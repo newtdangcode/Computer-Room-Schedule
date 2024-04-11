@@ -26,7 +26,7 @@ export default function Sidebar() {
     return (
         <aside className={`${styles.sidebar} bg-bgSecondary`}>
             <Link to="/" className="cursor-pointer">
-                <img className="h-[50px] w-[50px]" src={Logo} alt="logo" />
+                <img className="h-[auto] w-[99%]" src={Logo} alt="logo" />
             </Link>
             <div className={`${styles.navbar} grow mt-8`}>
                 {/* {auth.currentUser.role === USER_ROLES.ADMIN

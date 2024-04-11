@@ -38,16 +38,16 @@ export default function Header() {
   return (
     <header className={`${styles.header} bg-bgSecondary`}>
       <ul className="flex items-center cursor-pointer">
-        <li ref={notificationsRef} className=" relative ml-6 text-primary" onClick={handleDropdownMenu}>
+        <li ref={notificationsRef} className=" relative ml-6 text-textSecondary" onClick={handleDropdownMenu}>
           <IconNotification />
           <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 flex items-center justify-center">
             <p className="text-xs text-white font-semibold">{unreadNotifications}</p>
           </div>
           {isDropdown && <NotificationList notifications={notifications} />}
         </li>
-        
-        <li className="ml-6 flex items-center gap-x-2">
-          <ProfileAvatar size={35} isActive={false} />
+
+        <li className="ml-6 flex items-center gap-x-2 text-textSecondary">
+          <ProfileAvatar />
           <p>{currentUser?.name}</p>
         </li>
       </ul>
