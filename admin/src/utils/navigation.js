@@ -15,14 +15,14 @@ const adminNavigation = [
     icon: IconSchedule,
   },
   {
-    title: "Phòng máy",
-    path: "/rooms",
-    icon: IconRoom,
-  },
-  {
     title: "Đăng ký phòng",
     path: "/books",
     icon: IconBook,
+  },
+  {
+    title: "Phòng máy",
+    path: "/rooms",
+    icon: IconRoom,
   },
   {
     title: "Sinh viên",
