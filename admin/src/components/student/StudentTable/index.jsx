@@ -1,13 +1,15 @@
+import React from "react";
 import { Tooltip } from "react-tooltip";
 import { IconEdit, IconDelete } from "../../icon";
 import DataTable from "../../DataTable";
 import formatTimestamp from "../../../utils/formatTimestamp";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import Swal from "sweetalert2";
-export default function EmployeeTable({
-  employees,
+
+export default function StudentTable({
+  students,
   handleSoftDelete,
-  handleShowEditStaffModal,
+  handleShowEditModal,
   isSelectAll,
   isSelected,
   handleSelectAll,
@@ -26,12 +28,11 @@ export default function EmployeeTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            <p className="flex text-sm" >
-            {jsUcfirst(item.first_name)}
-            </p>
+
+            <p className="text-sm">{jsUcfirst(item.first_name)}</p>
           </div>
-        )
-      }
+        );
+      },
     },
     {
       field: "last_name",
@@ -39,15 +40,24 @@ export default function EmployeeTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            {item.id === currentUser.id ? (
-              <p className="flex text-sm">
-                {jsUcfirst(item.last_name)} &nbsp; <span className="text-red-500"> (Tôi)</span>
-              </p>
-            ) : (
-              <p className="text-sm">{jsUcfirst(item.last_name)}</p>
-            )}
+
+            <p className="text-sm">{jsUcfirst(item.last_name)}</p>
           </div>
         );
+      },
+    },
+    {
+      field: "code",
+      headerName: "Mã sinh viên",
+      renderCell: (item) => {
+        return <span className="text-sm">{item.code}</span>;
+      },
+    },
+    {
+      field: "class",
+      headerName: "Lớp",
+      renderCell: (item) => {
+        return <span className="text-sm">{item.class_name}</span>;
       },
     },
     {
@@ -58,60 +68,31 @@ export default function EmployeeTable({
       },
     },
     {
-      field: "phone",
+      field: "phone_number",
       headerName: "Số điện thoại",
       renderCell: (item) => {
-        return <span className="text-sm">{item.phone}</span>;
+        return <span className="text-sm">{item.phone_number}</span>;
       },
     },
     {
       field: "joinDate",
       headerName: "Ngày tham gia",
       renderCell: (item) => {
-        return <span className="text-sm">{formatTimestamp(item.createdAt)}</span>;
-      },
-    },
-    {
-      field: "role",
-      headerName: "Chức vụ",
-      renderCell: (item) => {
-        return <span className="text-sm">{item.role === 1 ? "Quản lý" : "Nhân viên"}</span>;
-      },
-    },
-    {
-      field: "status",
-      headerName: "Tình trạng",
-      renderCell: (item) => {
-        return (
-          <div>
-            {
-              (item.is_active = true ? (
-                <span className="inline-flex px-2 text-xs font-medium leading-5 rounded-full text-green-500 bg-green-100">
-                  Còn làm
-                </span>
-              ) : (
-                <span className="inline-flex px-2 text-xs font-medium leading-5 rounded-full text-red-500 bg-slate-100">
-                  Thôi làm
-                </span>
-              ))
-            }
-          </div>
-        );
+        return <span className="text-sm">{formatTimestamp(item.created_at)}</span>;
       },
     },
     {
       field: "actions",
       headerName: "Thao tác",
       renderCell: (item) => {
-        return item.id === currentUser.id ? (
-          ""
-        ) : (
+       
+        return (
           <div className="flex justify-center items-center text-gray-400 gap-x-4">
             <button
               data-tooltip-id="edit"
               data-tooltip-content="Chỉnh sửa"
               className="hover:text-green-600"
-              onClick={() => handleShowEditStaffModal(item)}
+              onClick={() => handleShowEditModal(item)}
             >
               <IconEdit />
             </button>
@@ -120,7 +101,7 @@ export default function EmployeeTable({
               onClick={() => {
                 Swal.fire({
                   title: "Bạn chắc chắn muốn xoá?",
-                  text: "Nhân viên sẽ được chuyển vào thùng rác.",
+                  text: "Sinh viên sẽ được chuyển vào thùng rác.",
                   icon: "question",
                   showCancelButton: true,
                   confirmButtonColor: "#0E9F6E",
@@ -132,7 +113,7 @@ export default function EmployeeTable({
                     handleSoftDelete(item.id);
                     Swal.fire({
                       title: "Đã chuyển vào thùng rác",
-                      text: "Nhân viên đã được chuyển vào thùng rác.",
+                      text: "Sinh viên đã được chuyển vào thùng rác.",
                       confirmButtonColor: "#0E9F6E",
                     });
                   }
@@ -149,12 +130,16 @@ export default function EmployeeTable({
         );
       },
     },
+    
   ];
+
+  
+
 
   return (
     <DataTable
       columnData={columnData}
-      rowData={employees}
+      rowData={students}
       select
       isSelectAll={isSelectAll}
       isSelected={isSelected}
