@@ -1,15 +1,13 @@
-import React from "react";
 import { Tooltip } from "react-tooltip";
-import { IconRestore, IconDelete } from "../../icon";
+import { IconEdit, IconDelete } from "../../icon";
 import DataTable from "../../DataTable";
-import jsUcfirst from "../../../utils/jsUcfirst";
 import formatTimestamp from "../../../utils/formatTimestamp";
+import jsUcfirst from "../../../utils/jsUcfirst";
 import Swal from "sweetalert2";
-
-export default function EmployeeDeletedTable({
-  employees,
-  handleDelete,
-  handleRestore,
+export default function LecturerTable({
+  lecturers,
+  handleSoftDelete,
+  handleShowEditStaffModal,
   isSelectAll,
   isSelected,
   handleSelectAll,
@@ -28,12 +26,15 @@ export default function EmployeeDeletedTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            <p className="flex text-sm" >
-            {jsUcfirst(item.first_name)}
-            </p>
+            <div className="w-[50px] h-[50px] ring-1 ring-gray-300">
+              <img src={item.photo} className="w-full h-full object-cover" />
+            </div>
+  
+            <p className="text-sm">{jsUcfirst(item.first_name)}</p>
+            
           </div>
-        )
-      }
+        );
+      },
     },
     {
       field: "last_name",
@@ -41,13 +42,12 @@ export default function EmployeeDeletedTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            {item.id === currentUser.id ? (
-              <p className="flex text-sm">
-                {jsUcfirst(item.last_name)} &nbsp; <span className="text-red-500"> (Tôi)</span>
-              </p>
-            ) : (
-              <p className="text-sm">{jsUcfirst(item.last_name)}</p>
-            )}
+            <div className="w-[50px] h-[50px] ring-1 ring-gray-300">
+              <img src={item.photo} className="w-full h-full object-cover" />
+            </div>
+  
+            <p className="text-sm">{jsUcfirst(item.last_name)}</p>
+            
           </div>
         );
       },
@@ -86,15 +86,17 @@ export default function EmployeeDeletedTable({
       renderCell: (item) => {
         return (
           <div>
-            {item.is_active === true ? (
-              <span className="inline-flex px-2 text-xs font-medium leading-5 rounded-full text-green-500 bg-green-100">
-                Còn làm
-              </span>
-            ) : (
-              <span className="inline-flex px-2 text-xs font-medium leading-5 rounded-full text-red-500 bg-slate-100">
-                Thôi làm
-              </span>
-            )}
+            {
+              (item.is_active = true ? (
+                <span className="inline-flex px-2 text-xs font-medium leading-5 rounded-full text-green-500 bg-green-100">
+                  Còn làm
+                </span>
+              ) : (
+                <span className="inline-flex px-2 text-xs font-medium leading-5 rounded-full text-red-500 bg-slate-100">
+                  Thôi làm
+                </span>
+              ))
+            }
           </div>
         );
       },
@@ -102,45 +104,25 @@ export default function EmployeeDeletedTable({
     {
       field: "actions",
       headerName: "Thao tác",
-      customClassName: "text-center",
       renderCell: (item) => {
-        return item.id === currentUser.id ? (
+        return item._id === currentUser._id ? (
           ""
         ) : (
           <div className="flex justify-center items-center text-gray-400 gap-x-4">
             <button
-              onClick={() => {
-                Swal.fire({
-                  title: "Bạn chắc chắn muốn Khôi phục?",
-                  icon: "question",
-                  showCancelButton: true,
-                  confirmButtonColor: "#0E9F6E",
-                  cancelButtonColor: "#d33",
-                  cancelButtonText: "Huỷ bỏ",
-                  confirmButtonText: "Đồng ý!",
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    handleRestore(item.id);
-                    Swal.fire({
-                      title: "Đã khôi phục",
-                      text: "Nhân viên đã được khôi phục.",
-                      confirmButtonColor: "#0E9F6E",
-                    });
-                  }
-                });
-              }}
-              data-tooltip-id="restore"
-              data-tooltip-content="Khôi phục"
-              className="hover:text-primary"
+              data-tooltip-id="edit"
+              data-tooltip-content="Chỉnh sửa"
+              className="hover:text-green-600"
+              onClick={() => handleShowEditStaffModal(item)}
             >
-              <IconRestore />
+              <IconEdit />
             </button>
             <Tooltip id="edit" style={{ backgroundColor: "var(--color-primary" }} />
             <button
               onClick={() => {
                 Swal.fire({
                   title: "Bạn chắc chắn muốn xoá?",
-                  text: "Nhân viên sẽ được xoá và không thể khôi phục.",
+                  text: "Giảng viên sẽ được chuyển vào thùng rác.",
                   icon: "question",
                   showCancelButton: true,
                   confirmButtonColor: "#0E9F6E",
@@ -149,8 +131,12 @@ export default function EmployeeDeletedTable({
                   confirmButtonText: "Đồng ý!",
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    handleDelete(item.id);
-                    Swal.fire({ title: "Đã xoá", text: "Nhân viên đã được xoá.", confirmButtonColor: "#0E9F6E" });
+                    handleSoftDelete(item._id);
+                    Swal.fire({
+                      title: "Đã chuyển vào thùng rác",
+                      text: "Giảng viên đã được chuyển vào thùng rác.",
+                      confirmButtonColor: "#0E9F6E",
+                    });
                   }
                 });
               }}
@@ -170,7 +156,7 @@ export default function EmployeeDeletedTable({
   return (
     <DataTable
       columnData={columnData}
-      rowData={employees}
+      rowData={lecturers}
       select
       isSelectAll={isSelectAll}
       isSelected={isSelected}

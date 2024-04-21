@@ -53,15 +53,15 @@ function DataTable({
               </thead>
               <tbody className="bg-white divide-y divide-gray-10 text-gray-700">
                 {rowData.map((rowItem, index) => (
-                  <tr key={rowItem._id}>
+                  <tr key={rowItem.id}>
                     {select ? (
                       <td className="px-4 py-3">
                         <input
-                          id={rowItem._id}
+                          id={rowItem.id}
                           name={rowItem.name}
                           type="checkbox"
                           onChange={(event) => handleSelected(event)}
-                          checked={isSelected.includes(rowItem._id)}
+                          checked={isSelected.includes(rowItem.id)}
                         />
                       </td>
                     ) : null}

@@ -3,9 +3,11 @@ module.exports = {
     theme: {
         extend: {
             colors: {
+                green: "var(--color-green)",
                 primary: "var(--color-primary)",
             },
             backgroundColor: {
+                
                 bgPrimary: "var(--color-bg-primary)",
                 bgSecondary: "var(--color-bg-secondary)",
             },

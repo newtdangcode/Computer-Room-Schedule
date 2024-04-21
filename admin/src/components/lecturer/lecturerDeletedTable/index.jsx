@@ -6,8 +6,8 @@ import jsUcfirst from "../../../utils/jsUcfirst";
 import formatTimestamp from "../../../utils/formatTimestamp";
 import Swal from "sweetalert2";
 
-export default function EmployeeDeletedTable({
-  employees,
+export default function LecturerDeletedTable({
+  lecturers,
   handleDelete,
   handleRestore,
   isSelectAll,
@@ -28,12 +28,15 @@ export default function EmployeeDeletedTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            <p className="flex text-sm" >
-            {jsUcfirst(item.first_name)}
-            </p>
+            <div className="w-[50px] h-[50px] ring-1 ring-gray-300">
+              <img src={item.photo} className="w-full h-full object-cover" />
+            </div>
+  
+            <p className="text-sm">{jsUcfirst(item.first_name)}</p>
+            
           </div>
-        )
-      }
+        );
+      },
     },
     {
       field: "last_name",
@@ -41,13 +44,12 @@ export default function EmployeeDeletedTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            {item.id === currentUser.id ? (
-              <p className="flex text-sm">
-                {jsUcfirst(item.last_name)} &nbsp; <span className="text-red-500"> (Tôi)</span>
-              </p>
-            ) : (
-              <p className="text-sm">{jsUcfirst(item.last_name)}</p>
-            )}
+            <div className="w-[50px] h-[50px] ring-1 ring-gray-300">
+              <img src={item.photo} className="w-full h-full object-cover" />
+            </div>
+  
+            <p className="text-sm">{jsUcfirst(item.last_name)}</p>
+            
           </div>
         );
       },
@@ -104,7 +106,7 @@ export default function EmployeeDeletedTable({
       headerName: "Thao tác",
       customClassName: "text-center",
       renderCell: (item) => {
-        return item.id === currentUser.id ? (
+        return item._id === currentUser._id ? (
           ""
         ) : (
           <div className="flex justify-center items-center text-gray-400 gap-x-4">
@@ -120,10 +122,10 @@ export default function EmployeeDeletedTable({
                   confirmButtonText: "Đồng ý!",
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    handleRestore(item.id);
+                    handleRestore(item._id);
                     Swal.fire({
                       title: "Đã khôi phục",
-                      text: "Nhân viên đã được khôi phục.",
+                      text: "Giảng viên đã được khôi phục.",
                       confirmButtonColor: "#0E9F6E",
                     });
                   }
@@ -140,7 +142,7 @@ export default function EmployeeDeletedTable({
               onClick={() => {
                 Swal.fire({
                   title: "Bạn chắc chắn muốn xoá?",
-                  text: "Nhân viên sẽ được xoá và không thể khôi phục.",
+                  text: "Giảng viên sẽ được xoá và không thể khôi phục.",
                   icon: "question",
                   showCancelButton: true,
                   confirmButtonColor: "#0E9F6E",
@@ -149,8 +151,8 @@ export default function EmployeeDeletedTable({
                   confirmButtonText: "Đồng ý!",
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    handleDelete(item.id);
-                    Swal.fire({ title: "Đã xoá", text: "Nhân viên đã được xoá.", confirmButtonColor: "#0E9F6E" });
+                    handleDelete(item._id);
+                    Swal.fire({ title: "Đã xoá", text: "Giảng viên đã được xoá.", confirmButtonColor: "#0E9F6E" });
                   }
                 });
               }}
@@ -170,7 +172,7 @@ export default function EmployeeDeletedTable({
   return (
     <DataTable
       columnData={columnData}
-      rowData={employees}
+      rowData={lecturers}
       select
       isSelectAll={isSelectAll}
       isSelected={isSelected}

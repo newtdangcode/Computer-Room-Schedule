@@ -4,8 +4,8 @@ import DataTable from "../../DataTable";
 import formatTimestamp from "../../../utils/formatTimestamp";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import Swal from "sweetalert2";
-export default function EmployeeTable({
-  employees,
+export default function RoomTable({
+  rooms,
   handleSoftDelete,
   handleShowEditStaffModal,
   isSelectAll,
@@ -21,80 +21,52 @@ export default function EmployeeTable({
 }) {
   const columnData = [
     {
-      field: "first_name",
-      headerName: "Họ",
+      field: "name",
+      headerName: "Tên phòng",
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            <p className="flex text-sm" >
-            {jsUcfirst(item.first_name)}
-            </p>
-          </div>
-        )
-      }
-    },
-    {
-      field: "last_name",
-      headerName: "Tên",
-      renderCell: (item) => {
-        return (
-          <div className="flex gap-x-2 items-center">
-            {item.id === currentUser.id ? (
-              <p className="flex text-sm">
-                {jsUcfirst(item.last_name)} &nbsp; <span className="text-red-500"> (Tôi)</span>
-              </p>
-            ) : (
-              <p className="text-sm">{jsUcfirst(item.last_name)}</p>
-            )}
+            <div className="w-[50px] h-[50px] ring-1 ring-gray-300">
+              <img src={item.photo} className="w-full h-full object-cover" />
+            </div>
+            
+            <p className="text-sm">{jsUcfirst(item.name)}</p>
+            
           </div>
         );
       },
     },
     {
-      field: "email",
-      headerName: "Email",
+      field: "machine_quantity",
+      headerName: "Số lượng máy",
       renderCell: (item) => {
-        return <span className="text-sm">{item.email}</span>;
+        return <span className="text-sm">{item.machine_quantity}</span>;
       },
     },
     {
-      field: "phone",
-      headerName: "Số điện thoại",
+      field: "employee",
+      headerName: "Phụ trách",
       renderCell: (item) => {
-        return <span className="text-sm">{item.phone}</span>;
+        return <span className="text-sm">{item.employee_name}</span>;
       },
     },
     {
       field: "joinDate",
-      headerName: "Ngày tham gia",
+      headerName: "Ngày thêm vào",
       renderCell: (item) => {
-        return <span className="text-sm">{formatTimestamp(item.createdAt)}</span>;
+        return <span className="text-sm">{formatTimestamp(item.created_at)}</span>;
       },
     },
-    {
-      field: "role",
-      headerName: "Chức vụ",
-      renderCell: (item) => {
-        return <span className="text-sm">{item.role === 1 ? "Quản lý" : "Nhân viên"}</span>;
-      },
-    },
+
     {
       field: "status",
       headerName: "Tình trạng",
       renderCell: (item) => {
         return (
           <div>
-            {
-              (item.is_active = true ? (
-                <span className="inline-flex px-2 text-xs font-medium leading-5 rounded-full text-green-500 bg-green-100">
-                  Còn làm
-                </span>
-              ) : (
-                <span className="inline-flex px-2 text-xs font-medium leading-5 rounded-full text-red-500 bg-slate-100">
-                  Thôi làm
-                </span>
-              ))
-            }
+            <span className="inline-flex px-2 text-xs font-medium leading-5 rounded-full text-green-500 bg-green-100">
+              {item.status_name}
+            </span>
           </div>
         );
       },
@@ -103,7 +75,7 @@ export default function EmployeeTable({
       field: "actions",
       headerName: "Thao tác",
       renderCell: (item) => {
-        return item.id === currentUser.id ? (
+        return item._id === currentUser._id ? (
           ""
         ) : (
           <div className="flex justify-center items-center text-gray-400 gap-x-4">
@@ -120,7 +92,7 @@ export default function EmployeeTable({
               onClick={() => {
                 Swal.fire({
                   title: "Bạn chắc chắn muốn xoá?",
-                  text: "Nhân viên sẽ được chuyển vào thùng rác.",
+                  text: "Phòng sẽ được chuyển vào thùng rác.",
                   icon: "question",
                   showCancelButton: true,
                   confirmButtonColor: "#0E9F6E",
@@ -129,10 +101,10 @@ export default function EmployeeTable({
                   confirmButtonText: "Đồng ý!",
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    handleSoftDelete(item.id);
+                    handleSoftDelete(item._id);
                     Swal.fire({
                       title: "Đã chuyển vào thùng rác",
-                      text: "Nhân viên đã được chuyển vào thùng rác.",
+                      text: "Phòng đã được chuyển vào thùng rác.",
                       confirmButtonColor: "#0E9F6E",
                     });
                   }
@@ -154,7 +126,7 @@ export default function EmployeeTable({
   return (
     <DataTable
       columnData={columnData}
-      rowData={employees}
+      rowData={rooms}
       select
       isSelectAll={isSelectAll}
       isSelected={isSelected}
