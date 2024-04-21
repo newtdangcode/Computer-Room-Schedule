@@ -164,7 +164,7 @@ export default function AddModalStaff({ closeModal, title, titleBtnFooter, handl
                         rounded-md focus:border-gray-200 border-gray-200 bg-gray-100 ring-1 ring-gray-200
                         focus:bg-white border-transparent form-select "
                 >
-                  
+                  <option value="">Lớp</option>
                   {classs.map((item) => (
                     <option value={item.id} key={item.id}>
                       {item.name}
@@ -293,6 +293,7 @@ export default function AddModalStaff({ closeModal, title, titleBtnFooter, handl
                   {...register("role_id")}
                   className="block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none"
                 >
+                  
                   <option value={4}>Sinh viên</option>
                 </select>
               </div>
