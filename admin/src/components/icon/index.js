@@ -41,4 +41,6 @@ export { default as IconOrderCancel } from "./orderCancel";
 export { default as IconPrint } from "./print";
 export { default as IconExcel } from "./excel";
 export { default as IconDownload } from "./download";
-export { default as IconProfileAvatar } from "./profileAvatar"
+export { default as IconProfileAvatar } from "./profileAvatar";
+export { default as IconClock } from "./clock";
+export { default as IconList } from "./list";

@@ -9,7 +9,7 @@ export default function ModalFooter({ title, isLoading }) {
         htmlFor="send"
         className={`${
           isLoading ? "cursor-not-allowed" : "cursor-pointer"
-        } bg-green text-white h-[48px] w-[250px] text-lg font-semibold rounded-md text-center flex justify-center items-center`}
+        } bg-primary hover:bg-red-800 text-white h-[48px] w-[250px] text-lg font-semibold rounded-md text-center flex justify-center items-center`}
       >
         {isLoading ? <Loading size={30} /> : title}
       </label>

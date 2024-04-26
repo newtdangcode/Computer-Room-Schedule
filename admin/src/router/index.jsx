@@ -1,10 +1,11 @@
 import Schedule from "../pages/schedule";
+import Semester from "../pages/semester";
 import Room from "../pages/room";
 import Book from "../pages/book";
 import Student from "../pages/student";
 import Lecturer from "../pages/lecturer";
 import Employee from "../pages/employee";
-
+import Subject from "../pages/subject";
 const adminRouter = [
   {
     path: "",
@@ -15,8 +16,16 @@ const adminRouter = [
     element: Book,
   },
   {
+    path: "/semesters",
+    element: Semester,
+  },
+  {
     path: "/rooms",
     element: Room,
+  },
+  {
+    path: "/subjects",
+    element: Subject,
   },
   {
     path: "/students",
@@ -42,8 +51,16 @@ const employeeRouter = [
     element: Book,
   },
   {
+    path: "/semesters",
+    element: Semester,
+  },
+  {
     path: "/rooms",
     element: Room,
+  },
+  {
+    path: "/subjects",
+    element: Subject,
   },
   {
     path: "/students",

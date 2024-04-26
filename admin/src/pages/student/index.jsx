@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import StudentTable from "../../components/student/StudentTable";
 import StudentDeletedTable from "../../components/student/StudentDeletedTable";
 import AddModalStaff from "../../components/student/StudentAddModal";
-import { IconBin, IconAdd, IconDelete, IconBack, IconRestore } from "../../components/icon";
+import { IconImport, IconBin, IconAdd, IconDelete, IconBack, IconRestore } from "../../components/icon";
 import PageLayout from "../../components/layout/pageLayout";
 import studentAPI from "../../api/studentAPI";
 import classAPI from "../../api/classAPI";
@@ -18,7 +18,7 @@ export default function Student() {
   const [isShowDeletedTable, setIsShowDeletedTable] = useState(false);
   const [isShowAddModal, setIsShowAddModal] = useState(false);
   const [isShowEditModal, setIsShowEditModal] = useState(false);
-  const [editData,setEditData] = useState();
+  const [editData, setEditData] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPageCount, setTotalPageCount] = useState(0);
   const [limitPerPage, setLimitPerPage] = useState(10);
@@ -46,25 +46,29 @@ export default function Student() {
     // showAddStaffModal,
     // showEditStaffModal,
   ]);
-  
+
   const handleSelectAll = () => {
     setIsSelectAll(!isSelectAll);
     setIsSelected(students.map((student) => student.id));
-    console.log(!isSelectAll,"-",students.map((student) => student.id),",",isSelected);
+    console.log(
+      !isSelectAll,
+      "-",
+      students.map((student) => student.id),
+      ",",
+      isSelected,
+    );
     if (isSelectAll) {
       setIsSelected([]);
     }
   };
   const handleSelected = (event) => {
     const { id, checked } = event.target;
-    var idInt =  parseInt(id, 10);
+    var idInt = parseInt(id, 10);
     setIsSelected([...isSelected, idInt]);
-    console.log(idInt,",",isSelected);
+    console.log(idInt, ",", isSelected);
     if (!checked) {
       setIsSelected(isSelected.filter((student_id) => student_id !== idInt));
     }
-     
-    
   };
   const getAllClass = async () => {
     try {
@@ -101,7 +105,6 @@ export default function Student() {
     } catch (err) {
       console.log(err);
     }
-    
   };
   const handleShowDeletedTable = () => {
     setIsShowDeletedTable(!isShowDeletedTable);
@@ -110,17 +113,7 @@ export default function Student() {
     setIsShowAddModal(!isShowAddModal);
   };
   const handleAddStudent = async (data) => {
-    const {
-      first_name,
-      last_name,
-      code,
-      class_id,
-      email,
-      phone_number,
-      username,
-      password,
-      role_id
-    } = data;
+    const { first_name, last_name, code, class_id, email, phone_number, username, password, role_id } = data;
     await studentAPI.addStudent({
       first_name,
       last_name,
@@ -130,7 +123,7 @@ export default function Student() {
       phone_number,
       username,
       password,
-      role_id
+      role_id,
     });
     setIsShowAddModal(!isShowAddModal);
     await getAllStudent();
@@ -142,38 +135,38 @@ export default function Student() {
   };
   const handleUpdateStudent = async (id, data) => {
     try {
-      await studentAPI.updateStudent(id, {...data});
+      await studentAPI.updateStudent(id, { ...data });
       setIsShowEditModal(!isShowEditModal);
       await getAllStudent();
-    }catch (error) {
+    } catch (error) {
       console.log(error);
     }
   };
 
   const handleSoftDelete = async (id) => {
     try {
-      await studentAPI.updateStudentStatus(id, {is_active: false});
+      await studentAPI.updateStudentStatus(id, { is_active: false });
       await getAllStudent();
-    }catch (error) {
+    } catch (error) {
       console.log(error);
     }
   };
   const handleRestore = async (id) => {
     try {
-      await studentAPI.updateStudentStatus(id, {is_active: true});
+      await studentAPI.updateStudentStatus(id, { is_active: true });
       await getAllStudent();
-    }catch (error) {
+    } catch (error) {
       console.log(error);
     }
-  }
+  };
   const handleDelete = async (id) => {
     try {
       await studentAPI.deleteStudent(id);
       await getAllStudent();
-    }catch (error) {
+    } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <PageLayout title="Sinh viên">
@@ -182,40 +175,7 @@ export default function Student() {
           <div className="flex justify-end items-center py-3 gap-x-4">
             {isShowDeletedTable ? (
               <React.Fragment>
-                <button
-                  disabled={isSelected.length <= 0}
-                  onClick={() => {
-                    Swal.fire({
-                      title: "Bạn chắc chắn muốn khôi phục?",
-                      text: "Các sinh viên sẽ được khôi phục.",
-                      icon: "question",
-                      showCancelButton: true,
-                      confirmButtonColor: "#0E9F6E",
-                      cancelButtonColor: "#d33",
-                      cancelButtonText: "Huỷ bỏ",
-                      confirmButtonText: "Đồng ý!",
-                    }).then((result) => {
-                      if (result.isConfirmed) {
-                        //handleRestoreManystudent();
-                        Swal.fire({
-                          title: "Đã Khôi phục",
-                          text: "Các sinh viên đã được khôi phục.",
-                          confirmButtonColor: "#0E9F6E",
-                        });
-                      }
-                    });
-                  }}
-                  className={`h-12 align-bottom inline-flex leading-5 items-center justify-center 
-                        transition-colors duration-150 font-medium px-10 py-2 rounded-lg text-sm 
-                        text-white border border-transparent ${
-                          isSelected.length > 0 ? "bg-yellow-400 cursor-pointer" : "bg-yellow-200 cursor-not-allowed"
-                        }`}
-                >
-                  <span className="mr-3">
-                    <IconRestore />
-                  </span>
-                  Khôi phục
-                </button>
+                
 
                 <button
                   disabled={isSelected.length <= 0}
@@ -243,13 +203,51 @@ export default function Student() {
                   className={`h-12 align-bottom inline-flex leading-5 items-center justify-center 
                         transition-colors duration-150 font-medium px-10 py-2 rounded-lg text-sm 
                         text-white border border-transparent ${
-                          isSelected.length > 0 ? "bg-red-600 cursor-pointer" : "bg-red-300 cursor-not-allowed"
+                          isSelected.length > 0
+                            ? "bg-red-600 cursor-pointer hover:bg-red-800"
+                            : "bg-red-300 cursor-not-allowed"
                         }`}
                 >
                   <span className="mr-3">
                     <IconDelete />
                   </span>
                   Xoá
+                </button>
+                <button
+                  disabled={isSelected.length <= 0}
+                  onClick={() => {
+                    Swal.fire({
+                      title: "Bạn chắc chắn muốn khôi phục?",
+                      text: "Các sinh viên sẽ được khôi phục.",
+                      icon: "question",
+                      showCancelButton: true,
+                      confirmButtonColor: "#0E9F6E",
+                      cancelButtonColor: "#d33",
+                      cancelButtonText: "Huỷ bỏ",
+                      confirmButtonText: "Đồng ý!",
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        //handleRestoreManystudent();
+                        Swal.fire({
+                          title: "Đã Khôi phục",
+                          text: "Các sinh viên đã được khôi phục.",
+                          confirmButtonColor: "#0E9F6E",
+                        });
+                      }
+                    });
+                  }}
+                  className={`h-12 align-bottom inline-flex leading-5 items-center justify-center 
+                        transition-colors duration-150 font-medium px-10 py-2 rounded-lg text-sm 
+                         border border-transparent ${
+                           isSelected.length > 0
+                             ? "bg-white border-primaryRed text-primary cursor-pointer hover:bg-primary hover:text-white"
+                             : "bg-white border-red-200 text-red-200 cursor-not-allowed"
+                         }`}
+                >
+                  <span className="mr-3">
+                    <IconRestore />
+                  </span>
+                  Khôi phục
                 </button>
               </React.Fragment>
             ) : (
@@ -280,7 +278,9 @@ export default function Student() {
                   className={`h-12 align-bottom inline-flex leading-5 items-center justify-center 
                         transition-colors duration-150 font-medium px-10 py-2 rounded-lg text-sm 
                         text-white border border-transparent ${
-                          isSelected.length > 0 ? "bg-red-600 cursor-pointer" : "bg-red-300 cursor-not-allowed"
+                          isSelected.length > 0
+                            ? "bg-red-600 cursor-pointer hover:bg-red-800"
+                            : "bg-red-300 cursor-not-allowed"
                         }`}
                 >
                   <span className="mr-3">
@@ -288,19 +288,35 @@ export default function Student() {
                   </span>
                   Xoá
                 </button>
+                <button
+                  disabled={isSelected.length <= 0}
+                  className={`h-12 align-bottom inline-flex leading-5 items-center justify-center 
+               transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
+               border border-transparent  ${
+                 isSelected.length > 0
+                   ? "bg-white border-primaryRed text-primary cursor-pointer hover:bg-primary hover:text-white"
+                   : "bg-white border-red-200 text-red-200 cursor-not-allowed"
+               }`}
+                  // onClick={handleShowAddModal}
+                >
+                  <span className="mr-3">
+                    <IconImport />
+                  </span>
+                  Thêm vào lớp
+                </button>
               </React.Fragment>
             )}
 
             <button
               className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
-                        cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
-                        text-white bg-green border border-transparent hover:bg-emerald-700 "
+              cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
+              text-primary bg-white border border-primaryRed  hover:bg-primary hover:text-white "
               onClick={handleShowAddModal}
             >
               <span className="mr-3">
                 <IconAdd />
               </span>
-              Thêm sinh Viên
+              Thêm Sinh Viên
             </button>
           </div>
         </div>
@@ -374,9 +390,9 @@ export default function Student() {
             </div> */}
             {isShowDeletedTable ? (
               <button
-                className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
-                          transition-colors duration-150 font-medium px-10 py-2 rounded-lg text-sm 
-                          text-white  bg-green border border-transparent hover:bg-emerald-700"
+              className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
+              transition-colors duration-150 font-medium px-10 py-2 rounded-lg text-sm 
+              text-white bg-red-500 hover:bg-red-700 border border-transparent"
                 onClick={() => {
                   handleShowDeletedTable();
                   setIsSelected([]);
@@ -458,7 +474,6 @@ export default function Student() {
           getAllStudent={getAllStudent}
         />
       )}
-
     </PageLayout>
   );
 }

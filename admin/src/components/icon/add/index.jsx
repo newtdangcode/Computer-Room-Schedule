@@ -7,8 +7,8 @@ export default function IconAdd() {
             viewBox="0 0 24 24"
             strokeLinecap="round"
             strokeLinejoin="round"
-            height="1em"
-            width="1em"
+            height="20px"
+            width="20px"
             xmlns="http://www.w3.org/2000/svg"
         >
             <line x1="12" y1="5" x2="12" y2="19"></line>
