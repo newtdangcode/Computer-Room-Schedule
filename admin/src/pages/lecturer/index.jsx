@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
+import useDebounce from "../../hooks/useDebounce";
 import Swal from "sweetalert2";
 import LecturerDeletedTable from "../../components/lecturer/lecturerDeletedTable";
 import LecturerTable from "../../components/lecturer/lecturerTable";
 import { IconBin, IconAdd, IconDelete, IconBack, IconRestore } from "../../components/icon";
 import PageLayout from "../../components/layout/pageLayout";
+import lecturerAPI from "../../api/lecturerAPI"
 
 import { useSelector } from "react-redux";
+import studentAPI from "../../api/studentAPI";
 
 export default function Lecturer() {
     const [lecturer, setLecturer] = useState([]);
@@ -16,20 +19,73 @@ export default function Lecturer() {
   const [totalPageCount, setTotalPageCount] = useState(0);
   const [limitPerPage, setLimitPerPage] = useState(10);
   const currentUser = useSelector((state) => state.auth.currentUser);
+  const [sortValue, setSortValue] = useState("");
+  const [searchKeyWord, setSearchKeyWord] = useState("");
+  const debounceValue = useDebounce(searchKeyWord, 500);
+  useEffect(()=>{
+    getAllLecturer();
+  },[
+    debounceValue,
+    isShowLecturerDeletedTable,
+    currentPage,
+    limitPerPage,
+    sortValue,
+  ]);
   const handleSelectAll = () => {
     setIsSelectAll(!isSelectAll);
-    //setIsSelected(staffs.map((staff) => staff._id));
+    setIsSelectAll(lecturer.map((lecturer)=>lecturer.id))
+    console.log(!isSelectAll,"-",lecturer.map((lecturer)=>lecturer.id),",",isSelected);
     if (isSelectAll) {
       setIsSelected([]);
     }
   };
   const handleSelected = (event) => {
     const { id, checked } = event.target;
-    setIsSelected([...isSelected, id]);
+    var idInt=parseInt(id,10);
+    setIsSelected([...isSelected, idInt]);
+    console.log(idInt,",",idInt);
     if (!checked) {
-      setIsSelected(isSelected.filter((staffId) => staffId !== id));
+      setIsSelected(isSelected.filter((lecturer_id) => lecturer_id !== idInt));
     }
   };
+  const getAllLecturer=async()=>{
+    let params ={page:currentPage,limit:limitPerPage};
+    if(debounceValue){
+      params.search=debounceValue.trim();
+    }
+    if(sortValue){
+      params={...params,...sortValue};
+    }
+    if(isShowLecturerDeletedTable){
+      params.is_active=false
+    }else{
+      params.is_active=true;
+    }
+    try {
+      const response = await lecturerAPI.getAllLecturer(params);
+      if (response.data.length === 0 && response.currentPage !== 1) {
+        setCurrentPage(response.currentPage - 1);
+      }
+      setLecturer(response.data);
+      console.log(response.data)
+      setTotalPageCount(response.totalPages);
+    } catch (err) {
+      console.log(err);
+    }
+    };
+    const handleShowDeletedTable=()=>{
+      setIsShowLecturerDeletedTable(!isShowLecturerDeletedTable);
+    }
+    const handleDelete= async(id)=>{
+      try{
+        await lecturerAPI.deleteLecturer(id);
+        await getAllLecturer();
+
+      }catch(error){
+        console.log(error)
+      }
+    }
+    
 
   return (
     <PageLayout title="Giảng viên">
@@ -174,7 +230,7 @@ export default function Lecturer() {
             handleSelectAll={handleSelectAll}
             isSelectAll={isSelectAll}
             currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
+            setCurrentPage={setCurrentPage}x
             totalPageCount={totalPageCount}
             limitPerPage={limitPerPage}
             setLimitPerPage={setLimitPerPage}
@@ -186,8 +242,7 @@ export default function Lecturer() {
           <h1 className="text-black font-bold mb-5">Danh sách</h1>
           <LecturerTable
             lecturer={lecturer}
-            //handleSoftDelete={handleSoftDeleteStaff}
-            //handleShowEditStaffModal={handleShowEditStaffModal}
+            
             isSelectAll={isSelectAll}
             isSelected={isSelected}
             handleSelectAll={handleSelectAll}

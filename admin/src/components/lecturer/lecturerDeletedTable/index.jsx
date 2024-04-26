@@ -106,9 +106,7 @@ export default function LecturerDeletedTable({
       headerName: "Thao tác",
       customClassName: "text-center",
       renderCell: (item) => {
-        return item._id === currentUser._id ? (
-          ""
-        ) : (
+        return  (
           <div className="flex justify-center items-center text-gray-400 gap-x-4">
             <button
               onClick={() => {
@@ -122,7 +120,7 @@ export default function LecturerDeletedTable({
                   confirmButtonText: "Đồng ý!",
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    handleRestore(item._id);
+                    handleRestore(item.id);
                     Swal.fire({
                       title: "Đã khôi phục",
                       text: "Giảng viên đã được khôi phục.",
@@ -151,7 +149,7 @@ export default function LecturerDeletedTable({
                   confirmButtonText: "Đồng ý!",
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    handleDelete(item._id);
+                    handleDelete(item.id);
                     Swal.fire({ title: "Đã xoá", text: "Giảng viên đã được xoá.", confirmButtonColor: "#0E9F6E" });
                   }
                 });

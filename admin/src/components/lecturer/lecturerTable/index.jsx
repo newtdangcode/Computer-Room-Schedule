@@ -5,7 +5,7 @@ import formatTimestamp from "../../../utils/formatTimestamp";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import Swal from "sweetalert2";
 export default function LecturerTable({
-  lecturers,
+  lecturer,
   handleSoftDelete,
   handleShowEditStaffModal,
   isSelectAll,
@@ -105,9 +105,7 @@ export default function LecturerTable({
       field: "actions",
       headerName: "Thao tác",
       renderCell: (item) => {
-        return item._id === currentUser._id ? (
-          ""
-        ) : (
+        return(
           <div className="flex justify-center items-center text-gray-400 gap-x-4">
             <button
               data-tooltip-id="edit"
@@ -131,7 +129,7 @@ export default function LecturerTable({
                   confirmButtonText: "Đồng ý!",
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    handleSoftDelete(item._id);
+                    handleSoftDelete(item.id);
                     Swal.fire({
                       title: "Đã chuyển vào thùng rác",
                       text: "Giảng viên đã được chuyển vào thùng rác.",
@@ -156,7 +154,7 @@ export default function LecturerTable({
   return (
     <DataTable
       columnData={columnData}
-      rowData={lecturers}
+      rowData={lecturer}
       select
       isSelectAll={isSelectAll}
       isSelected={isSelected}
