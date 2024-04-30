@@ -6,6 +6,7 @@ import Student from "../pages/student";
 import Lecturer from "../pages/lecturer";
 import Employee from "../pages/employee";
 import Subject from "../pages/subject";
+import Setting from "../pages/setting";
 const adminRouter = [
   {
     path: "",
@@ -38,6 +39,10 @@ const adminRouter = [
   {
     path: "/employees",
     element: Employee,
+  },
+  {
+    path: "/setting",
+    element: Setting,
   },
 ];
 
