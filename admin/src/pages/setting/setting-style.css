@@ -9,10 +9,12 @@ body {
 }
 .wrapperone{
     width: 200px;
-    height: 300px;
+    height: 200px;
     font-weight: bold;
     float: left;
-    margin-left: 150px;
+    margin-left: 80px;
+    margin-top: 30px;
+    display: flex;
 }
 .wrapperone h1{
     font-size: 20px;
@@ -21,13 +23,15 @@ body {
     color: #DE2219
 }
 .wrapperone button{
-    width: 100%;
+    width: 150%;
     height: 45px;
     border: none;
     outline: none;
     font-size: 16px;
     color: grey;
     background-color: black;
+    margin-top: 10px;
+    align-items: center;
 }
 .wrapperone button:hover{
     color: #DE2219
@@ -35,10 +39,11 @@ body {
 .wrapperone button:active{
     color: #DE2219
 }
-/*.wrapperone .red-bar{
-    width: 20px; /* Width of the red bar 
-    height: 100%; /* Full height of the container 
-    background-color: red; /* Red color for the bar 
+.wrapperone .red-bar{
+    width: 15px; 
+    height: 100%; 
+    border-radius: 5px;
+    background-color: red;  
+    margin-right: 100px;
+}   
 
-} 
-*/
