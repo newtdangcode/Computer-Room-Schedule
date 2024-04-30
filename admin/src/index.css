@@ -7,6 +7,7 @@
   --header-height: 4rem;
   --modal-wide: calc(100% - var(--sidebar-wide));
   --color-green: #0E9F6E;
+  --color-primaryRed: #DE2219;
   --color-primary: #DE2219;
   --color-bg-primary: #F9FAFB;
   --color-bg-secondary: #FFFFFF;

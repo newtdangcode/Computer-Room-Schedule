@@ -6,6 +6,8 @@ import {
   IconSetting,
   IconEmployee,
   IconStudent,
+  IconClock,
+  IconList
 } from "../components/icon";
 
 const adminNavigation = [
@@ -20,9 +22,19 @@ const adminNavigation = [
     icon: IconBook,
   },
   {
+    title: "Học kỳ",
+    path: "/semesters",
+    icon: IconClock,
+  },
+  {
     title: "Phòng máy",
     path: "/rooms",
     icon: IconRoom,
+  },
+  {
+    title: "Môn học",
+    path: "/subjects",
+    icon: IconList,
   },
   {
     title: "Sinh viên",
@@ -53,14 +65,24 @@ const staffNavigation = [
     icon: IconSchedule,
   },
   {
+    title: "Đăng ký phòng",
+    path: "/books",
+    icon: IconBook,
+  },
+  {
+    title: "Học kỳ",
+    path: "/semesters",
+    icon: IconClock,
+  },
+  {
     title: "Phòng máy",
     path: "/rooms",
     icon: IconRoom,
   },
   {
-    title: "Đơn đặt phòng",
-    path: "/books",
-    icon: IconBook,
+    title: "Môn học",
+    path: "/subjects",
+    icon: IconList,
   },
   {
     title: "Sinh viên",

@@ -1,105 +1,49 @@
 import React, { useEffect, useState } from "react";
-import useDebounce from "../../hooks/useDebounce";
 import Swal from "sweetalert2";
-import LecturerDeletedTable from "../../components/lecturer/lecturerDeletedTable";
-import LecturerTable from "../../components/lecturer/lecturerTable";
+import EmployeeTable from "../../components/employee/employeeTable";
+import EmployeeDeletedTable from "../../components/employee/employeeDeletedTable";
 import { IconBin, IconAdd, IconDelete, IconBack, IconRestore } from "../../components/icon";
 import PageLayout from "../../components/layout/pageLayout";
-import lecturerAPI from "../../api/lecturerAPI"
 
 import { useSelector } from "react-redux";
-import studentAPI from "../../api/studentAPI";
 
-export default function Lecturer() {
-    const [lecturer, setLecturer] = useState([]);
-    const [isSelectAll, setIsSelectAll] = useState(false);
+export default function Subject() {
+  const [subjects, setSubjects] = useState([]);
+  const [isSelectAll, setIsSelectAll] = useState(false);
   const [isSelected, setIsSelected] = useState([]);
-  const [isShowLecturerDeletedTable, setIsShowLecturerDeletedTable] = useState(false);
+  const [isShowDeletedTable, setIsShowDeletedTable] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPageCount, setTotalPageCount] = useState(0);
   const [limitPerPage, setLimitPerPage] = useState(10);
   const currentUser = useSelector((state) => state.auth.currentUser);
-  const [sortValue, setSortValue] = useState("");
-  const [searchKeyWord, setSearchKeyWord] = useState("");
-  const debounceValue = useDebounce(searchKeyWord, 500);
-  useEffect(()=>{
-    getAllLecturer();
-  },[
-    debounceValue,
-    isShowLecturerDeletedTable,
-    currentPage,
-    limitPerPage,
-    sortValue,
-  ]);
   const handleSelectAll = () => {
     setIsSelectAll(!isSelectAll);
-    setIsSelectAll(lecturer.map((lecturer)=>lecturer.id))
-    console.log(!isSelectAll,"-",lecturer.map((lecturer)=>lecturer.id),",",isSelected);
+    //setIsSelected(staffs.map((staff) => staff._id));
     if (isSelectAll) {
       setIsSelected([]);
     }
   };
   const handleSelected = (event) => {
     const { id, checked } = event.target;
-    var idInt=parseInt(id,10);
-    setIsSelected([...isSelected, idInt]);
-    console.log(idInt,",",idInt);
+    setIsSelected([...isSelected, id]);
     if (!checked) {
-      setIsSelected(isSelected.filter((lecturer_id) => lecturer_id !== idInt));
+      setIsSelected(isSelected.filter((staffId) => staffId !== id));
     }
   };
-  const getAllLecturer=async()=>{
-    let params ={page:currentPage,limit:limitPerPage};
-    if(debounceValue){
-      params.search=debounceValue.trim();
-    }
-    if(sortValue){
-      params={...params,...sortValue};
-    }
-    if(isShowLecturerDeletedTable){
-      params.is_active=false
-    }else{
-      params.is_active=true;
-    }
-    try {
-      const response = await lecturerAPI.getAllLecturer(params);
-      if (response.data.length === 0 && response.currentPage !== 1) {
-        setCurrentPage(response.currentPage - 1);
-      }
-      setLecturer(response.data);
-      console.log(response.data)
-      setTotalPageCount(response.totalPages);
-    } catch (err) {
-      console.log(err);
-    }
-    };
-    const handleShowDeletedTable=()=>{
-      setIsShowLecturerDeletedTable(!isShowLecturerDeletedTable);
-    }
-    const handleDelete= async(id)=>{
-      try{
-        await lecturerAPI.deleteLecturer(id);
-        await getAllLecturer();
-
-      }catch(error){
-        console.log(error)
-      }
-    }
-    
 
   return (
-    <PageLayout title="Giảng viên">
+    <PageLayout title="Môn học">
       <div className="bg-white rounded-lg ring-1 ring-gray-200 ring-opacity-4 overflow-hidden mb-5 shadow-xs">
         <div className="p-4">
           <div className="flex justify-end items-center py-3 gap-x-4">
-            {isShowLecturerDeletedTable ? (
+            {isShowDeletedTable ? (
               <React.Fragment>
                 <button
                   disabled={isSelected.length <= 0}
                   onClick={() => {
                     Swal.fire({
                       title: "Bạn chắc chắn muốn khôi phục?",
-                      text: "Các giảng viên sẽ được khôi phục.",
+                      text: "Các môn học sẽ được khôi phục.",
                       icon: "question",
                       showCancelButton: true,
                       confirmButtonColor: "#0E9F6E",
@@ -111,7 +55,7 @@ export default function Lecturer() {
                         //handleRestoreManyStaff();
                         Swal.fire({
                           title: "Đã Khôi phục",
-                          text: "Các giảng viên đã được khôi phục.",
+                          text: "Các môn học đã được khôi phục.",
                           confirmButtonColor: "#0E9F6E",
                         });
                       }
@@ -134,7 +78,7 @@ export default function Lecturer() {
                   onClick={() => {
                     Swal.fire({
                       title: "Bạn chắc chắn muốn xoá?",
-                      text: "Các giảng viên sẽ được xoá và không thể khôi phục.",
+                      text: "Các môn học sẽ được xoá và không thể khôi phục.",
                       icon: "question",
                       showCancelButton: true,
                       confirmButtonColor: "#0E9F6E",
@@ -146,7 +90,7 @@ export default function Lecturer() {
                         //handleDeleteManyStaff();
                         Swal.fire({
                           title: "Đã xoá",
-                          text: "Các giảng viên đã được xoá.",
+                          text: "Các môn học đã được xoá.",
                           confirmButtonColor: "#0E9F6E",
                         });
                       }
@@ -171,7 +115,7 @@ export default function Lecturer() {
                   onClick={() => {
                     Swal.fire({
                       title: "Bạn chắc chắn muốn xoá?",
-                      text: "Các giảng viên sẽ được chuyển vào thùng rác.",
+                      text: "Các môn học sẽ được chuyển vào thùng rác.",
                       icon: "question",
                       showCancelButton: true,
                       confirmButtonColor: "#0E9F6E",
@@ -183,7 +127,7 @@ export default function Lecturer() {
                         //handleSoftDeleteManyStaff();
                         Swal.fire({
                           title: "Đã chuyển vào thùng rác",
-                          text: "Các giảng viên đã được chuyển vào thùng rác.",
+                          text: "Các môn học đã được chuyển vào thùng rác.",
                           confirmButtonColor: "#0E9F6E",
                         });
                       }
@@ -212,17 +156,17 @@ export default function Lecturer() {
               <span className="mr-3">
                 <IconAdd />
               </span>
-              Thêm giảng Viên
+              Thêm môn học
             </button>
           </div>
         </div>
       </div>
       <div className="flex justify-end mb-5 px-[20px]"></div>
-      {isShowLecturerDeletedTable ? (
+      {isShowDeletedTable ? (
         <React.Fragment>
           <h1 className="text-black font-bold mb-5">Thùng rác</h1>
-          <LecturerDeletedTable
-            lecturer={lecturer}
+          <EmployeeDeletedTable
+            subjects={subjects}
             //handleDelete={handleDeleteStaff}
             //handleRestore={handleRestoreStaff}
             handleSelected={handleSelected}
@@ -230,7 +174,7 @@ export default function Lecturer() {
             handleSelectAll={handleSelectAll}
             isSelectAll={isSelectAll}
             currentPage={currentPage}
-            setCurrentPage={setCurrentPage}x
+            setCurrentPage={setCurrentPage}
             totalPageCount={totalPageCount}
             limitPerPage={limitPerPage}
             setLimitPerPage={setLimitPerPage}
@@ -240,9 +184,10 @@ export default function Lecturer() {
       ) : (
         <React.Fragment>
           <h1 className="text-black font-bold mb-5">Danh sách</h1>
-          <LecturerTable
-            lecturer={lecturer}
-            
+          <EmployeeTable
+            subjects={subjects}
+            //handleSoftDelete={handleSoftDeleteStaff}
+            //handleShowEditStaffModal={handleShowEditStaffModal}
             isSelectAll={isSelectAll}
             isSelected={isSelected}
             handleSelectAll={handleSelectAll}
