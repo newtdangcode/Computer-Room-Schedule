@@ -5,45 +5,241 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
-    background: rgb(228, 226, 226);
+    min-width: 80vh;
+    background: rgb(210, 210, 210);
+
 }
-.wrapperone{
-    width: 200px;
-    height: 200px;
-    font-weight: bold;
-    float: left;
-    margin-left: 80px;
+.wrapper{
+    width: 100vh;
+    height: 100vh;
     margin-top: 30px;
     display: flex;
+    flex-direction: column;
 }
-.wrapperone h1{
-    font-size: 20px;
-    height: 70px;
-    text-align: center;
-    color: #DE2219
+.wrapper .setting-bar {
+    width: 250px;
+    height: 250px;
+    margin-top: 30px;
+    margin-left: 50px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    /* border: 2px solid transparent; */
+    /* background-color: rgb(238, 215, 6); */
+    box-shadow: 0px 0px 10px grey;
 }
-.wrapperone button{
-    width: 150%;
-    height: 45px;
-    border: none;
-    outline: none;
+.wrapper .setting-bar h1{
+    font-weight: bold;
+    font-size:20px;
+    width: 75px;
+    color: #DE2219;
+    /* background-color: aqua; */
+    margin-left: 90px;
+    margin-top: -240px;
+    
+}
+.wrapper .setting-bar button{
+    width: 85%;
+    height: 15%;
     font-size: 16px;
-    color: grey;
-    background-color: black;
+    /* background-color: lawngreen; */ 
+    border-radius: 10px;
+    color: rgb(55, 55, 55);
     margin-top: 10px;
-    align-items: center;
+    margin-left: 20px;
+    font-weight: 550;
 }
-.wrapperone button:hover{
-    color: #DE2219
+.wrapper .setting-bar button:hover{
+    background-color: rgb(210, 210, 210);
+    transition: all 0.5s;
 }
-.wrapperone button:active{
-    color: #DE2219
+.wrapper .setting-bar button.active{
+    background-color: rgb(210, 210, 210);
+    color: #DE2219;
+    font-weight: bold;
 }
-.wrapperone .red-bar{
-    width: 15px; 
+.wrapper .setting-bar .red-bar-ver-1{
+    width: 8px; 
     height: 100%; 
     border-radius: 5px;
-    background-color: red;  
-    margin-right: 100px;
-}   
+    background-color: #DE2219;  
+    margin-right:10px;
 
+}   
+.wrapper .setting-bar .red-bar-hor-1{
+    width: 80%;
+    height: 5px;
+    margin-top: 10px;
+    margin-left:25px;
+    border-radius: 5px;
+    background-color: #DE2219;  
+}
+
+/*  */
+
+.wrapper .user-info {
+    width: 700px;
+    height: 700px;
+    margin-left: 700px;
+    margin-top: -250px;
+    display: flex;
+    flex-direction: column;
+    /* background-color: rgb(238, 215, 6); */
+    border-radius: 5px;
+    box-shadow: 0px 0px 50px grey;
+    transition: all 0.5s;
+}
+.wrapper .user-info h1{
+    font-weight: 650;
+    font-size: 20px;
+    width: 30%;
+    height: 60px;
+    color: #DE2219;
+    margin-top: -680px;
+    margin-left:30px;
+}
+.wrapper .user-info .red-bar-ver-2{
+    width: 8px; 
+    height: 100%; 
+    border-radius: 5px;
+    background-color: #DE2219;  
+    margin-right:10px;
+}
+.wrapper .user-info .LastName input{
+    margin-left:60px;
+    width:250px;
+    height:35px;
+    border: 2px solid;
+    border-radius: 5px;
+    border-color: grey;
+    /* background-color: aqua; */
+}
+.wrapper .user-info .LastName h2{
+    width: 250px;
+    margin-left:60px;
+    margin-top:80px;
+    margin-bottom: 10px;
+    /* background-color: greenyellow; */
+    font-weight: 500;
+}
+.wrapper .user-info .FirstName input{
+    margin-left:400px;
+    width:250px;
+    height:35px;
+    border: 2px solid;
+    border-radius: 5px;
+    border-color: grey;
+    /* background-color: aqua; */
+}
+.wrapper .user-info .FirstName h2{
+    width: 250px;
+    margin-left:400px;
+    margin-top: -69px;
+    margin-bottom: 10px;
+    /* background-color: greenyellow; */
+    font-weight: 500;
+}
+
+.wrapper .user-info .Email input{
+    margin-left:60px;
+    width:250px;
+    height:35px;
+    border: 2px solid;
+    border-radius: 5px;
+    border-color: grey;
+    /* background-color: aqua; */
+}
+.wrapper .user-info .Email h2{
+    width: 250px;
+    margin-top:100px;
+    margin-left:60px;
+    margin-bottom: 10px;
+    /* background-color: greenyellow; */
+    font-weight: 500;
+}
+.wrapper .user-info .PhoneNumber input{
+    margin-left:400px;
+    width:250px;
+    height:35px;
+    border: 2px solid;
+    border-radius: 5px;
+    border-color: grey;
+    /* background-color: aqua; */
+}.wrapper .user-info .PhoneNumber h2{
+    margin-top: -69px;
+    margin-bottom:10px;
+    width: 250px;
+    margin-left:400px;
+    /* background-color: greenyellow; */
+    font-weight: 500;
+}
+.wrapper .user-info button{
+    margin-left: 450px;
+    margin-top: 150px;
+}
+
+/*  */
+
+.wrapper .password-change {
+    width: 700px;
+    height: 400px;
+    margin-left: 700px;
+    margin-top: -250px;
+    display: flex;
+    flex-direction: column;
+    /* background-color: rgb(238, 215, 6); */
+    border-radius: 5px;
+    box-shadow: 0px 0px 50px grey;
+}
+.wrapper .password-change .red-bar-ver-2{
+    width: 8px; 
+    height: 100%; 
+    border-radius: 5px;
+    background-color: #DE2219;  
+    margin-right:10px;
+}
+ .wrapper .password-change h1{
+    font-weight: 650;
+    font-size: 20px;
+    width: 190px;
+    height: 30px;
+    color: #DE2219;
+    margin-left: 30px;
+    margin-top:-380px;
+    margin-bottom:50px;
+}
+.wrapper .password-change button{
+    margin-left: 450px;
+    margin-top: 40px;
+}
+.wrapper .password-change .old-pass input{
+    margin-left:60px;
+    width:250px;
+    height:35px;
+    border: 2px solid;
+    border-radius: 5px;
+    border-color: grey;
+}
+.wrapper .password-change .old-pass label{
+    width: 250px;
+    margin-left:150px;
+    margin-top:80px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+.wrapper .password-change .new-pass input{
+    margin-top: 20px;
+    margin-left:50px;
+    width:250px;
+    height:35px;
+    border: 2px solid;
+    border-radius: 5px;
+    border-color: grey;
+}
+.wrapper .password-change .new-pass label{
+    width: 250px;
+    margin-left:150px;
+    margin-top:100px;
+    margin-bottom: 10px;
+    font-weight: 500; 
+}
