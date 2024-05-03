@@ -15,12 +15,13 @@ body {
     margin-top: 30px;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 .wrapper .setting-bar {
     width: 250px;
     height: 250px;
     margin-top: 30px;
-    margin-left: 50px;
+    margin-left: 150px;
     display: flex;
     flex-direction: column;
     border-radius: 5px;
@@ -79,103 +80,98 @@ body {
 
 .wrapper .user-info {
     width: 700px;
-    height: 700px;
-    margin-left: 700px;
+    height: 500px;
+    margin-left: 600px;
     margin-top: -250px;
     display: flex;
     flex-direction: column;
     /* background-color: rgb(238, 215, 6); */
     border-radius: 5px;
     box-shadow: 0px 0px 50px grey;
-    transition: all 0.5s;
+    opacity: 1;
+    transform: translateX(0);
 }
+
 .wrapper .user-info h1{
     font-weight: 650;
     font-size: 20px;
     width: 30%;
     height: 60px;
     color: #DE2219;
-    margin-top: -680px;
+    margin-top: -480px;
     margin-left:30px;
+    margin-bottom: 30px;    
 }
 .wrapper .user-info .red-bar-ver-2{
     width: 8px; 
     height: 100%; 
     border-radius: 5px;
     background-color: #DE2219;  
-    margin-right:10px;
-}
-.wrapper .user-info .LastName input{
-    margin-left:60px;
-    width:250px;
-    height:35px;
-    border: 2px solid;
-    border-radius: 5px;
-    border-color: grey;
-    /* background-color: aqua; */
-}
-.wrapper .user-info .LastName h2{
-    width: 250px;
-    margin-left:60px;
-    margin-top:80px;
-    margin-bottom: 10px;
-    /* background-color: greenyellow; */
-    font-weight: 500;
-}
-.wrapper .user-info .FirstName input{
-    margin-left:400px;
-    width:250px;
-    height:35px;
-    border: 2px solid;
-    border-radius: 5px;
-    border-color: grey;
-    /* background-color: aqua; */
-}
-.wrapper .user-info .FirstName h2{
-    width: 250px;
-    margin-left:400px;
-    margin-top: -69px;
-    margin-bottom: 10px;
-    /* background-color: greenyellow; */
-    font-weight: 500;
-}
-
-.wrapper .user-info .Email input{
-    margin-left:60px;
-    width:250px;
-    height:35px;
-    border: 2px solid;
-    border-radius: 5px;
-    border-color: grey;
-    /* background-color: aqua; */
-}
-.wrapper .user-info .Email h2{
-    width: 250px;
-    margin-top:100px;
-    margin-left:60px;
-    margin-bottom: 10px;
-    /* background-color: greenyellow; */
-    font-weight: 500;
-}
-.wrapper .user-info .PhoneNumber input{
-    margin-left:400px;
-    width:250px;
-    height:35px;
-    border: 2px solid;
-    border-radius: 5px;
-    border-color: grey;
-    /* background-color: aqua; */
-}.wrapper .user-info .PhoneNumber h2{
-    margin-top: -69px;
-    margin-bottom:10px;
-    width: 250px;
-    margin-left:400px;
-    /* background-color: greenyellow; */
-    font-weight: 500;
-}
+    margin-right:10px;}
+    .wrapper .user-info .last-name input{
+        margin-left:60px;
+        width:250px;
+        height:35px;
+        border: 2px solid;
+        border-radius: 5px;
+        border-color: grey;
+    }
+    .wrapper .user-info .last-name label{
+        width: 250px;
+        margin-left:170px;
+        margin-top:80px;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+    .wrapper .user-info .first-name input{
+        margin-top: 20px;
+        margin-left:50px;
+        width:250px;
+        height:35px;
+        border: 2px solid;
+        border-radius: 5px;
+        border-color: grey;
+    }
+    .wrapper .user-info .first-name label{
+        width: 250px;
+        margin-left:170px;
+        margin-bottom: 10px;
+        font-weight: 500; 
+    }
+    .wrapper .user-info .email input{
+        margin-top: 20px;
+        margin-left:20px;
+        width:250px;
+        height:35px;
+        border: 2px solid;
+        border-radius: 5px;
+        border-color: grey;
+    }
+    .wrapper .user-info .email label{
+        width: 250px;
+        margin-left:130px;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+    .wrapper .user-info .phonenum input{
+        margin-top: 20px;
+        margin-left:20px;
+        width:250px;
+        height:35px;
+        border: 2px solid;
+        border-radius: 5px;
+        border-color: grey;
+    }
+    .wrapper .user-info .phonenum label{
+        width: 250px;
+        margin-left:130px;
+        margin-top:140px;
+        margin-bottom: 10px;
+        font-weight: 500; 
+    }
 .wrapper .user-info button{
     margin-left: 450px;
-    margin-top: 150px;
+    margin-top: 50px;
 }
 
 /*  */
@@ -183,13 +179,15 @@ body {
 .wrapper .password-change {
     width: 700px;
     height: 400px;
-    margin-left: 700px;
+    margin-left: 600px;
     margin-top: -250px;
     display: flex;
     flex-direction: column;
     /* background-color: rgb(238, 215, 6); */
     border-radius: 5px;
     box-shadow: 0px 0px 50px grey;
+    opacity: 0;
+    transform: translateX(-100%);
 }
 .wrapper .password-change .red-bar-ver-2{
     width: 8px; 

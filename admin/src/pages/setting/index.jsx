@@ -39,30 +39,27 @@ export default function Setting() {
           >Đổi mật khẩu</button>
       </div>
       {userInfoActive && (
-      <div className="user-info">
+      <div className="user-info" style={{ opacity: userInfoActive ? 1 : 0, transform: userInfoActive ? 'translateX(0)' : 'translateX(-100%)' }}>
           <div className="red-bar-ver-2"></div>
           <div className="account">
             <h1>Thông tin cá nhân</h1>
-            <div className="LastName">
-              <h2>Họ</h2>
-              <input type="text" 
-              placeholder="" required/>
+            <div className="last-name">
+              <label htmlFor="lastname">Họ</label>
+              <input type="text" id="lastname" name="lastname" />
             </div>
-            <div className="FirstName">
-              <h2>Tên</h2>
-              <input type="text" 
-              placeholder="" required/>
+            <div className="first-name">
+              <label htmlFor="firstname">Tên</label>
+              <input type="text" id="firstname" name="firstname" />
             </div>
-            <div className="Email">
-              <h2>Địa chỉ email</h2>
-              <input type="text" 
-              placeholder="" required/>
+            <div className="email">
+              <label htmlFor="email">Địa chỉ Email</label>
+              <input type="email" id="email" name="email" />
             </div>
-            <div className="PhoneNumber">
-              <h2>Số điện thoại</h2>
-              <input type="text" 
-              placeholder="PhoneNum-User" required/>
+            <div className="phonenum">
+              <label htmlFor="phonenum">Số điện thoại</label>
+              <input type="tel" id="phonenum" name="phonenum" />
             </div>
+            
             <button
                   onClick={() => {
                     Swal.fire({
@@ -95,7 +92,7 @@ export default function Setting() {
       </div>
       )}
   {passChangeActive && (
-      <div className="password-change">
+      <div className="password-change" style={{ opacity: passChangeActive ? 1 : 0, transform: passChangeActive ? 'translateX(0)' : 'translateX(-100%)' }}>
           <div className="red-bar-ver-2"></div>
           <div className="account">
             <h1>Thay đổi mật khẩu</h1>
