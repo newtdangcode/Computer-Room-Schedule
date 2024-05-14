@@ -5,7 +5,7 @@ import formatTimestamp from "../../../utils/formatTimestamp";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import Swal from "sweetalert2";
 export default function EmployeeTable({
-  employees,
+  employee,
   handleSoftDelete,
   handleShowEditStaffModal,
   isSelectAll,
@@ -26,8 +26,7 @@ export default function EmployeeTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            <p className="flex text-sm" >
-            {jsUcfirst(item.first_name)}
+            <p className="flex text-sm" >{jsUcfirst(item.first_name)}
             </p>
           </div>
         )
@@ -39,36 +38,26 @@ export default function EmployeeTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            {item.id === currentUser.id ? (
-              <p className="flex text-sm">
-                {jsUcfirst(item.last_name)} &nbsp; <span className="text-red-500"> (Tôi)</span>
-              </p>
-            ) : (
+            
               <p className="text-sm">{jsUcfirst(item.last_name)}</p>
-            )}
+            
           </div>
         );
       },
     },
+    ,
     {
-      field: "email",
-      headerName: "Email",
-      renderCell: (item) => {
-        return <span className="text-sm">{item.email}</span>;
-      },
-    },
-    {
-      field: "phone",
+      field: "phone_number",
       headerName: "Số điện thoại",
       renderCell: (item) => {
-        return <span className="text-sm">{item.phone}</span>;
+        return <span className="text-sm">{item.phone_number}</span>;
       },
     },
     {
-      field: "joinDate",
+      field: "created_at",
       headerName: "Ngày tham gia",
       renderCell: (item) => {
-        return <span className="text-sm">{formatTimestamp(item.createdAt)}</span>;
+        return <span className="text-sm">{formatTimestamp(item.created_at)}</span>;
       },
     },
     {
@@ -103,9 +92,7 @@ export default function EmployeeTable({
       field: "actions",
       headerName: "Thao tác",
       renderCell: (item) => {
-        return item.id === currentUser.id ? (
-          ""
-        ) : (
+        return  (
           <div className="flex justify-center items-center text-gray-400 gap-x-4">
             <button
               data-tooltip-id="edit"
@@ -154,7 +141,7 @@ export default function EmployeeTable({
   return (
     <DataTable
       columnData={columnData}
-      rowData={employees}
+      rowData={employee}
       select
       isSelectAll={isSelectAll}
       isSelected={isSelected}

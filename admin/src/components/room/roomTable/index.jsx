@@ -5,7 +5,7 @@ import formatTimestamp from "../../../utils/formatTimestamp";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import Swal from "sweetalert2";
 export default function RoomTable({
-  rooms,
+  room,
   handleSoftDelete,
   handleShowEditStaffModal,
   isSelectAll,
@@ -26,10 +26,7 @@ export default function RoomTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            <div className="w-[50px] h-[50px] ring-1 ring-gray-300">
-              <img src={item.photo} className="w-full h-full object-cover" />
-            </div>
-            
+           
             <p className="text-sm">{jsUcfirst(item.name)}</p>
             
           </div>
@@ -47,7 +44,7 @@ export default function RoomTable({
       field: "employee",
       headerName: "Phụ trách",
       renderCell: (item) => {
-        return <span className="text-sm">{item.employee_name}</span>;
+        return <span className="text-sm">{item.employee_code}</span>;
       },
     },
     {
@@ -65,7 +62,7 @@ export default function RoomTable({
         return (
           <div>
             <span className="inline-flex px-2 text-xs font-medium leading-5 rounded-full text-green-500 bg-green-100">
-              {item.status_name}
+              {item.status}
             </span>
           </div>
         );
@@ -75,9 +72,7 @@ export default function RoomTable({
       field: "actions",
       headerName: "Thao tác",
       renderCell: (item) => {
-        return item._id === currentUser._id ? (
-          ""
-        ) : (
+        return  (
           <div className="flex justify-center items-center text-gray-400 gap-x-4">
             <button
               data-tooltip-id="edit"
@@ -126,7 +121,7 @@ export default function RoomTable({
   return (
     <DataTable
       columnData={columnData}
-      rowData={rooms}
+      rowData={room}
       select
       isSelectAll={isSelectAll}
       isSelected={isSelected}

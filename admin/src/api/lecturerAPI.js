@@ -13,20 +13,61 @@ const sampleLecturer=[
     updated_at: "2024-04-14T08:00:00Z",
     },
     {
-        user_id: 2,
-        first_name: "Tan",
-        last_name: "Huynh",
-        email: "john@example.com",
-        phone_number: "123456789",
-        code:"S001",
-        is_active: true,
-        created_at: "2024-04-14T08:00:00Z",
-        updated_at: "2024-04-14T08:00:00Z",
-    },
+      user_id: 2,
+      first_name: "Alice",
+      last_name: "Smith",
+      email: "alice@example.com",
+      phone_number: "987654321",
+      code: "S002",
+      is_active: false,
+      created_at: "2024-04-15T10:00:00Z",
+      updated_at: "2024-04-15T10:00:00Z"
+  },{
+    user_id: 3,
+    first_name: "Bob",
+    last_name: "Johnson",
+    email: "bob@example.com",
+    phone_number: "555555555",
+    code: "S003",
+    is_active: true,
+    created_at: "2024-04-16T12:00:00Z",
+    updated_at: "2024-04-16T12:00:00Z"
+},{
+  user_id: 4,
+  first_name: "Emily",
+  last_name: "Davis",
+  email: "emily@example.com",
+  phone_number: "111222333",
+  code: "S004",
+  is_active: true,
+  created_at: "2024-04-17T14:00:00Z",
+  updated_at: "2024-04-17T14:00:00Z"
+},{
+  user_id: 5,
+  first_name: "Michael",
+  last_name: "Brown",
+  email: "michael@example.com",
+  phone_number: "999888777",
+  code: "S005",
+  is_active: true,
+  created_at: "2024-04-18T16:00:00Z",
+  updated_at: "2024-04-18T16:00:00Z"
+},{
+  user_id: 6,
+  first_name: "Sophia",
+  last_name: "Wilson",
+  email: "sophia@example.com",
+  phone_number: "444333222",
+  code: "S006",
+  is_active: true,
+  created_at: "2024-04-19T18:00:00Z",
+  updated_at: "2024-04-19T18:00:00Z"
+}
 ];
-var quantity=2;
+var quantity=6;
 const lecturerAPI={
     getAllLecturer:async(params)=>{
+        
         let filteredLecturer=[...sampleLecturer];
         if(params.is_active!==undefined){
             filteredLecturer=filteredLecturer.filter((lecturer)=>lecturer.is_active===params.is_active);
@@ -36,11 +77,14 @@ const lecturerAPI={
             filteredLecturer=filteredLecturer.filter(
                 (lecturer)=>
                 lecturer.first_name.toLowerCase().includes(searchValue)||
-                lecturer.last_name_name.toLowerCase().includes(searchValue)||
+                lecturer.last_name.toLowerCase().includes(searchValue)||
                 lecturer.code.toLowerCase().includes(searchValue)||
                 lecturer.email.toLowerCase().includes(searchValue)
-            )
+            );
         }
+        
+        
+
          // Sorting logic
     if (params.sort) {
         let sortBy;
@@ -88,6 +132,7 @@ const lecturerAPI={
             }
           });
         }
+        
       }
 
         const totalLecturer =filteredLecturer.length;
@@ -96,6 +141,10 @@ const lecturerAPI={
         const endIndex=Math.min(startIndex+params.limit,totalLecturer);
         const currentPageData=filteredLecturer.slice(startIndex,endIndex);
 
+        filteredLecturer =currentPageData.map((lecturer)=>({
+          ...lecturer,
+          
+        }))
        const modifiedLecturer = filteredLecturer.map((lecturer)=>{
         if(lecturer.hasOwnProperty("user_id")){
             lecturer.id=lecturer.user_id;
@@ -135,6 +184,17 @@ const lecturerAPI={
         const updatedSampleLecturer=sampleLecturer.filter(lecturer=>lecturer.user_id!==id);
         sampleLecturer=updatedSampleLecturer;
         quantity--;
-    }
+    },
+    updateLecturerStatus: async (id, data) => {
+      const url = `/lecturers/updateStatus/${id}`;
+      const {is_active} = data;
+      console.log(data,",",id);
+      sampleLecturer.map((lecturer)=>{
+        if(lecturer.user_id===id){
+          lecturer.is_active=is_active;
+        }
+      });
+      //await axios.patch(url, data);
+    },
 };
 export default lecturerAPI;

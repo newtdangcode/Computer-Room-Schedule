@@ -12,11 +12,11 @@ export default function ScheduleTable ({ room_id, schedule }){
     getRoom();
    },[rooms]);
   useEffect(()=>{
-    getAllRoom();
+    getAllRoomforShedule();
     
    },[]);
-  const getAllRoom = async () => {
-    const response = await roomAPI.getAllRoom();
+  const getAllRoomforShedule = async () => {
+    const response = await roomAPI.getAllRoomforShedule();
     setRooms(response.data);
     
     //console.log(response.data);

@@ -26,11 +26,7 @@ export default function LecturerTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            <div className="w-[50px] h-[50px] ring-1 ring-gray-300">
-              <img src={item.photo} className="w-full h-full object-cover" />
-            </div>
-  
-            <p className="text-sm">{jsUcfirst(item.first_name)}</p>
+           <p className="text-sm">{jsUcfirst(item.first_name)}</p>
             
           </div>
         );
@@ -42,9 +38,9 @@ export default function LecturerTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            <div className="w-[50px] h-[50px] ring-1 ring-gray-300">
-              <img src={item.photo} className="w-full h-full object-cover" />
-            </div>
+           
+              
+       
   
             <p className="text-sm">{jsUcfirst(item.last_name)}</p>
             
@@ -60,24 +56,24 @@ export default function LecturerTable({
       },
     },
     {
-      field: "phone",
+      field: "phone_number",
       headerName: "Số điện thoại",
       renderCell: (item) => {
-        return <span className="text-sm">{item.phone}</span>;
+        return <span className="text-sm">{item.phone_number}</span>;
       },
     },
     {
-      field: "joinDate",
+      field: "created_at",
       headerName: "Ngày tham gia",
       renderCell: (item) => {
-        return <span className="text-sm">{formatTimestamp(item.createdAt)}</span>;
+        return <span className="text-sm">{formatTimestamp(item.created_at)}</span>;
       },
     },
     {
       field: "role",
       headerName: "Chức vụ",
       renderCell: (item) => {
-        return <span className="text-sm">{item.role === 1 ? "Quản lý" : "Nhân viên"}</span>;
+        return <span className="text-sm">{item.role === 1 ? "Quản lý" : "Giảng viên"}</span>;
       },
     },
     {
