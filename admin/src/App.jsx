@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { RouterProvider, createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Root from "./pages/root";
-//import Login from "./pages/login";
+//import LoginPage from "./pages/login";
 //import ForgotPassword from "./pages/forgotPassword";
 //import ResetPassword from "./pages/resetPassword";
 import ProtectedRoute from "./router/ProtectedRoute";
@@ -15,6 +15,7 @@ import { adminRouter, employeeRouter } from "./router";
 import { USER_ROLES } from "./utils/Constant";
 import { toast } from "react-toastify";
 import notificationSound from "./assets/sound/notification-sound.mp3";
+
 
 import io from "socket.io-client";
 const socket = io(process.env.REACT_APP_SOCKET_SERVER_URL);
@@ -70,9 +71,9 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <React.Fragment>
-        {/* <Route path="/login" element={<Login />} />
-        <Route path="/forget-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:resetToken" element={<ResetPassword />} /> */}
+        {/*<Route path="/login" element={<LoginPage />} />
+        /*<Route path="/forget-password" element={<ForgotPassword />} />
+    <Route path="/reset-password/:resetToken" element={<ResetPassword />} />*/ }
         <Route
           path="/"
           element={
@@ -81,7 +82,8 @@ function App() {
             //</ProtectedRoute>
           }
         >
-          {/* {auth.currentUser?.role === USER_ROLES.ADMIN
+          {
+          /* {auth.currentUser?.role === USER_ROLES.ADMIN
             ? adminRouter.map((item) => {
                 const Page = item.element;
                 return <Route key={item.path} path={item.path} element={<Page />} />;
@@ -89,7 +91,8 @@ function App() {
             : staffRouter.map((item) => {
                 const Page = item.element;
                 return <Route key={item.path} path={item.path} element={<Page />} />;
-              })} */}
+              })} */
+              }
           {adminRouter.map((item) => {
                 const Page = item.element;
                 return <Route key={item.path} path={item.path} element={<Page />} />;
