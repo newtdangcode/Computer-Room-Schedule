@@ -7,35 +7,14 @@ import ModalFooter from "../../modal/footer";
 import { IconUploadFile, IconEye, IconEyeClose } from "../../icon";
 import { useForm } from "react-hook-form";
 import yup from "../../../utils/yupGlobal";
-import classAPI from "../../../api/classAPI";
+import lecturerAPi from "../../../api/lecturerAPI";
 import toastMessage from "../../../utils/toastMessage";
 import styles from "./styles.module.css";
 
-export default function AddModalStaff({ closeModal, title, titleBtnFooter, handleAddStudent, getAllStudent }) {
-  useEffect(() => {
-    getAllClass();
-  }, []);
-
-
-  const [classs, setClasss] = useState([]);
-  const getAllClass = async () => {
-    try {
-   
-      const response = await classAPI.getAllClass();
-      setClasss(response.data);
+export default function AddModalStaff({ closeModal, title, titleBtnFooter, handleAddLecturer, getAllLecturer }) {
+    useEffect(() => {
      
-    } catch (err) {
-      console.log(err);
-    }
-   
-  };
- 
-  
-  // const [classId, setClassId] = useState(null);
-  // const handleClassChange = (event) => {
-  //   setClassId(event.target.value);
-  // };
-
+    }, []);
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,8 +23,7 @@ export default function AddModalStaff({ closeModal, title, titleBtnFooter, handl
   const schema = yup.object().shape({
     first_name: yup.string().required("Vui lòng nhập họ của bạn"),
     last_name: yup.string().required("Vui lòng nhập tên của bạn"),
-    code: yup.string().required("Vui lòng nhập mã số sinh viên của bạn."),
-    class_id: yup.string().required("Vui lòng chọn lớp của bạn."),
+    code: yup.string().required("Vui lòng nhập mã Giảng Vi  ên của bạn."),
     email: yup.string().required("Vui lòng nhập Email của bạn.").email("Vui lòng nhập đúng định dạng của Email."),
     username: yup
       .string()
@@ -61,8 +39,9 @@ export default function AddModalStaff({ closeModal, title, titleBtnFooter, handl
       .string()
       .required("Vui lòng nhập số điện thoại của bạn.")
       .phone("Vui lòng nhập đúng định dạng số điện thoại."),
-    role_id: yup.string().required("Vui lòng chọn chức vụ."),
-  });
+
+    
+});
   const {
     register,
     handleSubmit,
@@ -86,11 +65,11 @@ export default function AddModalStaff({ closeModal, title, titleBtnFooter, handl
       setIsLoading(true);
       //const newData = {...data, class_id:classId};
       //await handleAddStudent(newData);
-      await handleAddStudent(data);
-      toastMessage({ type: "success", message: "Thêm sinh viên thành công." });
-      //getAllStudent();
+      await handleAddLecturer(data);
+      toastMessage({ type: "success", message: "Thêm Giảng viên thành công." });
+      console.log(data);
     } catch (error) {
-      toastMessage({ type: "error", message: `Thêm sinh viên thất bại. Số điện thoại hoặc Email bị trùng.` });
+      toastMessage({ type: "error", message: `Thêm giảng viên thất bại. Số điện thoại hoặc Email bị trùng.` });
     } finally {
       setIsLoading(false);
     }
@@ -137,12 +116,12 @@ export default function AddModalStaff({ closeModal, title, titleBtnFooter, handl
             </div>
             <div className={`${styles.item}`}>
               <div className="w-1/3 text-sm text-gray-700 font-medium dark:text-gray-400">
-                <label>Mã sinh viên</label>
+                <label>Mã Giảng viên</label>
               </div>
               <div className="flex flex-col w-2/3 ">
                 <input
                   type="text"
-                  placeholder="Nhập mã sinh viên"
+                  placeholder="Nhập mã Giảng Viên"
                   className={`  ${
                     errors.code ? "border-red-500" : ""
                   } block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none`}
@@ -151,30 +130,10 @@ export default function AddModalStaff({ closeModal, title, titleBtnFooter, handl
                 {errors.code && <p className="text-red-500 text-sm">{`*${errors.code.message}`}</p>}
               </div>
             </div>
-            <div className={`${styles.item}`}>
-              <div className="w-1/3 text-sm text-gray-700 font-medium dark:text-gray-400">
-                <label>Lớp</label>
-              </div>
-              <div className="flex flex-col w-2/3 ">
-                <select
-                  {...register("class_id")}
-               
-  
-                  //onChange={handleClassChange}
-                  className="block w-full h-12 px-2 py-1 text-sm focus:outline-none leading-5 
-                        rounded-md focus:border-gray-200 border-gray-200 bg-gray-100 ring-1 ring-gray-200
-                        focus:bg-white border-transparent form-select "
-                >
-                  <option value="">Lớp</option>
-                  {classs.map((item) => (
-                    <option value={item.id} key={item.id}>
-                      {item.name}
-                    </option>
-                  ))}
-                </select>
+            
                 {/* {errors.class_id && <p className="text-red-500 text-sm">{`*${errors.class_id.message}`}</p>} */}
-              </div>
-            </div>
+              
+            
             <div className={`${styles.item}`}>
               <div className="w-1/3 text-sm text-gray-700 font-medium dark:text-gray-400">
                 <label>Email</label>
@@ -285,20 +244,7 @@ export default function AddModalStaff({ closeModal, title, titleBtnFooter, handl
                 {errors.phone_number && <p className="text-red-500 text-sm">{`*${errors.phone_number.message}`}</p>}
               </div>
             </div>
-            <div className={`${styles.item}`}>
-              <div className="w-1/3 text-sm text-gray-700 font-medium dark:text-gray-400">
-                <label>Chức vụ</label>
-              </div>
-              <div className="flex flex-col w-2/3 ">
-                <select
-                  {...register("role_id")}
-                  className="block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none"
-                >
-                  
-                  <option value={4}>Sinh viên</option>
-                </select>
-              </div>
-            </div>
+            
             <input type="submit" hidden id="send" />
           </form>
         </div>
@@ -306,4 +252,6 @@ export default function AddModalStaff({ closeModal, title, titleBtnFooter, handl
       </Drawer>
     </div>
   );
-}
+};
+
+

@@ -7,7 +7,7 @@ import formatTimestamp from "../../../utils/formatTimestamp";
 import Swal from "sweetalert2";
 
 export default function LecturerDeletedTable({
-  lecturers,
+  lecturer,
   handleDelete,
   handleRestore,
   isSelectAll,
@@ -28,9 +28,7 @@ export default function LecturerDeletedTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            <div className="w-[50px] h-[50px] ring-1 ring-gray-300">
-              <img src={item.photo} className="w-full h-full object-cover" />
-            </div>
+            
   
             <p className="text-sm">{jsUcfirst(item.first_name)}</p>
             
@@ -44,10 +42,7 @@ export default function LecturerDeletedTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            <div className="w-[50px] h-[50px] ring-1 ring-gray-300">
-              <img src={item.photo} className="w-full h-full object-cover" />
-            </div>
-  
+           
             <p className="text-sm">{jsUcfirst(item.last_name)}</p>
             
           </div>
@@ -65,14 +60,14 @@ export default function LecturerDeletedTable({
       field: "phone",
       headerName: "Số điện thoại",
       renderCell: (item) => {
-        return <span className="text-sm">{item.phone}</span>;
+        return <span className="text-sm">{item.phone_number}</span>;
       },
     },
     {
       field: "joinDate",
       headerName: "Ngày tham gia",
       renderCell: (item) => {
-        return <span className="text-sm">{formatTimestamp(item.createdAt)}</span>;
+        return <span className="text-sm">{formatTimestamp(item.created_at)}</span>;
       },
     },
     {
@@ -170,7 +165,7 @@ export default function LecturerDeletedTable({
   return (
     <DataTable
       columnData={columnData}
-      rowData={lecturers}
+      rowData={lecturer}
       select
       isSelectAll={isSelectAll}
       isSelected={isSelected}

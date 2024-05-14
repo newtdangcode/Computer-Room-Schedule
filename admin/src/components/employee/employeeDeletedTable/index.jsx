@@ -7,7 +7,7 @@ import formatTimestamp from "../../../utils/formatTimestamp";
 import Swal from "sweetalert2";
 
 export default function EmployeeDeletedTable({
-  employees,
+  employee,
   handleDelete,
   handleRestore,
   isSelectAll,
@@ -41,36 +41,32 @@ export default function EmployeeDeletedTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            {item.id === currentUser.id ? (
-              <p className="flex text-sm">
-                {jsUcfirst(item.last_name)} &nbsp; <span className="text-red-500"> (Tôi)</span>
-              </p>
-            ) : (
+            
               <p className="text-sm">{jsUcfirst(item.last_name)}</p>
-            )}
+         
           </div>
         );
       },
     },
     {
-      field: "email",
-      headerName: "Email",
+      field: "code",
+      headerName: "Mã nhân viên",
       renderCell: (item) => {
-        return <span className="text-sm">{item.email}</span>;
+        return <span className="text-sm">{item.code}</span>;
       },
     },
     {
       field: "phone",
       headerName: "Số điện thoại",
       renderCell: (item) => {
-        return <span className="text-sm">{item.phone}</span>;
+        return <span className="text-sm">{item.phone_number}</span>;
       },
     },
     {
       field: "joinDate",
       headerName: "Ngày tham gia",
       renderCell: (item) => {
-        return <span className="text-sm">{formatTimestamp(item.createdAt)}</span>;
+        return <span className="text-sm">{formatTimestamp(item.created_at)}</span>;
       },
     },
     {
@@ -104,9 +100,7 @@ export default function EmployeeDeletedTable({
       headerName: "Thao tác",
       customClassName: "text-center",
       renderCell: (item) => {
-        return item.id === currentUser.id ? (
-          ""
-        ) : (
+        return (
           <div className="flex justify-center items-center text-gray-400 gap-x-4">
             <button
               onClick={() => {
@@ -170,7 +164,7 @@ export default function EmployeeDeletedTable({
   return (
     <DataTable
       columnData={columnData}
-      rowData={employees}
+      rowData={employee}
       select
       isSelectAll={isSelectAll}
       isSelected={isSelected}

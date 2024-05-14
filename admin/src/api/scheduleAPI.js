@@ -47,7 +47,7 @@ const schedules = [
     },
     {
       id: 5,
-      room_id: 1,
+      room_id: 3,
       date: '04/26/2024',
       shift_id: 1,
       lecturer: 'Hoàng Văn E',
@@ -111,8 +111,8 @@ const schedules = [
 //const [currentSchedule, setCurrentSchedule] = useState([]);
 const scheduleAPI = {
     getAllSchedule: async(params) => {
-        const rooms = (await roomAPI.getAllRoom()).data;
-        //console.log(rooms);
+        const rooms = (await roomAPI.getAllRoomforShedule()).data;
+        console.log(rooms);
         const currentWeek = params.currentWeek;
         console.log(params);
         const semesterParams = params.currentSemester;
