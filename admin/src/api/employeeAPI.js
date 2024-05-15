@@ -90,7 +90,7 @@ const employeeAPI={
         let fieldToSort;
         switch (sortBy) {
           case "last_name":
-            console.log("Sorting by name in ascending order");
+           
             fieldToSort = "last_name";
             break;
           case "-last_name":
@@ -141,7 +141,7 @@ const employeeAPI={
         }
         return employee;
        });
-       console.log(modifiedEmployee);
+     
         return {
             
             data:modifiedEmployee,
@@ -154,7 +154,7 @@ const employeeAPI={
     updateEmployeeStatus: async (id, data) => {
       const url = `/employees/updateStatus/${id}`;
       const {is_active} = data;
-      console.log(data,",",id);
+     
       sampleEmployee.map((employee)=>{
         if(employee.user_id===id){
           employee.is_active=is_active;

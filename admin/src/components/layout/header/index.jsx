@@ -47,8 +47,9 @@ export default function Header() {
         </li>
 
         <li className="ml-6 flex items-center gap-x-2 text-textSecondary">
+        <p className="text-primary">Hello {currentUser?.last_name}!</p>
           <ProfileAvatar />
-          <p>{currentUser?.name}</p>
+          
         </li>
       </ul>
     </header>

@@ -152,7 +152,7 @@ const lecturerAPI={
         }
         return lecturer;
        });
-       console.log(modifiedLecturer);
+      
         return {
             
             data:modifiedLecturer,
@@ -176,7 +176,7 @@ const lecturerAPI={
             created_at: "2024-04-14T08:00:00Z",
             updated_at: "2024-04-14T08:00:00Z",
         }
-        console.log(lecturer);
+     
         sampleLecturer.push(lecturer);
     },
     deleteLecturer :async(id)=>{
@@ -188,7 +188,7 @@ const lecturerAPI={
     updateLecturerStatus: async (id, data) => {
       const url = `/lecturers/updateStatus/${id}`;
       const {is_active} = data;
-      console.log(data,",",id);
+     
       sampleLecturer.map((lecturer)=>{
         if(lecturer.user_id===id){
           lecturer.is_active=is_active;

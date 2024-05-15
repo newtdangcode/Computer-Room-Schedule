@@ -289,7 +289,7 @@ const studentAPI = {
         //password : data.password,
         //role_id : parseInt(data.role_id, 10)
       }
-      console.log(student);
+    
       sampleStudents.push(student);
       
       //await axios.post(url, data);
@@ -335,7 +335,7 @@ const studentAPI = {
     updateStudentStatus: async (id, data) => {
       const url = `/students/updateStatus/${id}`;
       const {is_active} = data;
-      console.log(data,",",id);
+  
       sampleStudents.map((student)=>{
         if(student.user_id===id){
           student.is_active=is_active;
@@ -357,7 +357,7 @@ const studentAPI = {
     },
     deleteManyStudent: async (data) => {
       const url = "/students";
-      console.log(data);
+  
       //await axios.delete(url, {data});
     },
 };

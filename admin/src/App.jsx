@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { RouterProvider, createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Root from "./pages/root";
-//import LoginPage from "./pages/login";
+
 //import ForgotPassword from "./pages/forgotPassword";
 //import ResetPassword from "./pages/resetPassword";
 import ProtectedRoute from "./router/ProtectedRoute";
@@ -15,30 +15,30 @@ import { adminRouter, employeeRouter } from "./router";
 import { USER_ROLES } from "./utils/Constant";
 import { toast } from "react-toastify";
 import notificationSound from "./assets/sound/notification-sound.mp3";
-
-
+import NotFoundPage from "./pages/NotFoundPage/index";
+import Login from "./pages/login";
 import io from "socket.io-client";
 const socket = io(process.env.REACT_APP_SOCKET_SERVER_URL);
 
 function App() {
-  //const auth = useSelector((state) => state.auth);
+  const auth = useSelector((state) => state.auth);
   const [isLoading, setIsLoading] = useState(true);
-  //const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   const checkIsLogin = async () => {
-  //     try {
-  //       const response = await authAPI.checkIsLogin();
-  //       dispatch(setUserSuccess(response.data));
-  //       unwrapResult(await dispatch(fetchNotification()));
-  //     } catch {
-  //       dispatch(setUserFail);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-  //   checkIsLogin();
-  // }, []);
+  const dispatch = useDispatch();
+  const checkIsLogin = async () => {
+    try {
+      const response = await authAPI.employeeCheckLogin();
+      dispatch(setUserSuccess(response.data));
+      //unwrapResult(await dispatch(fetchNotification()));
+    } catch {
+      dispatch(setUserFail);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    
+    checkIsLogin();
+  }, []);
 
   // useEffect(() => {
   //   const handleCustomerOrder = async (data) => {
@@ -71,48 +71,45 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <React.Fragment>
-        {/*<Route path="/login" element={<LoginPage />} />
-        /*<Route path="/forget-password" element={<ForgotPassword />} />
+        <Route path="/login" element={<Login />} />
+    
+        {/*<Route path="/forget-password" element={<ForgotPassword />} />
     <Route path="/reset-password/:resetToken" element={<ResetPassword />} />*/ }
         <Route
           path="/"
           element={
-            //<ProtectedRoute>
+            <ProtectedRoute >
               <Root />
-            //</ProtectedRoute>
+            </ProtectedRoute>
           }
         >
-          {
-          /* {auth.currentUser?.role === USER_ROLES.ADMIN
+          
+          {auth.currentUser?.account_id?.role_id?.id === USER_ROLES.ADMIN
             ? adminRouter.map((item) => {
                 const Page = item.element;
                 return <Route key={item.path} path={item.path} element={<Page />} />;
               })
-            : staffRouter.map((item) => {
-                const Page = item.element;
-                return <Route key={item.path} path={item.path} element={<Page />} />;
-              })} */
-              }
-          {adminRouter.map((item) => {
+            : employeeRouter.map((item) => {
                 const Page = item.element;
                 return <Route key={item.path} path={item.path} element={<Page />} />;
               })}
+              
+         
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </React.Fragment>,
     ),
   );
   return (
     <React.Fragment>
-      {/* {isLoading ? (
+      {isLoading ? (
         <div className="flex justify-center items-center h-screen">
           <Loading size={40} />
         </div>
       ) : (
         <RouterProvider router={router} />
-      )} */}
-      {
-        <RouterProvider router={router} />
-      }
+      )}
+      
     </React.Fragment>
   );
 }

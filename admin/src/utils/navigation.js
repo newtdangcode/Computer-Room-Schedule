@@ -58,7 +58,7 @@ const adminNavigation = [
   },
 ];
 
-const staffNavigation = [
+const employeeNavigation = [
   {
     title: "Thời Khoá biểu",
     path: "",
@@ -95,15 +95,10 @@ const staffNavigation = [
     icon: IconLecturer,
   },
   {
-    title: "Nhân viên",
-    path: "/employees",
-    icon: IconEmployee,
-  },
-  {
     title: "Cài đặt",
     path: "/setting",
     icon: IconSetting,
   },
 ];
 
-export { adminNavigation, staffNavigation };
+export { adminNavigation, employeeNavigation };

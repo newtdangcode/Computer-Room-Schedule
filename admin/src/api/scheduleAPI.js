@@ -112,9 +112,9 @@ const schedules = [
 const scheduleAPI = {
     getAllSchedule: async(params) => {
         const rooms = (await roomAPI.getAllRoomforShedule()).data;
-        console.log(rooms);
+       
         const currentWeek = params.currentWeek;
-        console.log(params);
+
         const semesterParams = params.currentSemester;
         const semester = await semesterAPI.getOneSemester(parseInt(semesterParams));
         //console.log(semester);

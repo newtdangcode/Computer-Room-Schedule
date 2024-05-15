@@ -109,7 +109,7 @@ const roomAPI = {
     const modifiedRoom =filteredRoom.map((room)=>{
         return room;
     })
-    console.log(modifiedRoom);
+   
     return {
         data:modifiedRoom,
         currentPage:params.page,
@@ -124,7 +124,7 @@ const roomAPI = {
     updateRoomStatus:async(id,data)=>{
         const url=`/rooms/updateStatus/${id}`;
         const{is_active}=data;
-        console.log(data,",",id);
+       
         sampleroom.map((room)=>{
                 if(room.id===id){
                     room.is_active=is_active;
