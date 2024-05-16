@@ -273,7 +273,7 @@ export default function Employee() {
               <span className="mr-3">
                 <IconAdd />
               </span>
-              Thêm Sinh Viên
+              Thêm Nhân Viên
             </button>
           </div>
         </div>
