@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { IconPrevious, IconNext } from "../icon";
 import styles from "./styles.module.css";
 import Pagination from "../Pagination";
-
 function DataTable({
   columnData,
   rowData = [],
@@ -18,7 +17,9 @@ function DataTable({
   limitPerPage,
   setLimitPerPage,
 }) {
+  
   return (
+
     <React.Fragment>
       {rowData.length === 0 ? (
         <h1 className="text-center">Không có dữ liệu</h1>
@@ -26,11 +27,12 @@ function DataTable({
         <div className="w-full overflow-hidden border border-gray-200 rounded-lg ring-1 ring-black ring-opacity-5 mb-8 rounded-b-lg">
           <div className="w-full overflow-x-scroll">
             <table className="w-full whitespace-nowrap ">
-              <thead className="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b border-gray-20 bg-gray-100">
+              <thead className="text-xs font-semibold tracking-wide text-left text-white uppercase border-b border-gray-20 bg-primary">
                 <tr>
                   {select ? (
                     <td className="px-4 py-3">
                       <input
+                        className="h-[16px] w-[16px]"
                         id="selectAll"
                         name="selectAll"
                         type="checkbox"
@@ -53,15 +55,17 @@ function DataTable({
               </thead>
               <tbody className="bg-white divide-y divide-gray-10 text-gray-700">
                 {rowData.map((rowItem, index) => (
-                  <tr key={rowItem.id}>
-                    {select ? (
+                  <tr key={rowItem.code}>
+                    {select? (
+                      
                       <td className="px-4 py-3">
                         <input
-                          id={rowItem.id}
+                          className="h-[16px] w-[16px]"
+                          id={rowItem.code}
                           name={rowItem.name}
                           type="checkbox"
                           onChange={(event) => handleSelected(event)}
-                          checked={isSelected.includes(rowItem.id)}
+                          checked={isSelected.includes(rowItem.code)}
                         />
                       </td>
                     ) : null}

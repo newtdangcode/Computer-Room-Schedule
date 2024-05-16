@@ -1,166 +1,69 @@
-import axios from "axios";
-const sampleEmployee=[
-    {
-        user_id: 1,
-        code:"S001",
-        account_id:"1",
-        first_name: "John",
-        last_name: "Doe",
-        phone_number: "123456789",
-        is_active:true,
-        created_at: "2024-04-15T10:00:00Z",
-        updated_at: "2024-04-15T10:00:00Z"
-    },{
-        user_id: 2,
-        code: "S002",
-        account_id: "2",
-        first_name: "Alice",
-        last_name: "Johnson",
-        phone_number: "987654321",
-        is_active: true,
-        created_at: "2024-04-18T09:30:00Z",
-        updated_at: "2024-04-18T09:30:00Z"
-     },{
-        user_id: 3,
-        code: "S003",
-        account_id: "3",
-        first_name: "Emily",
-        last_name: "Smith",
-        phone_number: "555123456",
-        is_active: false,
-        created_at: "2024-04-20T14:45:00Z",
-        updated_at: "2024-04-20T14:45:00Z"
-     },{
-        user_id: 4,
-        code: "S004",
-        account_id: "4",
-        first_name: "Michael",
-        last_name: "Brown",
-        phone_number: "789987654",
-        is_active: true,
-        created_at: "2024-04-22T11:20:00Z",
-        updated_at: "2024-04-22T11:20:00Z"
-     },{
-        user_id: 5,
-        code: "S005",
-        account_id: "5",
-        first_name: "Sarah",
-        last_name: "Williams",
-        phone_number: "111222333",
-        is_active: true,
-        created_at: "2024-04-25T16:00:00Z",
-        updated_at: "2024-04-25T16:00:00Z"
-     }
-]
-const quantity=5;
+import removeAccents from "../utils/removeAccents";
+import axios from "./axios";
+
 const employeeAPI={
-    getAllEmployee:async(params)=>{
-        
-        let filteredEmployee=[...sampleEmployee];
-        if(params.is_active!==undefined){
-            filteredEmployee=filteredEmployee.filter((employee)=>employee.is_active===params.is_active);
-        }
-        if(params.search){
-            const searchValue=params.search.toLowerCase().trim();
-            filteredEmployee=filteredEmployee.filter(
-                (employee)=>
-                employee.first_name.toLowerCase().includes(searchValue)||
-                employee.last_name.toLowerCase().includes(searchValue)||
-                employee.code.toLowerCase().includes(searchValue)
-                
-            );
-        }
-        
-        
-
-         // Sorting logic
-    if (params.sort) {
-        let sortBy;
-        let sortOrder = 1; // Default sortOrder
-  
-        // Kiểm tra nếu params.sort là một string, sử dụng nó trực tiếp
-        if (typeof params.sort === "string") {
-          sortBy = params.sort;
-        } else {
-          // Nếu params.sort là một object, lấy trường và hướng sắp xếp
-          sortBy = Object.keys(params.sort)[0];
-          sortOrder = params.sort[sortBy] === "asc" ? 1 : -1;
-        }
-        // Xác định trường và hướng sắp xếp tương ứng
-        let fieldToSort;
-        switch (sortBy) {
-          case "last_name":
-           
-            fieldToSort = "last_name";
-            break;
-          case "-last_name":
-            fieldToSort = "last_name";
-            sortOrder = -1; // Đảo hướng sắp xếp
-            break;
-          case "created_at":
-            fieldToSort = "created_at";
-            break;
-          case "-created_at":
-            fieldToSort = "created_at";
-            sortOrder = -1; // Đảo hướng sắp xếp
-            break;
-          default:
-            // Trường hợp không hợp lệ, không thực hiện sắp xếp
-            break;
-        }
-  
-        // Nếu trường sắp xếp được xác định, thực hiện sắp xếp
-        if (fieldToSort) {
-          filteredEmployee.sort((a, b) => {
-            if (typeof a[fieldToSort] === "string") {
-              return a[fieldToSort].localeCompare(b[fieldToSort]) * sortOrder;
-            } else if (typeof a[fieldToSort] === "number") {
-              return (a[fieldToSort] - b[fieldToSort]) * sortOrder;
-            } else {
-              return 0;
-            }
-          });
-        }
-        
+  getAll: async (params) => {
+    
+   
+    params.filter = "is_active:eq:" + params.is_active;
+    
+   // console.log(params.is_active);
+    if(params.search!==""){
+      params.search = removeAccents(params.search);
+      params.filter = params.filter + ",last_name:like:" + params.search;
+    }
+    const access_token = await localStorage.getItem('access_token');
+    
+    const url = "/employee/get-all";
+    const response = await axios.get(url, {
+      params, 
+      headers: {
+        Authorization: `Bearer ${access_token}`
       }
-
-        const totalEmployee =filteredEmployee.length;
-        const totalPages=Math.ceil(totalEmployee/params.limit);
-        const startIndex =(params.page-1)*params.limit;
-        const endIndex=Math.min(startIndex+params.limit,totalEmployee);
-        const currentPageData=filteredEmployee.slice(startIndex,endIndex);
-
-        filteredEmployee =currentPageData.map((employee)=>({
-          ...employee,
-          
-        }))
-       const modifiedEmployee = filteredEmployee.map((employee)=>{
-        if(employee.hasOwnProperty("user_id")){
-            employee.id=employee.user_id;
-            delete employee.user_id;
-        }
-        return employee;
-       });
-     
-        return {
-            
-            data:modifiedEmployee,
-            currentPage:params.page,
-            totalPages:totalPages,
-        };
-
-        
-    },
-    updateEmployeeStatus: async (id, data) => {
-      const url = `/employees/updateStatus/${id}`;
-      const {is_active} = data;
-     
-      sampleEmployee.map((employee)=>{
-        if(employee.user_id===id){
-          employee.is_active=is_active;
+    });
+    
+    return response;
+  },
+    
+  create: async (data) => {
+    const url = "/employee/create";
+    const access_token = await localStorage.getItem('access_token');
+    //console.log(access_token);
+   
+      const response = await axios.post(url, data, {
+        headers: {
+          Authorization: `Bearer ${access_token}`
         }
       });
-      //await axios.patch(url, data);
-    },
+      console.log(response);
+      return response;
+   
+    
+    
+    
+  },
+
+  update: async (code, data) => {
+    const url = `/employee/update/${code}`;
+    const access_token = await localStorage.getItem('access_token');
+    console.log(url);
+    const response = await axios.patch(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`
+      }
+    });
+    return response;
+  },
+  
+  updateMany: async (data) => {
+    const url = "/employee/update-many";
+    const access_token = await localStorage.getItem('access_token');
+    const response = await axios.patch(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`
+      }
+    });
+    return response;
+  },
 }
 export default employeeAPI;

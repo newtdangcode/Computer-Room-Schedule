@@ -1,7 +1,7 @@
 import React from "react";
 import { Tooltip } from "react-tooltip";
 import { IconRestore, IconDelete } from "../../icon";
-import DataTable from "../../DataTable";
+import DataTable from "../../UserDataTable";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import formatTimestamp from "../../../utils/formatTimestamp";
 import Swal from "sweetalert2";
@@ -28,12 +28,10 @@ export default function EmployeeDeletedTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            <p className="flex text-sm" >
-            {jsUcfirst(item.first_name)}
-            </p>
+            <p className="flex text-sm">{jsUcfirst(item.first_name)}</p>
           </div>
-        )
-      }
+        );
+      },
     },
     {
       field: "last_name",
@@ -41,9 +39,7 @@ export default function EmployeeDeletedTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            
-              <p className="text-sm">{jsUcfirst(item.last_name)}</p>
-         
+            <p className="text-sm">{jsUcfirst(item.last_name)}</p>
           </div>
         );
       },
@@ -83,7 +79,7 @@ export default function EmployeeDeletedTable({
         return (
           <div>
             {item.is_active === true ? (
-              <span className="inline-flex px-2 text-xs font-medium leading-5 rounded-full text-green-500 bg-green-100">
+              <span className="inline-flex px-2 text-xs font-medium leading-5 rounded-full text-black bg-slate-100">
                 Còn làm
               </span>
             ) : (
@@ -114,7 +110,7 @@ export default function EmployeeDeletedTable({
                   confirmButtonText: "Đồng ý!",
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    handleRestore(item.id);
+                    handleRestore(item.code);
                     Swal.fire({
                       title: "Đã khôi phục",
                       text: "Nhân viên đã được khôi phục.",
@@ -129,7 +125,7 @@ export default function EmployeeDeletedTable({
             >
               <IconRestore />
             </button>
-            <Tooltip id="edit" style={{ backgroundColor: "var(--color-primary" }} />
+            {/* <Tooltip id="edit" style={{ backgroundColor: "var(--color-primary" }} />
             <button
               onClick={() => {
                 Swal.fire({
@@ -143,7 +139,7 @@ export default function EmployeeDeletedTable({
                   confirmButtonText: "Đồng ý!",
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    handleDelete(item.id);
+                    handleDelete(item.code);
                     Swal.fire({ title: "Đã xoá", text: "Nhân viên đã được xoá.", confirmButtonColor: "#0E9F6E" });
                   }
                 });
@@ -154,7 +150,7 @@ export default function EmployeeDeletedTable({
             >
               <IconDelete />
             </button>
-            <Tooltip id="delete" style={{ backgroundColor: "#EF4444" }} />
+            <Tooltip id="delete" style={{ backgroundColor: "#EF4444" }} /> */}
           </div>
         );
       },

@@ -1,0 +1,4 @@
+.footer {
+    width: calc(100% - var(--sidebar-wide));
+    margin-left: auto;
+}

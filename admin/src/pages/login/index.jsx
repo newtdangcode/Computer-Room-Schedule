@@ -51,7 +51,7 @@ export default function Login() {
         </div>
         <div className="w-2/5 p-12">
           <div className="h-full">
-            <h1 className="text-3xl font-semibold mb-6 text-primary">Computer Room Schedule</h1>
+            <h1 className="text-[28px] font-semibold mb-6 text-primary">PTITHCM Computer Room Schedule</h1>
             <h1 className="text-2xl font-semibold mb-6 text-gray-800">Đăng Nhập</h1>
             {isError && (
               <div className="my-4 py-3 px-4 bg-red-100 border-[1px] border-[#ff424f33]">

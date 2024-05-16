@@ -1,7 +1,7 @@
 import React from "react";
 import { Tooltip } from "react-tooltip";
 import { IconRestore, IconDelete } from "../../icon";
-import DataTable from "../../DataTable";
+import DataTable from "../../UserDataTable";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import formatTimestamp from "../../../utils/formatTimestamp";
 import Swal from "sweetalert2";
@@ -28,9 +28,7 @@ export default function StudentDeletedTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-  
             <p className="text-sm">{jsUcfirst(item.first_name)}</p>
-            
           </div>
         );
       },
@@ -41,9 +39,7 @@ export default function StudentDeletedTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-  
             <p className="text-sm">{jsUcfirst(item.last_name)}</p>
-            
           </div>
         );
       },
@@ -83,14 +79,13 @@ export default function StudentDeletedTable({
         return <span className="text-sm">{formatTimestamp(item.created_at)}</span>;
       },
     },
-    
+
     {
       field: "actions",
       headerName: "Thao tác",
       customClassName: "text-center",
       renderCell: (item) => {
-        
-        return(
+        return (
           <div className="flex justify-center items-center text-gray-400 gap-x-4">
             <button
               onClick={() => {
@@ -119,7 +114,7 @@ export default function StudentDeletedTable({
             >
               <IconRestore />
             </button>
-            <Tooltip id="edit" style={{ backgroundColor: "var(--color-primary" }} />
+            {/* <Tooltip id="edit" style={{ backgroundColor: "var(--color-primary" }} />
             <button
               onClick={() => {
                 Swal.fire({
@@ -145,14 +140,12 @@ export default function StudentDeletedTable({
               <IconDelete />
             </button>
             <Tooltip id="delete" style={{ backgroundColor: "#EF4444" }} />
-          </div>
+           */}
+           </div>
         );
       },
     },
-    
   ];
-  
-
 
   return (
     <DataTable

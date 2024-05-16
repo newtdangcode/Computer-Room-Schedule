@@ -11,6 +11,8 @@ export class UpdateAccountDto {
     @IsEmail()
     email: string;
 
+    @IsOptional()
+    acc_is_active: boolean;
     
     
 }

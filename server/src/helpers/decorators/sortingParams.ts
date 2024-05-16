@@ -9,7 +9,7 @@ export interface Sorting {
 export const SortingParams = createParamDecorator((validParams, ctx: ExecutionContext): Sorting => {
     const req: Request = ctx.switchToHttp().getRequest();
     const sort = req.query.sort as string;
-    console.log(sort);
+    
     if (!sort) return null;
     
     

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Head, Param, Patch, Post, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Account } from 'src/entities/account.entity';
@@ -24,8 +24,9 @@ export class EmployeeController {
     async getAll( 
             @PaginationParams() paginationParams: Pagination,
             @SortingParams(['first_name', 'last_name', 'code', 'is_active', 'created_at', 'updated_at']) sort?: Sorting,
-            @FilteringParams(['first_name', 'last_name', 'code', 'is_active', 'created_at', 'updated_at']) filter?: Filtering
+            @FilteringParams(['first_name', 'last_name', 'code', 'is_active', 'created_at', 'updated_at']) filter?: Filtering[]
         ): Promise<PaginatedResource<Partial<Employee>>> {
+        console.log('employee get all api...');
         return await this.employeeService.getAll(paginationParams, sort, filter);
     }
     
@@ -40,8 +41,9 @@ export class EmployeeController {
     @UsePipes(ValidationPipe)
     async create(@Body() createEmployeeDto: CreateEmployeeDto) {
         console.log('employee create api...');
-        const createdEmployee = await this.employeeService.creat(createEmployeeDto);
-        return { message: 'Employee created successfully', data: createdEmployee };
+        
+        return await this.employeeService.creat(createEmployeeDto);
+        //return { message: 'Employee created successfully', data: createdEmployee };
     }
 
     @Patch('update/:code')

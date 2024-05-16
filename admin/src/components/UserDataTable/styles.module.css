@@ -1,0 +1,56 @@
+.pagination li a {
+  padding: 10px 15px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #4c4f52;
+  border-radius: 5px;
+}
+.pagination li a:hover {
+  background-color: #f4f5f7;
+}
+
+.currentNumberPage{
+  background-color: var(--color-primary);
+  color: #fff !important;
+}
+
+.currentNumberPage:hover {
+  background-color: #057a55 !important;
+}
+
+.checkbox {
+  display: none;
+}
+
+.checkbox + .label {
+  position: relative;
+  padding-left: 25px;
+  cursor: pointer;
+}
+
+.checkbox + .label:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #9ca3af;
+  background: #fff;
+}
+
+.checkbox:checked + .label:before {
+  background: red;
+  
+}
+
+.checkbox:checked + .label:after {
+  content: '✔';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 4px;
+  top: -1px;
+  color: #fff;
+}

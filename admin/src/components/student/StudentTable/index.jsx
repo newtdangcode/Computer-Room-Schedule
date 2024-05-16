@@ -1,7 +1,7 @@
 import React from "react";
 import { Tooltip } from "react-tooltip";
 import { IconEdit, IconDelete } from "../../icon";
-import DataTable from "../../DataTable";
+import DataTable from "../../UserDataTable";
 import formatTimestamp from "../../../utils/formatTimestamp";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import Swal from "sweetalert2";
@@ -28,7 +28,6 @@ export default function StudentTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-
             <p className="text-sm">{jsUcfirst(item.first_name)}</p>
           </div>
         );
@@ -40,7 +39,6 @@ export default function StudentTable({
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-
             <p className="text-sm">{jsUcfirst(item.last_name)}</p>
           </div>
         );
@@ -85,7 +83,6 @@ export default function StudentTable({
       field: "actions",
       headerName: "Thao tác",
       renderCell: (item) => {
-       
         return (
           <div className="flex justify-center items-center text-gray-400 gap-x-4">
             <button
@@ -130,11 +127,7 @@ export default function StudentTable({
         );
       },
     },
-    
   ];
-
-  
-
 
   return (
     <DataTable

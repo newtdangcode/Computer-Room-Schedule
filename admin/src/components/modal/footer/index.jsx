@@ -1,10 +1,11 @@
 import Loading from "../../loading";
 
-export default function ModalFooter({ title, isLoading }) {
+export default function ModalFooter({ title, isLoading, onSubmit }) {
  
   return (
     
     <div className="flex items-center justify-center  h-[100px] bottom-0 bg-[#F9FAFB] p-[20px] ">
+      <button onClick={onSubmit} >
       <label
         htmlFor="send"
         className={`${
@@ -13,6 +14,8 @@ export default function ModalFooter({ title, isLoading }) {
       >
         {isLoading ? <Loading size={30} /> : title}
       </label>
+      </button>
+      
     </div>
   );
 }

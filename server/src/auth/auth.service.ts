@@ -71,44 +71,49 @@ export class AuthService {
     }
 
     async employeeRegister(registerEmployeeDto:RegisterEmployeeDto) {
-        const hashPassword = await this.hashPassword(registerEmployeeDto.password);
-        const account = {
-            username: registerEmployeeDto.username,
-            password: hashPassword,
-            refresh_token: null,
-            email: registerEmployeeDto.email,
-            role_id: {id: registerEmployeeDto.role_id}
-        };
-
-        const checkExistUsername = await this.accountRepository.findOneBy({
-            username: account.username,
-        });
-        const checkExistEmail = await this.accountRepository.findOneBy({
-            email: account.email,
-        });
-        const checkExistCode = await this.employeeRepository.findOneBy({
-            code: registerEmployeeDto.code,
-        });
-
-        if(checkExistUsername) {
-            throw new HttpException('Username is exist', HttpStatus.BAD_REQUEST);
-        } else if(checkExistEmail) {
-            throw new HttpException('Email is exist', HttpStatus.BAD_REQUEST);
-        } else if(checkExistCode) {
-            throw new HttpException('Employee code is exist', HttpStatus.BAD_REQUEST);
-        } else {
-            const accountCreated = await this.accountRepository.save(account);
-            const user = {
-                code: registerEmployeeDto.code,
-                first_name: registerEmployeeDto.first_name,
-                last_name: registerEmployeeDto.last_name,
-                phone_number: registerEmployeeDto.phone_number,
-                account_id: {id: accountCreated.id}
+        try{
+            const hashPassword = await this.hashPassword(registerEmployeeDto.password);
+            const account = {
+                username: registerEmployeeDto.username,
+                password: hashPassword,
+                refresh_token: null,
+                email: registerEmployeeDto.email,
+                role_id: {id: registerEmployeeDto.role_id}
             };
-            const userCreated = await this.employeeRepository.save(user);
-            const data = {...accountCreated,...userCreated};
-            return data;
+
+            const checkExistUsername = await this.accountRepository.findOneBy({
+                username: account.username,
+            });
+            const checkExistEmail = await this.accountRepository.findOneBy({
+                email: account.email,
+            });
+            const checkExistCode = await this.employeeRepository.findOneBy({
+                code: registerEmployeeDto.code,
+            });
+
+            if(checkExistUsername) {
+                throw new HttpException('Username đã tồn tại', HttpStatus.BAD_REQUEST);
+            } else if(checkExistEmail) {
+                throw new HttpException('Email đã tồn tại', HttpStatus.BAD_REQUEST);
+            } else if(checkExistCode) {
+                throw new HttpException('Mã nhân viên đã tồn tại', HttpStatus.BAD_REQUEST);
+            } else {
+                const accountCreated = await this.accountRepository.save(account);
+                const user = {
+                    code: registerEmployeeDto.code,
+                    first_name: registerEmployeeDto.first_name,
+                    last_name: registerEmployeeDto.last_name,
+                    phone_number: registerEmployeeDto.phone_number,
+                    account_id: {id: accountCreated.id}
+                };
+                const userCreated = await this.employeeRepository.save(user);
+                const data = {...accountCreated,...userCreated};
+                return data;
+            }
+        } catch(error) {
+            throw new HttpException(error.message, error.status);
         }
+        
         
     }
 
@@ -161,38 +166,52 @@ export class AuthService {
         });
     }
     async accountUpdate(updateAccountDto:UpdateAccountDto, id:number) {
-        const account = await this.getOneAccountById(id)
-        if(account){
-            if(updateAccountDto.password) {
-                updateAccountDto.password = await this.hashPassword(updateAccountDto.password);
-            }
+        try {
+            const account = await this.getOneAccountById(id)
+            if(account){
+                if(updateAccountDto.password) {
+                    updateAccountDto.password = await this.hashPassword(updateAccountDto.password);
+                }
 
-            let checkExistUsername = null;
-            if(updateAccountDto.username) {
-                checkExistUsername = await this.accountRepository.findOneBy({
-                    username: updateAccountDto.username,
-                });
-            }
-            let checkExistEmail = null;
-            if(updateAccountDto.email) {
-                checkExistEmail = await this.accountRepository.findOneBy({
-                    email: updateAccountDto.email,
-                });
+                let checkExistUsername = null;
+                if(updateAccountDto.username) {
+                    checkExistUsername = await this.accountRepository.findOneBy({
+                        username: updateAccountDto.username,
+                    });
+                }
+                let checkExistEmail = null;
+                if(updateAccountDto.email) {
+                    checkExistEmail = await this.accountRepository.findOneBy({
+                        email: updateAccountDto.email,
+                    });
+                    
+                }
                 
-            }
-            
-            
-            if(checkExistUsername&&checkExistUsername.id!==account.id) {
-                throw new HttpException('Username is exist', HttpStatus.BAD_REQUEST);
-            } else if(checkExistEmail&&checkExistEmail.id!==account.id) {
-                throw new HttpException('Email is exist', HttpStatus.BAD_REQUEST);
-            } else {
-                await this.accountRepository.update(id, updateAccountDto);
-            }
+                
+                if(checkExistUsername&&checkExistUsername.id!==account.id) {
+                    throw new HttpException('Username đã tồn tại', HttpStatus.BAD_REQUEST);
+                } else if(checkExistEmail&&checkExistEmail.id!==account.id) {
+                    throw new HttpException('Email đã tồn tại', HttpStatus.BAD_REQUEST);
+                } else {
+                    const is_active = updateAccountDto.acc_is_active;
+                    delete updateAccountDto.acc_is_active;
+                    let updateDto = {};
+                    if(is_active!==undefined) {
+                        updateDto = {...updateAccountDto, is_active};
+                    }else{
+                        updateDto = updateAccountDto;
+                    }
+                    await this.accountRepository.update(id, updateDto);
 
-        } else {
-            throw new HttpException('Id of account is not exist',HttpStatus.BAD_REQUEST);
+                }
+
+            } else {
+                throw new HttpException('Id of account is not exist',HttpStatus.BAD_REQUEST);
+            }
+        }catch(error){
+            throw new HttpException(error.message, error.status);
         }
+        
 
     }
 

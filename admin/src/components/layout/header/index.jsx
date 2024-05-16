@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import ProfileAvatar from "../../profileAvatar";
 import NotificationList from "../../notification/NotificationList";
 import styles from "./styles.module.css";
+import { Link } from "react-router-dom";
 
 export default function Header() {
   const [isDropdown, setIsDropdown] = useState(false);
@@ -38,7 +39,15 @@ export default function Header() {
   return (
     <header className={`${styles.header} bg-bgSecondary`}>
       <ul className="flex items-center cursor-pointer">
-        <li ref={notificationsRef} className=" relative ml-6 text-textSecondary" onClick={handleDropdownMenu}>
+        <li className="text-primary font-[800] text-[24px] ">
+          <Link to="/" className="cursor-pointer">
+            PTITHCM Computer Room Schedule
+          </Link>
+        </li>
+      </ul>
+      <ul className="flex items-center cursor-pointer">
+        
+        <li ref={notificationsRef} className=" relative ml-8 text-textSecondary" onClick={handleDropdownMenu}>
           <IconNotification />
           <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 flex items-center justify-center">
             <p className="text-xs text-white font-semibold">{unreadNotifications}</p>
@@ -46,9 +55,12 @@ export default function Header() {
           {isDropdown && <NotificationList notifications={notifications} />}
         </li>
 
-        <li className="ml-6 flex items-center gap-x-2 text-textSecondary">
-        <p className="text-primary">Hello {currentUser?.last_name}!</p>
-          <ProfileAvatar />
+        <li className="ml-8">
+          <Link to="/setting" className="cursor-pointer  flex items-center gap-x-1 text-textSecondary">
+            <ProfileAvatar />
+            <p className="text-primary">Hello {currentUser?.last_name}!</p>
+          </Link>
+          
           
         </li>
       </ul>

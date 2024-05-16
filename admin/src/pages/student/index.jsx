@@ -175,8 +175,6 @@ export default function Student() {
           <div className="flex justify-end items-center py-3 gap-x-4">
             {isShowDeletedTable ? (
               <React.Fragment>
-                
-
                 <button
                   disabled={isSelected.length <= 0}
                   onClick={() => {
@@ -390,7 +388,7 @@ export default function Student() {
             </div> */}
             {isShowDeletedTable ? (
               <button
-              className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
+                className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
               transition-colors duration-150 font-medium px-10 py-2 rounded-lg text-sm 
               text-white bg-red-500 hover:bg-red-700 border border-transparent"
                 onClick={() => {

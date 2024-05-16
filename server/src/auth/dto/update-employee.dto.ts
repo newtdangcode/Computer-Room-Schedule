@@ -19,5 +19,8 @@ export class UpdateEmployeeDto {
     
     @IsOptional()
     phone_number: string;
+
+    @IsOptional()
+    is_active: boolean;
     
 }

@@ -13,7 +13,7 @@ import { Pagination } from 'src/helpers/decorators/paginationParams';
 import { Sorting } from 'src/helpers/decorators/sortingParams';
 import { Filtering } from 'src/helpers/decorators/filteringParams';
 import { PaginatedResource } from 'src/auth/dto/paginated-resource.dto';
-import { getOrder, getWhere } from 'src/helpers/typeOrmHelpers';
+import { getOrder, getWhere } from 'src/helpers/features';
 @Injectable()
 export class EmployeeService {
     constructor(
@@ -24,14 +24,18 @@ export class EmployeeService {
 
     
     async getAll( 
-        { page, limit, offset }: Pagination,
+        { page=0, limit=10, offset }: Pagination,
         sort?: Sorting,
-        filter?: Filtering,
+        filter?: Filtering[],
     ): Promise<PaginatedResource<Partial<Employee>>> {
-        const where = getWhere(filter);
+        let where: any = getWhere(filter);
+
+        // Gộp các điều kiện trong mảng where bằng toán tử AND
+        where = where.reduce((prev, cur) => ({ ...prev, ...cur }), {});
         const order = getOrder(sort);
         const [employees, total] = await this.employeeRepository.findAndCount({
             where,
+            relations: {account_id:{role_id:true}},
             order,
             take: limit,
             skip: offset,
@@ -39,7 +43,9 @@ export class EmployeeService {
         const lastPage = Math.ceil(total / limit);
         const nextPage = page < lastPage ? page + 1 : null;
         const prevPage = page > 0 ? page - 1 : null;
-
+        employees.map((employee) => {
+            delete employee.account_id.password;
+        });
         return {
             data: employees,
             total,
@@ -58,7 +64,7 @@ export class EmployeeService {
             where: {
                 code: code,
             },
-            relations: ['account_id']
+            relations: {account_id:{role_id:true}}
         });
        
         if(employeeAccount){
@@ -97,21 +103,15 @@ export class EmployeeService {
     }
 
     async update(updateEmployeeDto: UpdateEmployeeDto, code:string) {
-        
+        //console.log('updateEmployeeDto', updateEmployeeDto, 'code', code);
         const employee = await this.getOneByCode(code);
         const id = employee.account_id.id;
+        const {first_name, last_name, phone_number, is_active} = updateEmployeeDto;
         const {username, password, email} = updateEmployeeDto;
         let updateAccountDto:UpdateAccountDto;
-        updateAccountDto = {username, password, email};
+        updateAccountDto = {username, password, email, acc_is_active: is_active};
         await this.authService.accountUpdate(updateAccountDto, id);
-
-        // delete updateEmployeeDto.username;
-        // delete updateEmployeeDto.password;
-        // delete updateAccountDto.email;
-        const {first_name, last_name, phone_number} = updateEmployeeDto;
-
-
-        await this.employeeRepository.update(code, {first_name, last_name, phone_number});
+        await this.employeeRepository.update(code, {first_name, last_name, phone_number, is_active});
 
         return await this.getOneByCode(code);
         
