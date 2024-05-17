@@ -30,7 +30,7 @@ export default function AddModalEmployee({ closeModal, title, titleBtnFooter, ha
     username: yup
       .string()
       .required("Vui lòng nhập tên tài khoản của bạn.")
-      .min(6, "Tên tài khoản có ít nhất 6 kí tự.")
+      .min(8, "Tên tài khoản có ít nhất 8 kí tự.")
       .max(30, "Tên tài khoản không dài hơn 30 kí tự."),
     password: yup.string().required("Vui lòng nhập mật khẩu của bạn.").min(8, "Mật khẩu có ít nhất 8 kí tự."),
     passwordConfirm: yup

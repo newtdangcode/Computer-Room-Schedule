@@ -5,13 +5,13 @@ import { Account } from 'src/entities/account.entity';
 import { Repository } from 'typeorm';
 import { Employee } from 'src/entities/employee.entity';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { CreateEmployeeDto } from 'src/auth/dto/create-employee.dto';
-import { UpdateEmployeeDto } from 'src/auth/dto/update-employee.dto';
-import { UpdateManyEmployeeDto } from 'src/auth/dto/update-many-employee.dto';
+import { CreateEmployeeDto } from 'src/dto/create-employee.dto';
+import { UpdateEmployeeDto } from 'src/dto/update-employee.dto';
+import { UpdateManyEmployeeDto } from 'src/dto/update-many-employee.dto';
 import { Pagination, PaginationParams } from 'src/helpers/decorators/paginationParams';
 import { Sorting, SortingParams } from 'src/helpers/decorators/sortingParams';
 import { Filtering, FilteringParams } from 'src/helpers/decorators/filteringParams';
-import { PaginatedResource } from 'src/auth/dto/paginated-resource.dto';
+import { PaginatedResource } from 'src/dto/paginated-resource.dto';
 
 @UseGuards(AuthGuard)
 @Controller('api/v1/employee')
@@ -24,11 +24,22 @@ export class EmployeeController {
     async getAll( 
             @PaginationParams() paginationParams: Pagination,
             @SortingParams(['first_name', 'last_name', 'code', 'is_active', 'created_at', 'updated_at']) sort?: Sorting,
-            @FilteringParams(['first_name', 'last_name', 'code', 'is_active', 'created_at', 'updated_at']) filter?: Filtering[]
+            @FilteringParams(['first_name', 'last_name', 'code', 'is_active', 'created_at', 'updated_at', 'account_id.role_id.id']) filter?: Filtering[],
         ): Promise<PaginatedResource<Partial<Employee>>> {
         console.log('employee get all api...');
         return await this.employeeService.getAll(paginationParams, sort, filter);
     }
+    @Get('get-all-without/:code')
+    async getAllWithout( 
+        @Param('code') code: string,
+        @PaginationParams() paginationParams: Pagination,
+        @SortingParams(['first_name', 'last_name', 'code', 'is_active', 'created_at', 'updated_at']) sort?: Sorting,
+        @FilteringParams(['first_name', 'last_name', 'code', 'is_active', 'created_at', 'updated_at', 'account_id.role_id.id']) filter?: Filtering[],
+    ): Promise<PaginatedResource<Partial<Employee>>> {
+    console.log('employee get all api...');
+    return await this.employeeService.getAll(paginationParams, sort, filter, code);
+
+}
     
 
     @Get('get-one-by-code/:code')

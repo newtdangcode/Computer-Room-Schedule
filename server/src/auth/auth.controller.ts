@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Body, UsePipes, ValidationPipe, UseGuards, Res, UnauthorizedException, Header, Headers } from '@nestjs/common';
-import { RegisterEmployeeDto } from './dto/register-employee.dto';
-import { LoginEmployeeDto } from './dto/login-employee.dto';
+import { RegisterEmployeeDto } from '../dto/register-employee.dto';
+import { LoginEmployeeDto } from '../dto/login-employee.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { access } from 'fs';

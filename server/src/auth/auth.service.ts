@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable, UnauthorizedException, forwardRef } from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import { RegisterEmployeeDto } from './dto/register-employee.dto';
-import { LoginEmployeeDto } from './dto/login-employee.dto';
+import { RegisterEmployeeDto } from '../dto/register-employee.dto';
+import { LoginEmployeeDto } from '../dto/login-employee.dto';
 import { promises } from 'dns';
 import { Account } from 'src/entities/account.entity';
 import { Employee } from 'src/entities/employee.entity';
@@ -10,7 +10,7 @@ import * as bycrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { EmployeeService } from 'src/employee/employee.service';
-import { UpdateAccountDto } from './dto/update-account.dto';
+import { UpdateAccountDto } from '../dto/update-account.dto';
 @Injectable()
 export class AuthService {
     constructor(

@@ -7,10 +7,8 @@ import { IconBin, IconAdd, IconDelete, IconBack, IconRestore } from "../../compo
 import PageLayout from "../../components/layout/pageLayout";
 import employeeAPI from "../../api/employeeAPI";
 import { useSelector } from "react-redux";
-import lecturerAPI from "../../api/lecturerAPI";
 import AddModalEmployee from "../../components/employee/employeeAddModal";
 import EditModalEmployee from "../../components/employee/employeeEditModal/index";
-import { set } from "react-hook-form";
 
 export default function Employee() {
   const [employees, setEmployees] = useState([]);
@@ -19,7 +17,10 @@ export default function Employee() {
   const [isShowEmployeeDeletedTable, setIsShowEmployeeDeletedTable] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPageCount, setTotalPageCount] = useState(0);
-  const [limitPerPage, setLimitPerPage] = useState(10);
+  const [limitPerPage, setLimitPerPage] = useState(5);
+  const [nextPage, setNextPage] = useState();
+  const [prevPage, setPrevPage] = useState();
+  const [lastPage, setLastPage] = useState();
   const currentUser = useSelector((state) => state.auth.currentUser);
   const [sortValue, setSortValue] = useState("");
   const [isShowAddModal, setIsShowAddModal] = useState(false);
@@ -76,12 +77,14 @@ export default function Employee() {
       params.is_active = true;
     }
     try {
-      const response = await employeeAPI.getAll(params);
+      const response = await employeeAPI.getAllWithoutCode(currentUser.code ,params);
       if (response.data.length === 0 && response.currentPage !== 1 && response.currentPage > 0) {
         setCurrentPage(response.currentPage - 1);
       }
-      setEmployees(response.data.filter((employee) => employee.code !== currentUser.code));
-      setTotalPageCount(response.totalPages);
+      setEmployees(response.data);
+      setTotalPageCount(response.lastPage);
+      setNextPage(response.nextPage);
+      setPrevPage(response.prevPage);
     } catch (err) {
       console.log(err);
     }
@@ -368,6 +371,8 @@ export default function Employee() {
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
             totalPageCount={totalPageCount}
+            nextPage={nextPage}
+            prevPage={prevPage}
             limitPerPage={limitPerPage}
             setLimitPerPage={setLimitPerPage}
             currentUser={currentUser}
@@ -387,6 +392,8 @@ export default function Employee() {
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
             totalPageCount={totalPageCount}
+            nextPage={nextPage}
+            prevPage={prevPage}
             limitPerPage={limitPerPage}
             setLimitPerPage={setLimitPerPage}
             currentUser={currentUser}

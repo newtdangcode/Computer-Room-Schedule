@@ -3,17 +3,18 @@ import { Employee } from 'src/entities/employee.entity';
 import { Repository } from 'typeorm';
 import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import { CreateEmployeeDto } from 'src/auth/dto/create-employee.dto';
+import { CreateEmployeeDto } from 'src/dto/create-employee.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from 'src/auth/auth.service';
-import { UpdateEmployeeDto } from 'src/auth/dto/update-employee.dto';
-import { UpdateAccountDto } from 'src/auth/dto/update-account.dto';
-import { UpdateManyEmployeeDto } from 'src/auth/dto/update-many-employee.dto';
+import { UpdateEmployeeDto } from 'src/dto/update-employee.dto';
+import { UpdateAccountDto } from 'src/dto/update-account.dto';
+import { UpdateManyEmployeeDto } from 'src/dto/update-many-employee.dto';
 import { Pagination } from 'src/helpers/decorators/paginationParams';
 import { Sorting } from 'src/helpers/decorators/sortingParams';
 import { Filtering } from 'src/helpers/decorators/filteringParams';
-import { PaginatedResource } from 'src/auth/dto/paginated-resource.dto';
+import { PaginatedResource } from 'src/dto/paginated-resource.dto';
 import { getOrder, getWhere } from 'src/helpers/features';
+import { Not } from 'typeorm';
 @Injectable()
 export class EmployeeService {
     constructor(
@@ -27,9 +28,12 @@ export class EmployeeService {
         { page=0, limit=10, offset }: Pagination,
         sort?: Sorting,
         filter?: Filtering[],
+        code?: string
     ): Promise<PaginatedResource<Partial<Employee>>> {
         let where: any = getWhere(filter);
-
+        if(code){
+            where = [...where, {code: Not(code)}];
+        }
         // Gộp các điều kiện trong mảng where bằng toán tử AND
         where = where.reduce((prev, cur) => ({ ...prev, ...cur }), {});
         const order = getOrder(sort);

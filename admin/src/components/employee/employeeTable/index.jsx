@@ -14,6 +14,8 @@ export default function EmployeeTable({
   handleSelected,
   currentPage,
   setCurrentPage,
+  nextPage,
+  prevPage,
   totalPageCount,
   limitPerPage,
   setLimitPerPage,
@@ -149,6 +151,8 @@ export default function EmployeeTable({
       handleSelected={handleSelected}
       handleSelectAll={handleSelectAll}
       currentPage={currentPage}
+      nextPage={nextPage}
+      prevPage={prevPage}
       setCurrentPage={setCurrentPage}
       totalPageCount={totalPageCount}
       limitPerPage={limitPerPage}

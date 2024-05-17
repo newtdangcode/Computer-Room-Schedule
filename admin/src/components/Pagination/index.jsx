@@ -8,6 +8,8 @@ export default function Pagination({
   siblingCount = 1,
   currentPage,
   limitPerPage,
+  nextPage,
+  prevPage,
   setLimitPerPage,
 }) {
   const paginationRange = usePagination({
@@ -16,16 +18,18 @@ export default function Pagination({
     siblingCount,
   });
 
-  if (currentPage === 0) {
+  if (currentPage === -1) {
     return null;
   }
 
   const onNext = () => {
-    onPageChange(currentPage + 1);
+    if(nextPage){onPageChange(currentPage + 1);}
+    
   };
 
   const onPrevious = () => {
-    onPageChange(currentPage - 1);
+    if(prevPage){onPageChange(currentPage - 1);}
+
   };
 
   let lastPage = paginationRange[paginationRange.length - 1];
@@ -40,6 +44,7 @@ export default function Pagination({
             defaultValue={limitPerPage}
             onChange={(e) => setLimitPerPage(e.target.value)}
           >
+            <option value={5}>5 kết quả</option>
             <option value={10}>10 kết quả</option>
             <option value={15}>15 kết quả</option>
             <option value={20}>20 kết quả</option>
@@ -47,8 +52,8 @@ export default function Pagination({
         </p>
         <div className="flex items-center justify-center my-[10px]">
           <button
-            className={`text-base px-[10px] h-3 ${currentPage === 1 ? "cursor-not-allowed" : ""}`}
-            disabled={currentPage === 1}
+            className={`text-base px-[10px] h-3 `}
+            disabled={currentPage === 0}
             onClick={onPrevious}
           >
             <IconPrevious />
@@ -57,13 +62,13 @@ export default function Pagination({
             {paginationRange.map((pageNumber) => {
               // If the pageItem is a DOT, render the DOTS unicode character
               if (pageNumber === DOTS) {
-                return <li key={pageNumber}>&#8230;</li>;
+                return <li key={pageNumber-1}>&#8230;</li>;
               }
 
               // Render our Page Pills
               return (
-                <li key={pageNumber} onClick={() => onPageChange(pageNumber)}>
-                  <span className={`${pageNumber === currentPage ? `${styles.currentNumberPage}` : ""}`}>
+                <li key={pageNumber-1} onClick={() => onPageChange(pageNumber-1)}>
+                  <span className={`${pageNumber-1 === currentPage ? `${styles.currentNumberPage}` : ""}`}>
                     {pageNumber}
                   </span>
                 </li>
@@ -71,8 +76,8 @@ export default function Pagination({
             })}
           </ul>
           <button
-            className={`text-base px-[10px] h-3 ${currentPage === lastPage ? "cursor-not-allowed" : ""}`}
-            disabled={currentPage === lastPage}
+            className={`text-base px-[10px] h-3 `}
+            disabled={currentPage === lastPage-1}
             onClick={onNext}
           >
             <IconNext />

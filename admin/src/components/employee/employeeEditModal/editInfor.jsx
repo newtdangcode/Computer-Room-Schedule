@@ -1,65 +1,96 @@
-import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Link } from "react-router-dom";
 
 import Drawer from "../../modal/drawer";
 import ModalHeader from "../../modal/header";
 import ModalFooter from "../../modal/footer";
 import { IconUploadFile, IconEye, IconEyeClose } from "../../icon";
-import { useForm } from "react-hook-form";
+import styles from "./styles.module.css";
 import yup from "../../../utils/yupGlobal";
 import toastMessage from "../../../utils/toastMessage";
-import styles from "./styles.module.css";
-export default function EditInfor({ employee, handleUpdateEmployee, setIsLoading, closeModal }) {
-    
-    
-  
-    const schema = yup.object().shape({
-        first_name: yup.string().required("Vui lòng nhập họ của bạn"),
-        last_name: yup.string().required("Vui lòng nhập tên của bạn"),  
-        phone_number: yup
-        .string()
-        .required("Vui lòng nhập số điện thoại của bạn.")
-        .phone("Vui lòng nhập đúng định dạng số điện thoại."),
-        role_id: yup.string().required("Vui lòng chọn chức vụ."),
-    });
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-      } = useForm({
-        resolver: yupResolver(schema),
-      });
 
-      const onSubmit = async (data) => {
-        //event.preventDefault();
-        //console.log("submit ok");
-        try {
-          console.log(data);
-          setIsLoading(true);
-          
-          await handleUpdateEmployee(employee.code, data);
-          toastMessage({ type: "success", message: "Cập nhật nhân viên thành công." });
-          closeModal();
-        } catch (error) {
-          const errorMessage = error.response.data.message;
-          console.log(error);
-          toastMessage({ type: "error", message: `Cập nhật nhân viên thất bại. ${errorMessage}.` });
-        } finally {
-          setIsLoading(false);
-        }
-      };
-    return(
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div className={`${styles.item} flex`}>
+export default function EditInfor({
+  employee,
+  title,
+  titleBtnFooter,
+  handleUpdateEmployee,
+  isEditInfor,
+  setIsEditInfor,
+  closeModal,
+  haveCloseModal = true,
+}) {
+  const schema = yup.object().shape({
+    first_name: yup.string().required("Vui lòng nhập họ của bạn."),
+    last_name: yup.string().required("Vui lòng nhập tên của bạn."),
+    phone_number: yup
+      .string()
+      .required("Vui lòng nhập số điện thoại của bạn.")
+      .phone("Vui lòng nhập đúng định dạng số điện thoại."),
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit = async (data) => {
+    try {
+      setIsLoading(true);
+      handleUpdateEmployee(employee.code, data);
+      toastMessage({ type: "success", message: "Cập nhật thành công." });
+    } catch (error) {
+      toastMessage({ type: "error", message: `Cập nhật thất bại. ${error}.` });
+    } finally {
+      setIsLoading(false);
+      closeModal();
+    }
+  };
+
+  return (
+    <>
+      <Drawer isFullWidth={haveCloseModal} closeModal={closeModal} title={title} titleBtnFooter={titleBtnFooter}>
+        {haveCloseModal ? <ModalHeader closeModal={closeModal} title={title} /> : null}
+
+        <div className={`h-full mt-[20px] ${haveCloseModal?"overflow-y-scroll grow":""}`}>
+          <div className="w-full h-[30px] flex">
+            <button
+              onClick={(e) => {
+                setIsEditInfor(!isEditInfor);
+              }}
+              className={`ml-[30px] text-[18px] ${
+                isEditInfor ? "underline cursor-none text-primary " : "text-black hover:text-[20px]"
+              }`}
+            >
+              Thông tin
+            </button>
+            <button
+              onClick={(e) => {
+                setIsEditInfor(!isEditInfor);
+              }}
+              className={`ml-[30px] text-[18px] ${
+                !isEditInfor ? "underline cursor-none text-primary" : "text-black hover:text-[20px]"
+              }`}
+            >
+              Tài khoản
+            </button>
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className={`${styles.item}`}>
               <div className="w-1/3 text-sm text-gray-700 font-medium dark:text-gray-400">
                 <label>Họ</label>
               </div>
-              <div className="flex flex-col w-2/3 ">
+              <div className="flex flex-col w-2/3">
                 <input
-                  type="text"
                   defaultValue={employee.first_name}
+                  type="text"
                   placeholder="Nhập họ"
-                  className={`  ${
+                  className={`${
                     errors.first_name ? "border-red-500" : ""
                   } block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none`}
                   {...register("first_name")}
@@ -67,55 +98,60 @@ export default function EditInfor({ employee, handleUpdateEmployee, setIsLoading
                 {errors.first_name && <p className="text-red-500 text-sm">{`*${errors.first_name.message}`}</p>}
               </div>
             </div>
-            <div className={`${styles.item} flex`}>
+            <div className={`${styles.item}`}>
               <div className="w-1/3 text-sm text-gray-700 font-medium dark:text-gray-400">
                 <label>Tên</label>
               </div>
-              <div className="flex flex-col w-2/3 ">
+              <div className="flex flex-col w-2/3">
                 <input
-                  type="text"
                   defaultValue={employee.last_name}
+                  type="text"
                   placeholder="Nhập tên"
-                  className={`  ${
-                    errors.last_name ? "border-red-500" : ""
+                  className={`${
+                    errors.name ? "border-red-500" : ""
                   } block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none`}
                   {...register("last_name")}
                 />
                 {errors.last_name && <p className="text-red-500 text-sm">{`*${errors.last_name.message}`}</p>}
               </div>
             </div>
-            <div className={`${styles.item} flex`}>
+
+            <div className={`${styles.item}`}>
               <div className="w-1/3 text-sm text-gray-700 font-medium dark:text-gray-400">
-                <label>Mã nhân viên</label>
+                <label>Số điện thoại</label>
               </div>
-              <div className="flex flex-col w-2/3 ">
+              <div className="flex flex-col w-2/3">
                 <input
-                  type="text"
-                  defaultValue={employee.code}
-                  readOnly
-                  className={`  ${
-                    errors.code ? "border-red-500" : ""
+                  defaultValue={employee.phone_number}
+                  type="tel"
+                  placeholder="Nhập SĐT"
+                  className={`${
+                    errors.phone ? "border-red-500" : ""
                   } block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none`}
-                  
+                  {...register("phone_number")}
                 />
+                {errors.phone_number && <p className="text-red-500 text-sm">{`*${errors.phone_number.message}`}</p>}
               </div>
             </div>
-            <div className={`${styles.item} flex`}>
+            <div className={`${styles.item}`}>
               <div className="w-1/3 text-sm text-gray-700 font-medium dark:text-gray-400">
                 <label>Chức vụ</label>
               </div>
-              <div className="flex flex-col w-2/3 ">
+              <div className="flex flex-col w-2/3">
                 <select
-                  {...register("role_id")}
+                  defaultValue={employee.role_id}
                   className="block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none"
+                  {...register("role_id")}
                 >
-                  
-                  <option value={2}>Nhân viên</option>
+                  <option value={employee.account_id.role_id.id}>{employee.account_id.role_id.name}</option>
                 </select>
               </div>
             </div>
-            <input type="submit" hidden id="send" />
+            <input type="submit" hidden id="send" disabled={isLoading} />
           </form>
-          
-    )
+        </div>
+        <ModalFooter title={titleBtnFooter} isLoading={isLoading} />
+      </Drawer>
+    </>
+  );
 }

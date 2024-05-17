@@ -24,6 +24,28 @@ const employeeAPI={
     
     return response;
   },
+  getAllWithoutCode: async (code,params) => {
+    
+   
+    params.filter = "is_active:eq:" + params.is_active;
+    
+   // console.log(params.is_active);
+    if(params.search!==""){
+      params.search = removeAccents(params.search);
+      params.filter = params.filter + ",last_name:like:" + params.search;
+    }
+    const access_token = await localStorage.getItem('access_token');
+    
+    const url = `/employee/get-all-without/${code}`;
+    const response = await axios.get(url, {
+      params, 
+      headers: {
+        Authorization: `Bearer ${access_token}`
+      }
+    });
+    
+    return response;
+  },
     
   create: async (data) => {
     const url = "/employee/create";

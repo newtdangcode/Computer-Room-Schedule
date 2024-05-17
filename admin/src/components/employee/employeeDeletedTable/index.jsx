@@ -16,6 +16,8 @@ export default function EmployeeDeletedTable({
   handleSelected,
   currentPage,
   setCurrentPage,
+  nextPage,
+  prevPage,
   totalPageCount,
   limitPerPage,
   setLimitPerPage,
@@ -168,6 +170,8 @@ export default function EmployeeDeletedTable({
       handleSelectAll={handleSelectAll}
       currentPage={currentPage}
       setCurrentPage={setCurrentPage}
+      nextPage={nextPage}
+      prevPage={prevPage}
       totalPageCount={totalPageCount}
       limitPerPage={limitPerPage}
       setLimitPerPage={setLimitPerPage}

@@ -13,6 +13,8 @@ function DataTable({
   handleSelectAll,
   currentPage,
   setCurrentPage,
+  nextPage,
+  prevPage,
   totalPageCount,
   limitPerPage,
   setLimitPerPage,
@@ -89,6 +91,8 @@ function DataTable({
             onPageChange={setCurrentPage}
             totalPageCount={totalPageCount}
             limitPerPage={limitPerPage}
+            nextPage={nextPage}
+            prevPage={prevPage}
             setLimitPerPage={setLimitPerPage}
           />
         </div>
