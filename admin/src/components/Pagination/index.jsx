@@ -18,7 +18,7 @@ export default function Pagination({
     siblingCount,
   });
 
-  if (currentPage === -1) {
+  if (currentPage === 0) {
     return null;
   }
 
@@ -32,7 +32,7 @@ export default function Pagination({
 
   };
 
-  let lastPage = paginationRange[paginationRange.length - 1];
+  let lastPage = paginationRange[paginationRange.length];
 
   return (
     <div className="px-4 py-3 bg-white border-t border-gray-200 text-gray-500">
@@ -53,7 +53,7 @@ export default function Pagination({
         <div className="flex items-center justify-center my-[10px]">
           <button
             className={`text-base px-[10px] h-3 `}
-            disabled={currentPage === 0}
+            disabled={currentPage === 1}
             onClick={onPrevious}
           >
             <IconPrevious />
@@ -67,8 +67,8 @@ export default function Pagination({
 
               // Render our Page Pills
               return (
-                <li key={pageNumber-1} onClick={() => onPageChange(pageNumber-1)}>
-                  <span className={`${pageNumber-1 === currentPage ? `${styles.currentNumberPage}` : ""}`}>
+                <li key={pageNumber} onClick={() => onPageChange(pageNumber)}>
+                  <span className={`${pageNumber === currentPage ? `${styles.currentNumberPage}` : ""}`}>
                     {pageNumber}
                   </span>
                 </li>
@@ -77,7 +77,7 @@ export default function Pagination({
           </ul>
           <button
             className={`text-base px-[10px] h-3 `}
-            disabled={currentPage === lastPage-1}
+            disabled={currentPage === lastPage}
             onClick={onNext}
           >
             <IconNext />

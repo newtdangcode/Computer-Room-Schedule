@@ -23,33 +23,35 @@ export class EmployeeService {
         @InjectRepository(Employee) private employeeRepository:Repository<Employee>,
     ){}
 
-    
-    async getAll( 
-        { page=0, limit=10, offset }: Pagination,
+    async getAll(
+        { page = 1, limit = 10, offset }: Pagination,
         sort?: Sorting,
         filter?: Filtering[],
-        code?: string
     ): Promise<PaginatedResource<Partial<Employee>>> {
+
+        const adjustedOffset = (page - 1) * limit;
+    
         let where: any = getWhere(filter);
-        if(code){
-            where = [...where, {code: Not(code)}];
-        }
-        // Gộp các điều kiện trong mảng where bằng toán tử AND
+        
         where = where.reduce((prev, cur) => ({ ...prev, ...cur }), {});
+    
         const order = getOrder(sort);
         const [employees, total] = await this.employeeRepository.findAndCount({
             where,
-            relations: {account_id:{role_id:true}},
+            relations: { account_id: { role_id: true } },
             order,
             take: limit,
-            skip: offset,
+            skip: adjustedOffset,
         });
+    
         const lastPage = Math.ceil(total / limit);
         const nextPage = page < lastPage ? page + 1 : null;
-        const prevPage = page > 0 ? page - 1 : null;
+        const prevPage = page > 1 ? page - 1 : null;
+    
         employees.map((employee) => {
             delete employee.account_id.password;
         });
+    
         return {
             data: employees,
             total,
@@ -59,8 +61,53 @@ export class EmployeeService {
             prevPage,
             lastPage,
         };
-
     }
+    
+    
+    async getAllWithoutCode(
+        { page = 1, limit = 10, offset }: Pagination,
+        sort?: Sorting,
+        filter?: Filtering[],
+        code?: string
+    ): Promise<PaginatedResource<Partial<Employee>>> {
+        // Adjust the offset calculation to account for 1-based page indexing
+        const adjustedOffset = (page - 1) * limit;
+    
+        let where: any = getWhere(filter);
+        if (code) {
+            where = [...where, { code: Not(code) }];
+        }
+        // Combine conditions in the where array with the AND operator
+        where = where.reduce((prev, cur) => ({ ...prev, ...cur }), {});
+    
+        const order = getOrder(sort);
+        const [employees, total] = await this.employeeRepository.findAndCount({
+            where,
+            relations: { account_id: { role_id: true } },
+            order,
+            take: limit,
+            skip: adjustedOffset,
+        });
+    
+        const lastPage = Math.ceil(total / limit);
+        const nextPage = page < lastPage ? page + 1 : null;
+        const prevPage = page > 1 ? page - 1 : null;
+    
+        employees.map((employee) => {
+            delete employee.account_id.password;
+        });
+    
+        return {
+            data: employees,
+            total,
+            limit,
+            currentPage: page,
+            nextPage,
+            prevPage,
+            lastPage,
+        };
+    }
+    
 
     async getOneByCode(code: string){
         

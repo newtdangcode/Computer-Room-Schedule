@@ -15,7 +15,7 @@ export default function Employee() {
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [isSelected, setIsSelected] = useState([]);
   const [isShowEmployeeDeletedTable, setIsShowEmployeeDeletedTable] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalPageCount, setTotalPageCount] = useState(0);
   const [limitPerPage, setLimitPerPage] = useState(5);
   const [nextPage, setNextPage] = useState();
@@ -78,7 +78,7 @@ export default function Employee() {
     }
     try {
       const response = await employeeAPI.getAllWithoutCode(currentUser.code ,params);
-      if (response.data.length === 0 && response.currentPage !== 1 && response.currentPage > 0) {
+      if (response.data.length === 0 && response.currentPage !== 1 && response.currentPage > 1) {
         setCurrentPage(response.currentPage - 1);
       }
       setEmployees(response.data);

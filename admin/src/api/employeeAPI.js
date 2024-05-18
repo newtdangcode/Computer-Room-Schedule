@@ -12,8 +12,10 @@ const employeeAPI={
       params.search = removeAccents(params.search);
       params.filter = params.filter + ",last_name:like:" + params.search;
     }
+   
     const access_token = await localStorage.getItem('access_token');
-    
+    delete params.is_active;
+    delete params.search;
     const url = "/employee/get-all";
     const response = await axios.get(url, {
       params, 
@@ -35,7 +37,8 @@ const employeeAPI={
       params.filter = params.filter + ",last_name:like:" + params.search;
     }
     const access_token = await localStorage.getItem('access_token');
-    
+    delete params.is_active;
+    delete params.search;
     const url = `/employee/get-all-without/${code}`;
     const response = await axios.get(url, {
       params, 

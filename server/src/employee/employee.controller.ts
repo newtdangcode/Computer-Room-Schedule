@@ -37,7 +37,7 @@ export class EmployeeController {
         @FilteringParams(['first_name', 'last_name', 'code', 'is_active', 'created_at', 'updated_at', 'account_id.role_id.id']) filter?: Filtering[],
     ): Promise<PaginatedResource<Partial<Employee>>> {
     console.log('employee get all api...');
-    return await this.employeeService.getAll(paginationParams, sort, filter, code);
+    return await this.employeeService.getAllWithoutCode(paginationParams, sort, filter, code);
 
 }
     
