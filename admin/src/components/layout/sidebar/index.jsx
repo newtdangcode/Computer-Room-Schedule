@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogoutUser } from "../../../features/auth/authSlice";
 import authAPI from "../../../api/authAPI";
-import NavItem from "../../navItem";
+import NavItem from "../navItem";
 import { IconLogout } from "../../icon";
 import { adminNavigation, employeeNavigation } from "../../../utils/navigation";
 import { USER_ROLES } from "../../../utils/Constant";

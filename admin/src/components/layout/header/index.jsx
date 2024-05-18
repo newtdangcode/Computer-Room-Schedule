@@ -58,7 +58,7 @@ export default function Header() {
         <li className="ml-8">
           <Link to="/setting" className="cursor-pointer  flex items-center gap-x-1 text-textSecondary">
             <ProfileAvatar />
-            <p className="text-primary">Hello {currentUser?.last_name}!</p>
+            <p className="text-primary">Xin chào {currentUser?.last_name}!</p>
           </Link>
           
           

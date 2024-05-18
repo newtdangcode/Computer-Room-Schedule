@@ -7,7 +7,8 @@ import {
   IconEmployee,
   IconStudent,
   IconClock,
-  IconList
+  IconList,
+  IconClass
 } from "../components/icon";
 
 const adminNavigation = [
@@ -35,6 +36,11 @@ const adminNavigation = [
     title: "Môn học",
     path: "/subjects",
     icon: IconList,
+  },
+  {
+    title: "Lớp học",
+    path: "/class",
+    icon: IconClass,
   },
   {
     title: "Sinh viên",
@@ -83,6 +89,11 @@ const employeeNavigation = [
     title: "Môn học",
     path: "/subjects",
     icon: IconList,
+  },
+  {
+    title: "Lớp học",
+    path: "/class",
+    icon: IconClass,
   },
   {
     title: "Sinh viên",

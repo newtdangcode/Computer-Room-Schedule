@@ -7,6 +7,7 @@ import Lecturer from "../pages/lecturer";
 import Employee from "../pages/employee";
 import Subject from "../pages/subject";
 import Setting from "../pages/setting";
+import Class from "../pages/class";
 const adminRouter = [
   {
     path: "",
@@ -27,6 +28,10 @@ const adminRouter = [
   {
     path: "/subjects",
     element: Subject,
+  },
+  {
+    path: "/class",
+    element: Class,
   },
   {
     path: "/students",
@@ -66,6 +71,10 @@ const employeeRouter = [
   {
     path: "/subjects",
     element: Subject,
+  },
+  {
+    path: "/class",
+    element: Class,
   },
   {
     path: "/students",

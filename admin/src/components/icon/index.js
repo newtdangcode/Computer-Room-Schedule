@@ -44,3 +44,4 @@ export { default as IconDownload } from "./download";
 export { default as IconProfileAvatar } from "./profileAvatar";
 export { default as IconClock } from "./clock";
 export { default as IconList } from "./list";
+export { default as IconClass } from "./class";

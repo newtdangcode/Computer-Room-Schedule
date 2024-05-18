@@ -11,6 +11,7 @@ import { Employee } from './entities/employee.entity';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { EmployeeModule } from './employee/employee.module';
+import { ClassModule } from './class/class.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { EmployeeModule } from './employee/employee.module';
     ConfigModule,
     AuthModule,
     EmployeeModule,
+    ClassModule,
 
   ],
   controllers: [AppController],
