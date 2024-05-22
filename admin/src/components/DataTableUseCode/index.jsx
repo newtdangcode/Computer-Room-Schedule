@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { IconPrevious, IconNext } from "../icon";
 import styles from "./styles.module.css";
 import Pagination from "../Pagination";
-function DataTable({
+function DataTableUseCode({
   columnData,
   rowData = [],
   select = false,
@@ -101,4 +101,4 @@ function DataTable({
   );
 }
 
-export default React.memo(DataTable);
+export default React.memo(DataTableUseCode);

@@ -10,16 +10,18 @@ INSERT INTO Role (name) VALUES
 ('Sinh viên');
 
 CREATE TABLE class (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  code VARCHAR(255) PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  is_active BOOLEAN DEFAULT TRUE
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-INSERT INTO class (name) VALUES 
-('D21CQAT01-N'),
-('D21CQCN01-N'),
-('D21CQPT01-N'),
-('D22CQAT01-N'),
-('D22CQCN03-N');
+INSERT INTO class (code ,name) VALUES 
+('D21CQAT01-N','An toàn thông tin 1 khoá 2021'),
+('D21CQCN01-N','Công nghệ thông tin 1 khoá 2021'),
+('D21CQPT01-N', 'Công nghệ đa phương tiện 1 khoá 2021'),
+('D22CQAT01-N', 'An toàn thông tin 1 khoá 2022'),
+('D22CQPT03-N', 'Công nghệ đa phương tiện 3 khoá 2022');
 
 CREATE TABLE account (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -41,13 +43,12 @@ CREATE TABLE student (
   first_name VARCHAR(255),
   last_name VARCHAR(255),
   phone_number VARCHAR(255),
-  class_id INT NOT NULL,
+  class_code VARCHAR(255) NOT NULL,
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (account_id) REFERENCES account(id),
-  FOREIGN KEY (class_id) REFERENCES class(id)
-
+  FOREIGN KEY (class_code) REFERENCES class(code)
 );
 
 CREATE TABLE lecturer (

@@ -2,8 +2,29 @@ import axios from "./axios";
 import removeAccents from "../utils/removeAccents";
 
 const classAPI = {
+  getAllWithoutParams: async () => {
+    const access_token = await localStorage.getItem("access_token");
+    
+  
+    const url = "/class/get-all";
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    return response;
+  },
   getAll: async (params) => {
-    params.filter = "is_active:eq:" + params.is_active;
+    
+  
+    if(params.is_active===undefined){
+      params.filter = "is_active:eq:true";
+    }else {
+      params.filter = "is_active:eq:" + params.is_active;
+      delete params.is_active;
+    }
+    
 
     if (params.search !== "") {
       params.search = removeAccents(params.search);
@@ -11,7 +32,7 @@ const classAPI = {
     }
 
     const access_token = await localStorage.getItem("access_token");
-    delete params.is_active;
+    
     delete params.search;
     const url = "/class/get-all";
     const response = await axios.get(url, {

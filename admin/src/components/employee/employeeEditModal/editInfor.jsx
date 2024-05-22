@@ -115,7 +115,18 @@ export default function EditInfor({
                 {errors.last_name && <p className="text-red-500 text-sm">{`*${errors.last_name.message}`}</p>}
               </div>
             </div>
-
+            <div className={`${styles.item}`}>
+              <div className="w-1/3 text-sm text-gray-700 font-medium dark:text-gray-400">
+                <label>Mã nhân viên </label>
+              </div>
+              <div className="flex flex-col w-2/3 ">
+                <div
+                  className={`flex text-center items-center w-full px-3 py-1 text-sm font-[600] text-gray-400 h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] `}
+                  
+                >{employee.code}</div>
+                
+              </div>
+            </div>
             <div className={`${styles.item}`}>
               <div className="w-1/3 text-sm text-gray-700 font-medium dark:text-gray-400">
                 <label>Số điện thoại</label>

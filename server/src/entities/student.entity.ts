@@ -7,6 +7,7 @@ export class Student extends BaseEntity {
   code: string;
 
   @ManyToOne(() => Account, account => account.id)
+  @JoinColumn({name:"account_id"})
   account_id: Account;
 
   @Column({ nullable: true })

@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Body, UsePipes, ValidationPipe, UseGuards, Res, UnauthorizedException, Header, Headers } from '@nestjs/common';
-import { RegisterEmployeeDto } from '../dto/register-employee.dto';
-import { LoginEmployeeDto } from '../dto/login-employee.dto';
+import { RegisterEmployeeDto } from '../dto/account/register-employee.dto';
+import { LoginDto } from '../dto/account/login.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { access } from 'fs';
@@ -29,19 +29,18 @@ export class AuthController {
         return { message: 'Employee registered successfully', data: registeredEmployee };
     }
 
-    @Post('employee/login')
+    @Post('login')
     @UsePipes(ValidationPipe)
-    async employeeLogin(@Body() loginEmployeeDto: LoginEmployeeDto) {
-        console.log('employee login api...');
-        const loggedInEmployee = await this.authService.employeeLogin(loginEmployeeDto);
-        return { message: 'Employee logged in successfully', data: loggedInEmployee };
+    async login(@Body() LoginDto: LoginDto) {
+        console.log('user login api...');
+        const loggedUser = await this.authService.login(LoginDto);
+        return { message: 'User logged in successfully', data: loggedUser };
     }
     
-
-    @Get('employee/check-login')
+    @Get('check-login')
     @UsePipes(ValidationPipe)
     async checkLogin(@Headers('authorization') authorizationHeader: string) {
-        console.log(authorizationHeader);
+        
         // Kiểm tra xem header Authorization có tồn tại không
         if (!authorizationHeader) {
             // Nếu không có, trả về lỗi hoặc thực hiện xử lý phù hợp
@@ -53,9 +52,9 @@ export class AuthController {
             throw new UnauthorizedException('Invalid access token format');
         }
         const access_token = splitHeader[1];
-        const checkLoggegEmployee = await this.authService.employeeCheckLogin(access_token);
+        const checkLogged = await this.authService.CheckLogin(access_token);
         console.log('check login api...');
-        return { message: 'Employee is logged in', data: checkLoggegEmployee };
+        return { message: 'User is logged in', data: checkLogged };
     }
     
 

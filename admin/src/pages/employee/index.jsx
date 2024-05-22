@@ -77,7 +77,7 @@ export default function Employee() {
       params.is_active = true;
     }
     try {
-      const response = await employeeAPI.getAllWithoutCode(currentUser.code ,params);
+      const response = await employeeAPI.getAllExceptByCode(currentUser.code ,params);
       if (response.data.length === 0 && response.currentPage !== 1 && response.currentPage > 1) {
         setCurrentPage(response.currentPage - 1);
       }
@@ -137,7 +137,7 @@ export default function Employee() {
   };
   const handleShowEditModal = async(code) => {
     const editEmployee = await employees.find((employee) => employee.code === code);
-    //console.log(employees);
+    console.log(editEmployee);
     setEditEmployee(editEmployee);
     setIsShowEditModal(!isShowEditModal);
   };
@@ -361,7 +361,7 @@ export default function Employee() {
         <React.Fragment>
           <h1 className="text-black font-bold mb-5">Thùng rác</h1>
           <EmployeeDeletedTable
-            employee={employees}
+            employees={employees}
             //handleDelete={handleDelete}
             handleRestore={handleRestore}
             handleSelected={handleSelected}
@@ -382,7 +382,7 @@ export default function Employee() {
         <React.Fragment>
           <h1 className="text-black font-bold mb-5">Danh sách</h1>
           <EmployeeTable
-            employee={employees}
+            employees={employees}
             handleSoftDelete={handleSoftDelete}
             handleShowEditModal={handleShowEditModal}
             isSelectAll={isSelectAll}

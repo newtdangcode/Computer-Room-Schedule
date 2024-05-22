@@ -1,13 +1,13 @@
 import React from "react";
 import { Tooltip } from "react-tooltip";
 import { IconRestore, IconDelete } from "../../icon";
-import DataTable from "../../DataTableUseCode";
+import DataTableUseCode from "../../DataTableUseCode";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import formatTimestamp from "../../../utils/formatTimestamp";
 import Swal from "sweetalert2";
 
 export default function EmployeeDeletedTable({
-  employee,
+  employees,
   handleDelete,
   handleRestore,
   isSelectAll,
@@ -160,9 +160,9 @@ export default function EmployeeDeletedTable({
   ];
 
   return (
-    <DataTable
+    <DataTableUseCode
       columnData={columnData}
-      rowData={employee}
+      rowData={employees}
       select
       isSelectAll={isSelectAll}
       isSelected={isSelected}

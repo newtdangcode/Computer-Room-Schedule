@@ -112,4 +112,30 @@ const employeeNavigation = [
   },
 ];
 
-export { adminNavigation, employeeNavigation };
+const lecturerNavigation = [
+  {
+    title: "Thời Khoá biểu",
+    path: "",
+    icon: IconSchedule,
+  },
+  {
+    title: "Cài đặt",
+    path: "/setting",
+    icon: IconSetting,
+  },
+];
+
+const studentNavigation = [
+  {
+    title: "Thời Khoá biểu",
+    path: "",
+    icon: IconSchedule,
+  },
+  {
+    title: "Cài đặt",
+    path: "/setting",
+    icon: IconSetting,
+  },
+];
+
+export { adminNavigation, employeeNavigation, lecturerNavigation, studentNavigation };

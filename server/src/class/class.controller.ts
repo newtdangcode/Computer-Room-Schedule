@@ -5,10 +5,10 @@ import { Class } from 'src/entities/class.entity';
 import { Pagination, PaginationParams } from 'src/helpers/decorators/paginationParams';
 import { Sorting, SortingParams } from 'src/helpers/decorators/sortingParams';
 import { Filtering, FilteringParams } from 'src/helpers/decorators/filteringParams';
-import { PaginatedResource } from 'src/dto/paginated-resource.dto';
-import { UpdateClassDto } from 'src/dto/update-class.dto';
-import { CreateClassDto } from 'src/dto/create-class.dto';
-import { UpdateManyClassDto } from 'src/dto/update-many.dto';
+import { PaginatedResource } from 'src/dto/pagination/paginated-resource.dto';
+import { UpdateClassDto } from 'src/dto/class/update-class.dto';
+import { CreateClassDto } from 'src/dto/class/create-class.dto';
+import { UpdateManyClassDto } from 'src/dto/class/update-many-class.dto';
 @UseGuards(AuthGuard)
 @Controller('api/v1/class')
 export class ClassController {

@@ -1,11 +1,11 @@
 import { Tooltip } from "react-tooltip";
 import { IconEdit, IconDelete } from "../../icon";
-import DataTable from "../../DataTableUseCode";
+import DataTableUseCode from "../../DataTableUseCode";
 import formatTimestamp from "../../../utils/formatTimestamp";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import Swal from "sweetalert2";
 export default function EmployeeTable({
-  employee,
+  employees,
   handleSoftDelete,
   handleShowEditModal,
   isSelectAll,
@@ -142,9 +142,9 @@ export default function EmployeeTable({
   ];
 
   return (
-    <DataTable
+    <DataTableUseCode
       columnData={columnData}
-      rowData={employee}
+      rowData={employees}
       select
       isSelectAll={isSelectAll}
       isSelected={isSelected}

@@ -31,7 +31,7 @@ export default function Login() {
     const { username, password } = data;
     try {
       setIsLoading(true);
-      const response = await authAPI.employeeLogin(username, password);
+      const response = await authAPI.login(username, password);
       dispatch(setUserSuccess(response.data));
       console.log(response.data);
       navigate("/", { replace: true });

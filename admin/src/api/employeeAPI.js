@@ -2,6 +2,20 @@ import removeAccents from "../utils/removeAccents";
 import axios from "./axios";
 
 const employeeAPI={
+  getAllWithoutParams: async () => {
+    const access_token = await localStorage.getItem("access_token");
+    
+  
+    const url = "/lecturer/get-all";
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    return response;
+  },
+
   getAll: async (params) => {
     
    
@@ -26,7 +40,7 @@ const employeeAPI={
     
     return response;
   },
-  getAllWithoutCode: async (code,params) => {
+  getAllExceptByCode: async (code,params) => {
     
    
     params.filter = "is_active:eq:" + params.is_active;
@@ -39,7 +53,7 @@ const employeeAPI={
     const access_token = await localStorage.getItem('access_token');
     delete params.is_active;
     delete params.search;
-    const url = `/employee/get-all-without/${code}`;
+    const url = `/employee/get-all-except/${code}`;
     const response = await axios.get(url, {
       params, 
       headers: {
@@ -60,7 +74,7 @@ const employeeAPI={
           Authorization: `Bearer ${access_token}`
         }
       });
-      console.log(response);
+    
       return response; 
   },
 

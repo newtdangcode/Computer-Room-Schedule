@@ -23,27 +23,12 @@ export default function ProtectedRoute({ children }) {
 
     <React.Fragment>
 
-      {auth.isAuth && (auth.currentUser?.account_id?.role_id?.id == USER_ROLES.ADMIN 
-          || auth.currentUser?.account_id?.role_id?.id == USER_ROLES.EMPLOYEE
-        ) ? (
+      {auth.isAuth ? (
           children
         ) : (
           <Navigate to="/login" />
         )}
-      {/* {isLoading ? (
-        <div className="flex justify-center items-center h-screen">
-          <Loading size={40} />
-        </div>
-      ) : (
-        auth.isAuth && (auth.currentUser?.account_id?.role_id?.id == USER_ROLES.ADMIN 
-          || auth.currentUser?.account_id?.role_id?.id == USER_ROLES.EMPLOYEE
-        ) ? (
-          children
-        ) : (
-          <Navigate to="/login" />
-        )
-      
-      )} */}
+
       
     </React.Fragment>
     

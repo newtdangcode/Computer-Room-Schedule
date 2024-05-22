@@ -84,10 +84,27 @@ const employeeRouter = [
     path: "/lecturers",
     element: Lecturer,
   },
+  
+];
+const lecturerRouter = [
   {
-    path: "/employees",
-    element: Employee,
+    path: "",
+    element: Schedule,
+  },
+  {
+    path: "/setting",
+    element: Setting,
+  },
+];
+const studentRouter = [
+  {
+    path: "",
+    element: Schedule,
+  },
+  {
+    path: "/setting",
+    element: Setting,
   },
 ];
 
-export { adminRouter, employeeRouter };
+export { adminRouter, employeeRouter, lecturerRouter, studentRouter};

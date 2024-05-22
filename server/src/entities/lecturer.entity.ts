@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, BaseEntity, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, BaseEntity, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
 import { Account } from './account.entity';
+import { join } from 'path';
 
 @Entity({name: "lecturer"})
 export class Lecturer extends BaseEntity {
@@ -7,6 +8,7 @@ export class Lecturer extends BaseEntity {
   code: string;
 
   @ManyToOne(() => Account, account => account.id)
+  @JoinColumn({ name: 'account_id' })
   account_id: Account;
 
   @Column({ nullable: true })

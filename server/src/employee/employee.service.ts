@@ -3,16 +3,16 @@ import { Employee } from 'src/entities/employee.entity';
 import { Repository } from 'typeorm';
 import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import { CreateEmployeeDto } from 'src/dto/create-employee.dto';
+import { CreateEmployeeDto } from 'src/dto/employee/create-employee.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from 'src/auth/auth.service';
-import { UpdateEmployeeDto } from 'src/dto/update-employee.dto';
-import { UpdateAccountDto } from 'src/dto/update-account.dto';
-import { UpdateManyEmployeeDto } from 'src/dto/update-many-employee.dto';
+import { UpdateEmployeeDto } from 'src/dto/employee/update-employee.dto';
+import { UpdateAccountDto } from 'src/dto/account/update-account.dto';
+import { UpdateManyEmployeeDto } from 'src/dto/employee/update-many-employee.dto';
 import { Pagination } from 'src/helpers/decorators/paginationParams';
 import { Sorting } from 'src/helpers/decorators/sortingParams';
 import { Filtering } from 'src/helpers/decorators/filteringParams';
-import { PaginatedResource } from 'src/dto/paginated-resource.dto';
+import { PaginatedResource } from 'src/dto/pagination/paginated-resource.dto';
 import { getOrder, getWhere } from 'src/helpers/features';
 import { Not } from 'typeorm';
 @Injectable()
@@ -64,7 +64,7 @@ export class EmployeeService {
     }
     
     
-    async getAllWithoutCode(
+    async getAllExcept(
         { page = 1, limit = 10, offset }: Pagination,
         sort?: Sorting,
         filter?: Filtering[],
@@ -131,7 +131,7 @@ export class EmployeeService {
             username: username,
         });
         if(!account){
-            throw new HttpException('Employees is not found', HttpStatus.NOT_FOUND);
+            throw new HttpException('Employee is not found', HttpStatus.NOT_FOUND);
         }else {
             const employeeAccount = await this.employeeRepository.findOne({
                 where: {
@@ -143,13 +143,13 @@ export class EmployeeService {
                 delete employeeAccount.account_id.password;
                 return employeeAccount; 
             } else {
-                throw new HttpException('Employees is not found', HttpStatus.NOT_FOUND);
+                throw new HttpException('Employee is not found', HttpStatus.NOT_FOUND);
             }
         }
         
     }
 
-    async creat(createEmployeeDto: CreateEmployeeDto) {
+    async create(createEmployeeDto: CreateEmployeeDto) {
        return await this.authService.employeeRegister(createEmployeeDto);
     }
 

@@ -5,8 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Class } from 'src/entities/class.entity';
 import { config } from 'process';
 import { ConfigModule } from '@nestjs/config';
-import { CreateClassDto } from 'src/dto/create-class.dto';
-import { UpdateClassDto } from 'src/dto/update-class.dto';
+import { CreateClassDto } from 'src/dto/class/create-class.dto';
+import { UpdateClassDto } from 'src/dto/class/update-class.dto';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import { UpdateClassDto } from 'src/dto/update-class.dto';
     ConfigModule,
     CreateClassDto,
     UpdateClassDto,
-    
+
 
   ],
   providers: [ClassService],

@@ -5,13 +5,13 @@ import { Repository } from 'typeorm';
 import { Class } from 'src/entities/class.entity';
 import { Filtering } from 'src/helpers/decorators/filteringParams';
 import { Sorting } from 'src/helpers/decorators/sortingParams';
-import { PaginatedResource } from 'src/dto/paginated-resource.dto';
+import { PaginatedResource } from 'src/dto/pagination/paginated-resource.dto';
 import { Pagination } from 'src/helpers/decorators/paginationParams';
 import { getWhere, getOrder } from 'src/helpers/features';
-import { CreateClassDto } from 'src/dto/create-class.dto';
-import { UpdateAccountDto } from 'src/dto/update-account.dto';
-import { UpdateClassDto } from 'src/dto/update-class.dto';
-import { UpdateManyClassDto } from 'src/dto/update-many.dto';
+import { CreateClassDto } from 'src/dto/class/create-class.dto';
+import { UpdateAccountDto } from 'src/dto/account/update-account.dto';
+import { UpdateClassDto } from 'src/dto/class/update-class.dto';
+import { UpdateManyClassDto } from 'src/dto/class/update-many-class.dto';
 
 @Injectable()
 export class ClassService {

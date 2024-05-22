@@ -14,6 +14,7 @@ export default function Header() {
   const notifications = useSelector((state) => state.notifications.items);
 
   useEffect(() => {
+  
     const result = notifications.filter((item) => item.unread === true);
     setUnreadNotifications(result.length);
   }, [notifications]);

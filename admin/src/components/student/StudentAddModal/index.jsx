@@ -11,46 +11,36 @@ import classAPI from "../../../api/classAPI";
 import toastMessage from "../../../utils/toastMessage";
 import styles from "./styles.module.css";
 
-export default function AddModalStaff({ closeModal, title, titleBtnFooter, handleAddStudent, getAllStudent }) {
+export default function AddModalStudent({ closeModal, title, titleBtnFooter, handleAddStudent }) {
+  const [classes, setClasses] = useState([]);
   useEffect(() => {
+
     getAllClass();
   }, []);
 
-
-  const [classs, setClasss] = useState([]);
   const getAllClass = async () => {
     try {
-   
-      const response = await classAPI.getAllClass();
-      setClasss(response.data);
-     
-    } catch (err) {
-      console.log(err);
+      const response = await classAPI.getAllWithoutParams();
+      setClasses(response.data);
+      console.log("addmodal ",response.data);
+    } catch (error) {
+      console.log("Failed to fetch class list: ", error);
     }
-   
-  };
+  }
  
-  
-  // const [classId, setClassId] = useState(null);
-  // const handleClassChange = (event) => {
-  //   setClassId(event.target.value);
-  // };
-
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  //const [passwordConfirm, setPasswordConfirm] = useState();
 
   const schema = yup.object().shape({
+    code: yup.string().required("Vui lòng nhập mã sinh viên của bạn."),
     first_name: yup.string().required("Vui lòng nhập họ của bạn"),
-    last_name: yup.string().required("Vui lòng nhập tên của bạn"),
-    code: yup.string().required("Vui lòng nhập mã số sinh viên của bạn."),
-    class_id: yup.string().required("Vui lòng chọn lớp của bạn."),
+    last_name: yup.string().required("Vui lòng nhập tên của bạn"),  
     email: yup.string().required("Vui lòng nhập Email của bạn.").email("Vui lòng nhập đúng định dạng của Email."),
     username: yup
       .string()
       .required("Vui lòng nhập tên tài khoản của bạn.")
-      .min(6, "Tên tài khoản có ít nhất 6 kí tự.")
+      .min(8, "Tên tài khoản có ít nhất 8 kí tự.")
       .max(30, "Tên tài khoản không dài hơn 30 kí tự."),
     password: yup.string().required("Vui lòng nhập mật khẩu của bạn.").min(8, "Mật khẩu có ít nhất 8 kí tự."),
     passwordConfirm: yup
@@ -62,6 +52,7 @@ export default function AddModalStaff({ closeModal, title, titleBtnFooter, handl
       .required("Vui lòng nhập số điện thoại của bạn.")
       .phone("Vui lòng nhập đúng định dạng số điện thoại."),
     role_id: yup.string().required("Vui lòng chọn chức vụ."),
+    class_code: yup.string().required("Vui lòng chọn lớp."),
   });
   const {
     register,
@@ -80,17 +71,18 @@ export default function AddModalStaff({ closeModal, title, titleBtnFooter, handl
 
   const onSubmit = async (data) => {
     //event.preventDefault();
-    console.log("submit ok");
+    //console.log("submit ok");
     try {
       console.log(data);
       setIsLoading(true);
-      //const newData = {...data, class_id:classId};
-      //await handleAddStudent(newData);
+      
       await handleAddStudent(data);
       toastMessage({ type: "success", message: "Thêm sinh viên thành công." });
-      //getAllStudent();
+      closeModal();
     } catch (error) {
-      toastMessage({ type: "error", message: `Thêm sinh viên thất bại. Số điện thoại hoặc Email bị trùng.` });
+      const errorMessage = error.response.data.message;
+      console.log(error);
+      toastMessage({ type: "error", message: `Thêm sinh viên thất bại. ${errorMessage}.` });
     } finally {
       setIsLoading(false);
     }
@@ -157,22 +149,19 @@ export default function AddModalStaff({ closeModal, title, titleBtnFooter, handl
               </div>
               <div className="flex flex-col w-2/3 ">
                 <select
-                  {...register("class_id")}
-               
-  
-                  //onChange={handleClassChange}
-                  className="block w-full h-12 px-2 py-1 text-sm focus:outline-none leading-5 
-                        rounded-md focus:border-gray-200 border-gray-200 bg-gray-100 ring-1 ring-gray-200
-                        focus:bg-white border-transparent form-select "
+                  defaultValue={""}
+                  {...register("class_code")}
+                  className="block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none"
                 >
-                  <option value="">Lớp</option>
-                  {classs.map((item) => (
-                    <option value={item.id} key={item.id}>
-                      {item.name}
-                    </option>
-                  ))}
+                    <option value="">Chọn lớp</option>
+                {classes.map((item) => (
+                  <option value={item.code} key={item.code}>
+                    {item.code}
+                  </option>
+                ))}
+                    
                 </select>
-                {/* {errors.class_id && <p className="text-red-500 text-sm">{`*${errors.class_id.message}`}</p>} */}
+                {errors.class_code && <p className="text-red-500 text-sm">{`*${errors.class_code.message}`}</p>}
               </div>
             </div>
             <div className={`${styles.item}`}>
@@ -295,7 +284,7 @@ export default function AddModalStaff({ closeModal, title, titleBtnFooter, handl
                   className="block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none"
                 >
                   
-                  <option value={4}>Sinh viên</option>
+                  <option value={2}>sinh viên</option>
                 </select>
               </div>
             </div>

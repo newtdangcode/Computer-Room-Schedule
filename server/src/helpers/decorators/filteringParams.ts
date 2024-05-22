@@ -32,9 +32,10 @@ export const FilteringParams = createParamDecorator((data, ctx: ExecutionContext
     if (typeof data != 'object') throw new BadRequestException('Invalid filter parameter');
     const filters = filter.split(',');
     const respone = [];
+    
     filters.map((filter) => {
         // validate the format of the filter, if the rule is 'isnull' or 'isnotnull' it don't need to have a value
-        if (!filter.match(/^[a-zA-Z0-9_]+:(eq|neq|gt|gte|lt|lte|like|nlike|in|nin):[a-zA-Z0-9_,]+$/) && !filter.match(/^[a-zA-Z0-9_]+:(isnull|isnotnull)$/)) {
+        if (!filter.match(/^[a-zA-Z0-9_.]+:(eq|neq|gt|gte|lt|lte|like|nlike|in|nin):[a-zA-Z0-9_,./-]+$/) && !filter.match(/^[a-zA-Z0-9_.]+:(isnull|isnotnull)$/)) {
             throw new BadRequestException('Invalid filter parameter');
         }
         //console.log('filter', filter);
@@ -42,7 +43,6 @@ export const FilteringParams = createParamDecorator((data, ctx: ExecutionContext
         const [property, rule, value] = filter.split(':');
         if (!data.includes(property)) throw new BadRequestException(`Invalid filter property: ${property}`);
         if (!Object.values(FilterRule).includes(rule as FilterRule)) throw new BadRequestException(`Invalid filter rule: ${rule}`);
-
         respone.push({ property, rule, value });
     });
     //console.log('response filter', respone);

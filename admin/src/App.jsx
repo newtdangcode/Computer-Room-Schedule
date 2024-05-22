@@ -11,7 +11,7 @@ import authAPI from "./api/authAPI";
 import { setUserSuccess, setUserFail } from "./features/auth/authSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { fetchNotification } from "./features/auth/notificationSlice";
-import { adminRouter, employeeRouter } from "./router";
+import { adminRouter, employeeRouter, lecturerRouter, studentRouter } from "./router";
 import { USER_ROLES } from "./utils/Constant";
 import { toast } from "react-toastify";
 import notificationSound from "./assets/sound/notification-sound.mp3";
@@ -26,7 +26,7 @@ function App() {
   const dispatch = useDispatch();
   const checkIsLogin = async () => {
     try {
-      const response = await authAPI.employeeCheckLogin();
+      const response = await authAPI.checkLogin();
       dispatch(setUserSuccess(response.data));
       //unwrapResult(await dispatch(fetchNotification()));
     } catch {
@@ -85,16 +85,38 @@ function App() {
         >
           
           {auth.currentUser?.account_id?.role_id?.id === USER_ROLES.ADMIN
-            ? adminRouter.map((item) => {
+            ?(
+              adminRouter.map((item) => {
                 const Page = item.element;
                 return <Route key={item.path} path={item.path} element={<Page />} />;
               })
-            : employeeRouter.map((item) => {
-                const Page = item.element;
-                return <Route key={item.path} path={item.path} element={<Page />} />;
-              })}
-              
-         
+            )
+            :(  
+              auth.currentUser?.account_id?.role_id?.id === USER_ROLES.EMPLOYEE
+              ?(
+                employeeRouter.map((item) => {
+                  const Page = item.element;
+                  return <Route key={item.path} path={item.path} element={<Page />} />;
+                })
+              )
+              :(
+                auth.currentUser?.account_id?.role_id?.id === USER_ROLES.LECTURER
+                ?(
+                  lecturerRouter.map((item) => {
+                    const Page = item.element;
+                    return <Route key={item.path} path={item.path} element={<Page />} />;
+                  })
+                )
+                :(
+                  studentRouter.map((item) => {
+                    const Page = item.element;
+                    return <Route key={item.path} path={item.path} element={<Page />} />;
+                  })
+                
+                )
+              )
+            )    
+          }
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </React.Fragment>,

@@ -1,8 +1,8 @@
 import axios from "./axios";
 
 const authAPI = {
-    employeeLogin: async (username, password) => {
-        const url = "/auth/employee/login";
+    login: async (username, password) => {
+        const url = "/auth/login";
        
         const response = await axios.post(url, { username, password });
         localStorage.setItem('access_token', response.data.access_token);
@@ -10,8 +10,8 @@ const authAPI = {
        
         return response;
     },
-    employeeCheckLogin: async() => {
-        const url = "/auth/employee/check-login";
+    checkLogin: async() => {
+        const url = "/auth/check-login";
         const access_token = await localStorage.getItem('access_token');
        
         const response = await axios.get(url, {
