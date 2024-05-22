@@ -7,6 +7,7 @@ import { config } from 'process';
 import { ConfigModule } from '@nestjs/config';
 import { CreateClassDto } from 'src/dto/class/create-class.dto';
 import { UpdateClassDto } from 'src/dto/class/update-class.dto';
+import { UpdateManyClassDto } from 'src/dto/class/update-many-class.dto';
 
 @Module({
   imports: [
@@ -14,8 +15,7 @@ import { UpdateClassDto } from 'src/dto/class/update-class.dto';
     ConfigModule,
     CreateClassDto,
     UpdateClassDto,
-
-
+    UpdateManyClassDto,
   ],
   providers: [ClassService],
   controllers: [ClassController],

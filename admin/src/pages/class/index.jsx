@@ -10,7 +10,7 @@ import AddModalClass from "../../components/class/classAddModal";
 import classAPI from "../../api/classAPI";
 import PageLayout from "../../components/layout/pageLayout";
 
-export default function Employee() {
+export default function Class() {
   const [classes, setClasses] = useState([]);
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [isSelected, setIsSelected] = useState([]);

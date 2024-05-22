@@ -5,7 +5,7 @@ export class Semester {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true})
+  @Column({ nullable: false})
   name: string;
 
   @Column({ type: 'date' ,nullable: false})

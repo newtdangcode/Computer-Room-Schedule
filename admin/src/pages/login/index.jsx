@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Loading from "../../components/loading";
 import yup from "../../utils/yupGlobal";
 import styles from "./styles.module.css";
-import loginImg from "../../assets/img/login.jpg";
+import loginImg from "../../assets/img/login.png";
 import authAPI from "../../api/authAPI.js";
 import { setUserSuccess, setUserFail } from "../../features/auth/authSlice";
 

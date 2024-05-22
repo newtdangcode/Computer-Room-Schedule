@@ -14,6 +14,8 @@ import { EmployeeModule } from './employee/employee.module';
 import { ClassModule } from './class/class.module';
 import { StudentModule } from './student/student.module';
 import { LecturerModule } from './lecturer/lecturer.module';
+import { SemesterModule } from './semester/semester.module';
+import { Semester } from './entities/semester.entity';
 
 @Module({
   imports: [
@@ -30,7 +32,8 @@ import { LecturerModule } from './lecturer/lecturer.module';
         Class,
         Student,
         Lecturer,
-        Employee
+        Employee,
+        Semester,
       ],
       synchronize: false,
 
@@ -41,6 +44,7 @@ import { LecturerModule } from './lecturer/lecturer.module';
     ClassModule,
     StudentModule,
     LecturerModule,
+    SemesterModule,
 
   ],
   controllers: [AppController],

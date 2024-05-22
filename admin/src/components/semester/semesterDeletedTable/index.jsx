@@ -1,11 +1,11 @@
 import { Tooltip } from "react-tooltip";
 import { IconRestore } from "../../icon";
-import DataTableUseCode from "../../DataTableUseCode";
+import DataTableUseId from "../../DataTableUseId";
 import formatTimestamp from "../../../utils/formatTimestamp";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import Swal from "sweetalert2";
-export default function ClassDeletedTable({
-  classes,
+export default function SemesterDeletedTable({
+  semesters,
   handleDelete,
   handleRestore,
   isSelectAll,
@@ -24,7 +24,7 @@ export default function ClassDeletedTable({
   const columnData = [
     {
       field: "name",
-      headerName: "Tên",
+      headerName: "Tên học kỳ",
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
@@ -34,13 +34,19 @@ export default function ClassDeletedTable({
       },
     },
     {
-      field: "code",
-      headerName: "Mã lớp",
+      field: "start_time",
+      headerName: "Ngày bắt đầu",
       renderCell: (item) => {
-        return <span className="text-sm">{item.code}</span>;
+        return <span className="text-sm">{formatTimestamp(item.start_time)}</span>;
       },
     },
-
+    {
+      field: "end_time",
+      headerName: "Ngày kết thúc",
+      renderCell: (item) => {
+        return <span className="text-sm">{formatTimestamp(item.end_time)}</span>;
+      },
+    },
     {
       field: "created_at",
       headerName: "Ngày tạo",
@@ -87,10 +93,10 @@ export default function ClassDeletedTable({
                   confirmButtonText: "Đồng ý!",
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    handleRestore(item.code);
+                    handleRestore(item.id);
                     Swal.fire({
                       title: "Đã khôi phục",
-                      text: "Lớp đã được khôi phục.",
+                      text: "Học kỳ đã được khôi phục.",
                       confirmButtonColor: "#0E9F6E",
                     });
                   }
@@ -107,7 +113,7 @@ export default function ClassDeletedTable({
               onClick={() => {
                 Swal.fire({
                   title: "Bạn chắc chắn muốn xoá?",
-                  text: "Lớp sẽ được xoá và không thể khôi phục.",
+                  text: "Học kỳ sẽ được xoá và không thể khôi phục.",
                   icon: "question",
                   showCancelButton: true,
                   confirmButtonColor: "#0E9F6E",
@@ -117,7 +123,7 @@ export default function ClassDeletedTable({
                 }).then((result) => {
                   if (result.isConfirmed) {
                     handleDelete(item.code);
-                    Swal.fire({ title: "Đã xoá", text: "Lớp đã được xoá.", confirmButtonColor: "#0E9F6E" });
+                    Swal.fire({ title: "Đã xoá", text: "Học kỳ đã được xoá.", confirmButtonColor: "#0E9F6E" });
                   }
                 });
               }}
@@ -135,9 +141,9 @@ export default function ClassDeletedTable({
   ];
 
   return (
-    <DataTableUseCode
+    <DataTableUseId
       columnData={columnData}
-      rowData={classes}
+      rowData={semesters}
       select
       isSelectAll={isSelectAll}
       isSelected={isSelected}

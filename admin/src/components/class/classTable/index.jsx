@@ -1,6 +1,6 @@
 import { Tooltip } from "react-tooltip";
 import { IconEdit, IconDelete } from "../../icon";
-import DataTable from "../../DataTableUseCode";
+import DataTableUseCode from "../../DataTableUseCode";
 import formatTimestamp from "../../../utils/formatTimestamp";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import Swal from "sweetalert2";
@@ -119,7 +119,7 @@ export default function ClassTable({
   ];
 
   return (
-    <DataTable
+    <DataTableUseCode
       columnData={columnData}
       rowData={classes}
       select

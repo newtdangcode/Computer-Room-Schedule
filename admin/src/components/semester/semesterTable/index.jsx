@@ -1,13 +1,14 @@
 import { Tooltip } from "react-tooltip";
-import { IconRestore } from "../../icon";
-import DataTableUseCode from "../../DataTableUseCode";
-import formatTimestamp from "../../../utils/formatTimestamp";
+import { IconEdit, IconDelete } from "../../icon";
+import DataTableUseId from "../../DataTableUseId";
+import formatDate from "../../../utils/formatDate";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import Swal from "sweetalert2";
-export default function ClassDeletedTable({
-  classes,
-  handleDelete,
-  handleRestore,
+import formatTimestamp from "../../../utils/formatTimestamp";
+export default function SemesterTable({
+  semesters,
+  handleSoftDelete,
+  handleShowEditModal,
   isSelectAll,
   isSelected,
   handleSelectAll,
@@ -24,7 +25,7 @@ export default function ClassDeletedTable({
   const columnData = [
     {
       field: "name",
-      headerName: "Tên",
+      headerName: "Tên học kỳ",
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
@@ -34,13 +35,19 @@ export default function ClassDeletedTable({
       },
     },
     {
-      field: "code",
-      headerName: "Mã lớp",
+      field: "start_time",
+      headerName: "Ngày bắt đầu",
       renderCell: (item) => {
-        return <span className="text-sm">{item.code}</span>;
+        return <span className="text-sm">{formatDate(item.start_time)}</span>;
       },
     },
-
+    {
+      field: "end_time",
+      headerName: "Ngày kết thúc",
+      renderCell: (item) => {
+        return <span className="text-sm">{formatDate(item.end_time)}</span>;
+      },
+    },
     {
       field: "created_at",
       headerName: "Ngày tạo",
@@ -71,43 +78,23 @@ export default function ClassDeletedTable({
     {
       field: "actions",
       headerName: "Thao tác",
-      customClassName: "text-center",
       renderCell: (item) => {
         return (
           <div className="flex justify-center items-center text-gray-400 gap-x-4">
             <button
-              onClick={() => {
-                Swal.fire({
-                  title: "Bạn chắc chắn muốn Khôi phục?",
-                  icon: "question",
-                  showCancelButton: true,
-                  confirmButtonColor: "#0E9F6E",
-                  cancelButtonColor: "#d33",
-                  cancelButtonText: "Huỷ bỏ",
-                  confirmButtonText: "Đồng ý!",
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    handleRestore(item.code);
-                    Swal.fire({
-                      title: "Đã khôi phục",
-                      text: "Lớp đã được khôi phục.",
-                      confirmButtonColor: "#0E9F6E",
-                    });
-                  }
-                });
-              }}
-              data-tooltip-id="restore"
-              data-tooltip-content="Khôi phục"
+              data-tooltip-id="edit"
+              data-tooltip-content="Chỉnh sửa"
               className="hover:text-primary"
+              onClick={() => handleShowEditModal(item.id)}
             >
-              <IconRestore />
+              <IconEdit />
             </button>
-            {/* <Tooltip id="edit" style={{ backgroundColor: "var(--color-primary" }} />
+            <Tooltip id="edit" style={{ backgroundColor: "var(--color-primary" }} />
             <button
               onClick={() => {
                 Swal.fire({
                   title: "Bạn chắc chắn muốn xoá?",
-                  text: "Lớp sẽ được xoá và không thể khôi phục.",
+                  text: "Lớp sẽ được chuyển vào thùng rác.",
                   icon: "question",
                   showCancelButton: true,
                   confirmButtonColor: "#0E9F6E",
@@ -116,8 +103,12 @@ export default function ClassDeletedTable({
                   confirmButtonText: "Đồng ý!",
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    handleDelete(item.code);
-                    Swal.fire({ title: "Đã xoá", text: "Lớp đã được xoá.", confirmButtonColor: "#0E9F6E" });
+                    handleSoftDelete(item.id);
+                    Swal.fire({
+                      title: "Đã chuyển vào thùng rác",
+                      text: "Lớp đã được chuyển vào thùng rác.",
+                      confirmButtonColor: "#0E9F6E",
+                    });
                   }
                 });
               }}
@@ -127,7 +118,7 @@ export default function ClassDeletedTable({
             >
               <IconDelete />
             </button>
-            <Tooltip id="delete" style={{ backgroundColor: "#EF4444" }} /> */}
+            <Tooltip id="delete" style={{ backgroundColor: "#EF4444" }} />
           </div>
         );
       },
@@ -135,9 +126,9 @@ export default function ClassDeletedTable({
   ];
 
   return (
-    <DataTableUseCode
+    <DataTableUseId
       columnData={columnData}
-      rowData={classes}
+      rowData={semesters}
       select
       isSelectAll={isSelectAll}
       isSelected={isSelected}
