@@ -18,9 +18,9 @@ export class Student extends BaseEntity {
   @Column({ nullable: true })
   phone_number: string;
 
-  @ManyToOne(() => Class, _class => _class.id)
-  @JoinColumn({name: "class_id"})
-  class_id: Class;
+  @ManyToOne(() => Class, _class => _class.code)
+  @JoinColumn({name: "class_code"})
+  class_code: Class;
 
   @Column({ default: true })
   is_active: boolean;

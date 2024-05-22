@@ -325,7 +325,7 @@ export default function Lecturer() {
               </div>
               </div>
       <div className="flex justify-end mb-5 px-[20px]"></div>
-      {isShowLecturerDeletedTable ? (
+      {/* {isShowLecturerDeletedTable ? (
         <React.Fragment>
           <h1 className="text-black font-bold mb-5">Thùng rác</h1>
           <LecturerDeletedTable
@@ -372,7 +372,7 @@ export default function Lecturer() {
         getAllLecturer={getAllLecturer}
         />
       )}
-      
+       */}
     </PageLayout>
   );
 }

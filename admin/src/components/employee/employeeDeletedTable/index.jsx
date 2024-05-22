@@ -1,7 +1,7 @@
 import React from "react";
 import { Tooltip } from "react-tooltip";
 import { IconRestore, IconDelete } from "../../icon";
-import DataTable from "../../UserDataTable";
+import DataTable from "../../DataTableUseCode";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import formatTimestamp from "../../../utils/formatTimestamp";
 import Swal from "sweetalert2";

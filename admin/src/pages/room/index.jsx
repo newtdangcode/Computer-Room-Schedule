@@ -299,7 +299,7 @@ export default function Room() {
         </div>
       </div>
       <div className="flex justify-end mb-5 px-[20px]"></div>
-      {isShowRoomDeletedTable ? (
+      {/* {isShowRoomDeletedTable ? (
         <React.Fragment>
           <h1 className="text-black font-bold mb-5">Thùng rác</h1>
           <RoomDeletedTable
@@ -337,7 +337,7 @@ export default function Room() {
             currentUser={currentUser}
           />
         </React.Fragment>
-      )}
+      )} */}
     </PageLayout>
   );
 }

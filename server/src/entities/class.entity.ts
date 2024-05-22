@@ -2,11 +2,17 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, BaseEntit
 @Entity({name: "class"})
 export class Class extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  code: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false })
   name: string;
 
   @Column({ default: true })
   is_active: boolean;
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  updated_at: Date;
 }

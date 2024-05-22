@@ -61,11 +61,7 @@ const employeeAPI={
         }
       });
       console.log(response);
-      return response;
-   
-    
-    
-    
+      return response; 
   },
 
   update: async (code, data) => {

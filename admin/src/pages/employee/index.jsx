@@ -158,7 +158,7 @@ export default function Employee() {
                   onClick={() => {
                     Swal.fire({
                       title: "Bạn chắc chắn muốn xoá?",
-                      text: "Các sinh viên sẽ được xoá và không thể khôi phục.",
+                      text: "Các nhân viên sẽ được xoá và không thể khôi phục.",
                       icon: "question",
                       showCancelButton: true,
                       confirmButtonColor: "#0E9F6E",
@@ -170,7 +170,7 @@ export default function Employee() {
                         //handleDeleteManystudent();
                         Swal.fire({
                           title: "Đã xoá",
-                          text: "Các sinh viên đã được xoá.",
+                          text: "Các nhân viên đã được xoá.",
                           confirmButtonColor: "#0E9F6E",
                         });
                       }
@@ -194,7 +194,7 @@ export default function Employee() {
                   onClick={() => {
                     Swal.fire({
                       title: "Bạn chắc chắn muốn khôi phục?",
-                      text: "Các sinh viên sẽ được khôi phục.",
+                      text: "Các nhân viên sẽ được khôi phục.",
                       icon: "question",
                       showCancelButton: true,
                       confirmButtonColor: "#0E9F6E",
@@ -206,7 +206,7 @@ export default function Employee() {
                         handleRestoreMany();
                         Swal.fire({
                           title: "Đã Khôi phục",
-                          text: "Các sinh viên đã được khôi phục.",
+                          text: "Các nhân viên đã được khôi phục.",
                           confirmButtonColor: "#0E9F6E",
                         });
                       }
@@ -233,7 +233,7 @@ export default function Employee() {
                   onClick={() => {
                     Swal.fire({
                       title: "Bạn chắc chắn muốn xoá?",
-                      text: "Các sinh viên sẽ được chuyển vào thùng rác.",
+                      text: "Các nhân viên sẽ được chuyển vào thùng rác.",
                       icon: "question",
                       showCancelButton: true,
                       confirmButtonColor: "#0E9F6E",
@@ -245,7 +245,7 @@ export default function Employee() {
                         handleSoftDeleteMany();
                         Swal.fire({
                           title: "Đã chuyển vào thùng rác",
-                          text: "Các sinh viên đã được chuyển vào thùng rác.",
+                          text: "Các nhân viên đã được chuyển vào thùng rác.",
                           confirmButtonColor: "#0E9F6E",
                         });
                       }

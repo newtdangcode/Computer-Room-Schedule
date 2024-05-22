@@ -424,7 +424,7 @@ export default function Student() {
       </div>
       <div className="flex justify-end mb-5 px-[20px]"></div>
 
-      {isShowDeletedTable ? (
+      {/* {isShowDeletedTable ? (
         <React.Fragment>
           <h1 className="text-black font-bold mb-5">Thùng rác</h1>
           <StudentDeletedTable
@@ -471,7 +471,7 @@ export default function Student() {
           handleAddStudent={handleAddStudent}
           getAllStudent={getAllStudent}
         />
-      )}
+      )} */}
     </PageLayout>
   );
 }
