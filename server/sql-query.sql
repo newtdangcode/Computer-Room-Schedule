@@ -9,19 +9,7 @@ INSERT INTO Role (name) VALUES
 ('Giảng viên'),
 ('Sinh viên');
 
-CREATE TABLE class (
-  code VARCHAR(255) PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  is_active BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-INSERT INTO class (code ,name) VALUES 
-('D21CQAT01-N','An toàn thông tin 1 khoá 2021'),
-('D21CQCN01-N','Công nghệ thông tin 1 khoá 2021'),
-('D21CQPT01-N', 'Công nghệ đa phương tiện 1 khoá 2021'),
-('D22CQAT01-N', 'An toàn thông tin 1 khoá 2022'),
-('D22CQPT03-N', 'Công nghệ đa phương tiện 3 khoá 2022');
+
 
 CREATE TABLE account (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -34,6 +22,47 @@ CREATE TABLE account (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (role_id) REFERENCES role(id)
+);
+
+CREATE TABLE lecturer (
+  code VARCHAR(255) PRIMARY KEY,
+  account_id INT NOT NULL,
+  first_name VARCHAR(255),
+  last_name VARCHAR(255),
+  phone_number VARCHAR(255),
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (account_id) REFERENCES account(id)
+);
+
+
+
+CREATE TABLE employee (
+  code VARCHAR(255) PRIMARY KEY,
+  account_id INT NOT NULL,
+  first_name VARCHAR(255),
+  last_name VARCHAR(255),
+  phone_number VARCHAR(255),
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (account_id) REFERENCES account(id)
+);
+
+INSERT INTO account (username, password, refresh_token, email, role_id)
+VALUES ('admin001', '$2b$10$nu49VlJbiZ.s7LCwEqkx.ecChtrHoKDXO9l/M20/L80e5mtfV09LC', NULL, 'admin001@gmail.com', 1);
+INSERT INTO employee (code, account_id, first_name, last_name, phone_number)
+VALUES ('ADMIN001', 1, 'web', 'admin', '0123456789');
+
+CREATE TABLE class (
+  code VARCHAR(255) PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  lecturer_code VARCHAR(255) NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (lecturer_code) REFERENCES lecturer(code)
 );
 
 
@@ -50,31 +79,6 @@ CREATE TABLE student (
   FOREIGN KEY (account_id) REFERENCES account(id),
   FOREIGN KEY (class_code) REFERENCES class(code)
 );
-
-CREATE TABLE lecturer (
-  code VARCHAR(255) PRIMARY KEY,
-  account_id INT NOT NULL,
-  first_name VARCHAR(255),
-  last_name VARCHAR(255),
-  phone_number VARCHAR(255),
-  is_active BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (account_id) REFERENCES account(id)
-);
-
-CREATE TABLE employee (
-  code VARCHAR(255) PRIMARY KEY,
-  account_id INT NOT NULL,
-  first_name VARCHAR(255),
-  last_name VARCHAR(255),
-  phone_number VARCHAR(255),
-  is_active BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (account_id) REFERENCES account(id)
-);
-
 
 
 CREATE TABLE room_status (

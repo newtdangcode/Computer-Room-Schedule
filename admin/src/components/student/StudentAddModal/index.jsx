@@ -9,8 +9,7 @@ import { useForm } from "react-hook-form";
 import yup from "../../../utils/yupGlobal";
 import classAPI from "../../../api/classAPI";
 import toastMessage from "../../../utils/toastMessage";
-import styles from "./styles.module.css";
-
+import styles from "./styles.module.css"
 export default function AddModalStudent({ closeModal, title, titleBtnFooter, handleAddStudent }) {
   const [classes, setClasses] = useState([]);
   useEffect(() => {

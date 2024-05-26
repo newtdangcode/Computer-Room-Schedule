@@ -4,6 +4,7 @@ import { IconPrevious, IconNext } from "../icon";
 import styles from "./styles.module.css";
 import Pagination from "../Pagination";
 function DataTableUseCode({
+  
   columnData,
   rowData = [],
   select = false,
@@ -86,7 +87,7 @@ function DataTableUseCode({
               </tbody>
             </table>
           </div>
-          <Pagination
+          {select&&<Pagination
             currentPage={currentPage}
             onPageChange={setCurrentPage}
             totalPageCount={totalPageCount}
@@ -94,7 +95,7 @@ function DataTableUseCode({
             nextPage={nextPage}
             prevPage={prevPage}
             setLimitPerPage={setLimitPerPage}
-          />
+          />}
         </div>
       )}
     </React.Fragment>

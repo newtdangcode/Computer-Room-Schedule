@@ -10,15 +10,18 @@ import { CreateStudentDto } from 'src/dto/student/create-student.dto';
 import { UpdateStudentDto } from 'src/dto/student/update-student.dto';
 import { AuthModule } from 'src/auth/auth.module';
 import { UpdateManyStudentDto } from 'src/dto/student/update-many-employee.dto';
+import { Subject } from 'rxjs';
+import { SubjectModule } from 'src/subject/subject.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Account, Student]),
+    TypeOrmModule.forFeature([Account, Student, Subject]),
     ConfigModule,
     CreateStudentDto,
     UpdateStudentDto,
     UpdateManyStudentDto,
     forwardRef(() => AuthModule),
+    forwardRef(() => SubjectModule),
   ],
   controllers: [StudentController],
   providers: [StudentService],

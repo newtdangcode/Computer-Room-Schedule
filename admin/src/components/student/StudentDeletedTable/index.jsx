@@ -55,7 +55,7 @@ export default function StudentDeletedTable({
       field: "class",
       headerName: "Lớp",
       renderCell: (item) => {
-        return <span className="text-sm">{item.class_code.name}</span>;
+        return <span className="text-sm">{item.class_code.code}</span>;
       },
     },
     {

@@ -1,13 +1,13 @@
 import { Tooltip } from "react-tooltip";
-import { IconEdit, IconDelete, IconEye, IconView } from "../../icon";
-import DataTableUseCode from "../../DataTableUseCode";
+import { IconRestore, IconEye, IconView } from "../../icon";
+import DataTableUseId from "../../DataTableUseId";
 import formatTimestamp from "../../../utils/formatTimestamp";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import Swal from "sweetalert2";
-export default function ClassTable({
-  classes,
-  handleSoftDelete,
-  handleShowEditModal,
+export default function SubjectDeletedTable({
+  subjects,
+  handleDelete,
+  handleRestore,
   handleShowStudentList,
   isSelectAll,
   isSelected,
@@ -25,7 +25,7 @@ export default function ClassTable({
   const columnData = [
     {
       field: "name",
-      headerName: "Tên",
+      headerName: "Tên học môn học",
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
@@ -36,16 +36,35 @@ export default function ClassTable({
     },
     {
       field: "code",
-      headerName: "Mã lớp",
+      headerName: "Mã môn học",
       renderCell: (item) => {
-        return <span className="text-sm">{item.code}</span>;
+        return (
+          <div className="flex gap-x-2 items-center">
+            <p className="text-sm">{item.code}</p>
+          </div>
+        );
       },
     },
     {
       field: "lecturer_code",
-      headerName: "Cố vấn học tập",
+      headerName: "Giảng viên",
       renderCell: (item) => {
-        return <span className="text-sm">{item.lecturer_code.first_name} {item.lecturer_code.last_name}</span>;
+        return (
+          <div className="flex gap-x-2 items-center">
+            <p className="text-sm">{jsUcfirst(item.lecturer_code.first_name)} {jsUcfirst(item.lecturer_code.last_name)}</p>
+          </div>
+        );
+      },
+    },
+    {
+      field: "semester_id",
+      headerName: "Học kỳ",
+      renderCell: (item) => {
+        return (
+          <div className="flex gap-x-2 items-center">
+            <p className="text-sm">{jsUcfirst(item.semester_id.name)}</p>
+          </div>
+        );
       },
     },
     {
@@ -78,6 +97,7 @@ export default function ClassTable({
     {
       field: "actions",
       headerName: "Thao tác",
+      customClassName: "text-center",
       renderCell: (item) => {
         return (
           <div className="flex justify-center items-center text-gray-400 gap-x-4">
@@ -90,20 +110,9 @@ export default function ClassTable({
               <IconView />
             </button>
             <button
-              data-tooltip-id="edit"
-              data-tooltip-content="Chỉnh sửa"
-              className="hover:text-primary"
-              onClick={() => handleShowEditModal(item.code)}
-            >
-              <IconEdit />
-            </button>
-
-            <Tooltip id="edit" style={{ backgroundColor: "var(--color-primary" }} />
-            <button
               onClick={() => {
                 Swal.fire({
-                  title: "Bạn chắc chắn muốn xoá?",
-                  text: "Lớp sẽ được chuyển vào thùng rác.",
+                  title: "Bạn chắc chắn muốn Khôi phục?",
                   icon: "question",
                   showCancelButton: true,
                   confirmButtonColor: "#0E9F6E",
@@ -112,12 +121,37 @@ export default function ClassTable({
                   confirmButtonText: "Đồng ý!",
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    handleSoftDelete(item.code);
+                    handleRestore(item.id);
                     Swal.fire({
-                      title: "Đã chuyển vào thùng rác",
-                      text: "Lớp đã được chuyển vào thùng rác.",
+                      title: "Đã khôi phục",
+                      text: "Học môn học đã được khôi phục.",
                       confirmButtonColor: "#0E9F6E",
                     });
+                  }
+                });
+              }}
+              data-tooltip-id="restore"
+              data-tooltip-content="Khôi phục"
+              className="hover:text-primary"
+            >
+              <IconRestore />
+            </button>
+            {/* <Tooltip id="edit" style={{ backgroundColor: "var(--color-primary" }} />
+            <button
+              onClick={() => {
+                Swal.fire({
+                  title: "Bạn chắc chắn muốn xoá?",
+                  text: "Học môn học sẽ được xoá và không thể khôi phục.",
+                  icon: "question",
+                  showCancelButton: true,
+                  confirmButtonColor: "#0E9F6E",
+                  cancelButtonColor: "#d33",
+                  cancelButtonText: "Huỷ bỏ",
+                  confirmButtonText: "Đồng ý!",
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    handleDelete(item.code);
+                    Swal.fire({ title: "Đã xoá", text: "Học môn học đã được xoá.", confirmButtonColor: "#0E9F6E" });
                   }
                 });
               }}
@@ -127,7 +161,7 @@ export default function ClassTable({
             >
               <IconDelete />
             </button>
-            <Tooltip id="delete" style={{ backgroundColor: "#EF4444" }} />
+            <Tooltip id="delete" style={{ backgroundColor: "#EF4444" }} /> */}
           </div>
         );
       },
@@ -135,9 +169,9 @@ export default function ClassTable({
   ];
 
   return (
-    <DataTableUseCode
+    <DataTableUseId
       columnData={columnData}
-      rowData={classes}
+      rowData={subjects}
       select
       isSelectAll={isSelectAll}
       isSelected={isSelected}

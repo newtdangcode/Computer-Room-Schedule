@@ -5,4 +5,6 @@ export class CreateClassDto {
     code: string;
     @IsNotEmpty()
     name: string;
+    @IsNotEmpty()
+    lecturer_code: string;
 }

@@ -1,13 +1,12 @@
 import axios from "./axios";
 import removeAccents from "../utils/removeAccents";
-import { get } from "react-hook-form";
 
-const classAPI = {
+const subjectAPI = {
   getAllWithoutParams: async () => {
     const access_token = await localStorage.getItem("access_token");
     
   
-    const url = "/class/get-all";
+    const url = "/subject/get-all";
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${access_token}`,
@@ -16,6 +15,7 @@ const classAPI = {
 
     return response;
   },
+
   getAll: async (params) => {
     
   
@@ -35,7 +35,7 @@ const classAPI = {
     const access_token = await localStorage.getItem("access_token");
     
     delete params.search;
-    const url = "/class/get-all";
+    const url = "/subject/get-all";
     const response = await axios.get(url, {
       params,
       headers: {
@@ -45,19 +45,9 @@ const classAPI = {
 
     return response;
   },
-  getOne: async (code) => {
-    const url = `/class/get-one/${code}`;
-    const access_token = await localStorage.getItem("access_token");
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
-    //console.log(response);
-    return response;
-  },
-  getStudentList: async (code) => {
-    const url = `/class/get-student-list/${code}`;
+
+  getSubjectStudentList: async (id) => {
+    const url = `/subject/get-one/${id}`;
     const access_token = await localStorage.getItem("access_token");
     const response = await axios.get(url, {
       headers: {
@@ -66,8 +56,20 @@ const classAPI = {
     });
     return response;
   },
+  
+  addStudentsToSubject: async (id, data) => {
+    const url = `/subject/add-students-to-subject/${id}`;
+    const access_token = await localStorage.getItem("access_token");
+    const response = await axios.patch(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    return response;
+  },
+
   create: async (data) => {
-    const url = "/class/create";
+    const url = "/subject/create";
     const access_token = await localStorage.getItem("access_token");
 
     const response = await axios.post(url, data, {
@@ -75,12 +77,12 @@ const classAPI = {
         Authorization: `Bearer ${access_token}`,
       },
     });
-    //console.log(response);
+    console.log(response);
     return response;
   },
 
-  update: async (code, data) => {
-    const url = `/class/update/${code}`;
+  update: async (id, data) => {
+    const url = `/subject/update/${id}`;
     const access_token = await localStorage.getItem("access_token");
     console.log(url);
     const response = await axios.patch(url, data, {
@@ -92,7 +94,7 @@ const classAPI = {
   },
 
   updateMany: async (data) => {
-    const url = "/class/update-many";
+    const url = "/subject/update-many";
     const access_token = await localStorage.getItem("access_token");
     const response = await axios.patch(url, data, {
       headers: {
@@ -102,4 +104,4 @@ const classAPI = {
     return response;
   },
 };
-export default classAPI;
+export default subjectAPI;

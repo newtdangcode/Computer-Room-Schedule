@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Lecturer } from './lecturer.entity';
 import { Semester } from './semester.entity';
+import { Student } from './student.entity';
 
 @Entity({name: 'subject'})
 export class Subject {
@@ -21,13 +22,34 @@ export class Subject {
   @JoinColumn({ name: 'semester_id'})
   semester_id: Semester;
 
+  @ManyToMany(()=> Student, (students) => students.subjects)
+  @JoinTable({
+    name: 'subject_student',
+    joinColumn: { name: 'subject_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'student_code'}
+  })
+  students: Student[];
+  // @ManyToMany(()=>Student ,{onDelete: 'NO ACTION', onUpdate: 'NO ACTION'})
+  // @JoinTable()
+  // students: Student[];
+  // @ManyToMany(
+  //   () => Student,
+  //   student => student.subjects,
+  //   {onDelete: 'NO ACTION', onUpdate: 'NO ACTION'}
+  // )
+  // @JoinTable({
+  //   name: 'subject_student',
+  //   joinColumn: { name: 'subject_id', referencedColumnName: 'id' },
+  //   inverseJoinColumn: { name: 'student_code', referencedColumnName: 'code' }
+  // })
+  //students?: Student[];
   @Column({ type: 'boolean', default: true })
-  isActive: boolean;
+  is_active: boolean;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  updatedAt: Date;
+  updated_at: Date;
 
 }

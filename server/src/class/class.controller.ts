@@ -30,6 +30,10 @@ export class ClassController {
     async getOne(@Param('code') code: string){
         return await this.classService.getOne(code);
     }
+    @Get(('get-student-list/:code'))
+    async getStudentList(@Param('code') code: string) {
+        return await this.classService.getStudentList(code);
+    }
 
     @Post('create')
     @UsePipes(ValidationPipe)

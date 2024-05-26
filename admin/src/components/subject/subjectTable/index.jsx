@@ -1,84 +1,98 @@
-import React from "react";
 import { Tooltip } from "react-tooltip";
-import { IconEdit, IconDelete } from "../../icon";
-import DataTableUseCode from "../../DataTableUseCode";
-import formatTimestamp from "../../../utils/formatTimestamp";
+import { IconEdit, IconDelete, IconEye, IconView } from "../../icon";
+import DataTableUseId from "../../DataTableUseId";
+import formatDate from "../../../utils/formatDate";
 import jsUcfirst from "../../../utils/jsUcfirst";
 import Swal from "sweetalert2";
-
-export default function StudentTable({
-  haveActions=true,
-  students,
+import formatTimestamp from "../../../utils/formatTimestamp";
+export default function SubjectTable({
+  subjects,
   handleSoftDelete,
   handleShowEditModal,
+  handleShowStudentList,
   isSelectAll,
   isSelected,
   handleSelectAll,
   handleSelected,
   currentPage,
   setCurrentPage,
+  nextPage,
+  prevPage,
   totalPageCount,
   limitPerPage,
   setLimitPerPage,
   currentUser,
 }) {
- 
   const columnData = [
     {
-      field: "first_name",
-      headerName: "Họ",
+      field: "name",
+      headerName: "Tên học môn học",
       renderCell: (item) => {
         return (
           <div className="flex gap-x-2 items-center">
-            <p className="text-sm">{jsUcfirst(item.first_name)}</p>
-          </div>
-        );
-      },
-    },
-    {
-      field: "last_name",
-      headerName: "Tên",
-      renderCell: (item) => {
-        return (
-          <div className="flex gap-x-2 items-center">
-            <p className="text-sm">{jsUcfirst(item.last_name)}</p>
+            <p className="text-sm">{jsUcfirst(item.name)}</p>
           </div>
         );
       },
     },
     {
       field: "code",
-      headerName: "Mã sinh viên",
+      headerName: "Mã môn học",
       renderCell: (item) => {
-        return <span className="text-sm">{item.code}</span>;
+        return (
+          <div className="flex gap-x-2 items-center">
+            <p className="text-sm">{item.code}</p>
+          </div>
+        );
       },
     },
     {
-      field: "class",
-      headerName: "Lớp",
+      field: "lecturer_code",
+      headerName: "Giảng viên",
       renderCell: (item) => {
-        return <span className="text-sm">{item.class_code.code}</span>;
+        return (
+          <div className="flex gap-x-2 items-center">
+            <p className="text-sm">{jsUcfirst(item.lecturer_code.first_name)} {jsUcfirst(item.lecturer_code.last_name)}</p>
+          </div>
+        );
       },
     },
     {
-      field: "email",
-      headerName: "Email",
+      field: "semester_id",
+      headerName: "Học kỳ",
       renderCell: (item) => {
-        return <span className="text-sm">{item.account_id.email}</span>;
+        return (
+          <div className="flex gap-x-2 items-center">
+            <p className="text-sm">{jsUcfirst(item.semester_id.name)}</p>
+          </div>
+        );
       },
     },
     {
-      field: "phone_number",
-      headerName: "Số điện thoại",
-      renderCell: (item) => {
-        return <span className="text-sm">{item.phone_number}</span>;
-      },
-    },
-    {
-      field: "joinDate",
-      headerName: "Ngày tham gia",
+      field: "created_at",
+      headerName: "Ngày tạo",
       renderCell: (item) => {
         return <span className="text-sm">{formatTimestamp(item.created_at)}</span>;
+      },
+    },
+
+    {
+      field: "status",
+      headerName: "Tình trạng",
+      renderCell: (item) => {
+        return (
+          <div>
+            {item.is_active === true ? (
+              <span className="inline-flex px-2 text-xs font-medium leading-5 rounded-full text-black bg-slate-100">
+                Còn hoạt động
+              </span>
+            ) : (
+              <span className="inline-flex px-2 text-xs font-medium leading-5 rounded-full text-red-500 bg-slate-100">
+                Ngưng hoạt động
+              </span>
+            )}
+          </div>
+        );
       },
     },
     {
@@ -88,10 +102,18 @@ export default function StudentTable({
         return (
           <div className="flex justify-center items-center text-gray-400 gap-x-4">
             <button
+              data-tooltip-id="view"
+              data-tooltip-content="Xem danh sách sinh viên"
+              className="hover:text-primary"
+              onClick={() => handleShowStudentList(item.id)}
+            >
+              <IconView />
+            </button>
+            <button
               data-tooltip-id="edit"
               data-tooltip-content="Chỉnh sửa"
               className="hover:text-primary"
-              onClick={() => handleShowEditModal(item.code)}
+              onClick={() => handleShowEditModal(item.id)}
             >
               <IconEdit />
             </button>
@@ -100,7 +122,7 @@ export default function StudentTable({
               onClick={() => {
                 Swal.fire({
                   title: "Bạn chắc chắn muốn xoá?",
-                  text: "Sinh viên sẽ được chuyển vào thùng rác.",
+                  text: "Lớp sẽ được chuyển vào thùng rác.",
                   icon: "question",
                   showCancelButton: true,
                   confirmButtonColor: "#0E9F6E",
@@ -109,10 +131,10 @@ export default function StudentTable({
                   confirmButtonText: "Đồng ý!",
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    handleSoftDelete(item.code);
+                    handleSoftDelete(item.id);
                     Swal.fire({
                       title: "Đã chuyển vào thùng rác",
-                      text: "Sinh viên đã được chuyển vào thùng rác.",
+                      text: "Lớp đã được chuyển vào thùng rác.",
                       confirmButtonColor: "#0E9F6E",
                     });
                   }
@@ -130,20 +152,19 @@ export default function StudentTable({
       },
     },
   ];
-  if(!haveActions){
-    columnData.pop();
-    columnData.pop();
-  }
+
   return (
-    <DataTableUseCode
+    <DataTableUseId
       columnData={columnData}
-      rowData={students}
-      select={haveActions}
+      rowData={subjects}
+      select
       isSelectAll={isSelectAll}
       isSelected={isSelected}
       handleSelected={handleSelected}
       handleSelectAll={handleSelectAll}
       currentPage={currentPage}
+      nextPage={nextPage}
+      prevPage={prevPage}
       setCurrentPage={setCurrentPage}
       totalPageCount={totalPageCount}
       limitPerPage={limitPerPage}

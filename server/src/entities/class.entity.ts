@@ -1,4 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, BaseEntity, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, BaseEntity, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
+import { Lecturer } from './lecturer.entity';
+import { Student } from './student.entity';
 @Entity({name: "class"})
 export class Class extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -6,6 +8,13 @@ export class Class extends BaseEntity {
 
   @Column({ nullable: false })
   name: string;
+
+  @ManyToOne(() => Lecturer, lecturer => lecturer.code)
+  @JoinColumn({ name: 'lecturer_code' })
+  lecturer_code: Lecturer;
+
+  @OneToMany(() => Student, student => student.class_code)
+  students: Student[];
 
   @Column({ default: true })
   is_active: boolean;

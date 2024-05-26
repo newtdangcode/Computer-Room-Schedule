@@ -41,6 +41,9 @@ export default function Employee() {
     if(isSelected.length === lecturers.length && lecturers.length > 0) {
       setIsSelectAll(true);
     }
+    if(isSelected.length === 0) {
+      setIsSelectAll(false);
+    }
   }, [ isSelected]);
   const handleSelectAll = () => {
     setIsSelectAll(!isSelectAll);

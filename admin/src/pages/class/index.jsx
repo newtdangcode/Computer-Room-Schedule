@@ -9,8 +9,12 @@ import ClassTable from "../../components/class/classTable";
 import AddModalClass from "../../components/class/classAddModal";
 import classAPI from "../../api/classAPI";
 import PageLayout from "../../components/layout/pageLayout";
+import studentAPI from "../../api/studentAPI";
+import { set } from "react-hook-form";
+import StudentListModal from "../../components/student/studentListModal";
 
 export default function Class() {
+  const [class_code, setClass_code] = useState();
   const [classes, setClasses] = useState([]);
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [isSelected, setIsSelected] = useState([]);
@@ -25,6 +29,7 @@ export default function Class() {
   const [sortValue, setSortValue] = useState("");
   const [isShowAddModal, setIsShowAddModal] = useState(false);
   const [isShowEditModal, setIsShowEditModal] = useState(false);
+  const [isShowStudentList, setIsShowStudentList] = useState(false);
   const [editClass, setEditClass] = useState();
   const [searchKeyWord, setSearchKeyWord] = useState("");
   const debounceValue = useDebounce(searchKeyWord, 500);
@@ -35,10 +40,13 @@ export default function Class() {
   useEffect(() => {
     getAllClass();
     //console.log('EMPLOYESS ',classes);
-  }, [debounceValue, isShowDeletedTable, currentPage, limitPerPage, sortValue, isShowAddModal, isShowEditModal]);
+  }, [debounceValue, isShowDeletedTable, currentPage, limitPerPage, sortValue, isShowAddModal, isShowEditModal, isShowStudentList]);
   useEffect(() => {
     if(isSelected.length === classes.length && classes.length > 0) {
       setIsSelectAll(true);
+    }
+    if(isSelected.length === 0) {
+      setIsSelectAll(false);
     }
   }, [ isSelected]);
   const handleSelectAll = () => {
@@ -85,11 +93,12 @@ export default function Class() {
       setTotalPageCount(response.lastPage);
       setNextPage(response.nextPage);
       setPrevPage(response.prevPage);
-      console.log(response.data);
+      //console.log(response.data);
     } catch (err) {
       console.log(err);
     }
   };
+  
   const handleSoftDelete = async (code) => {
     try {
       await classAPI.update(code, { is_active: false });
@@ -145,6 +154,14 @@ export default function Class() {
   const handleUpdateClass = async (code, data) => {
     await classAPI.update(code, data);
   }
+  const handleCloseStudentList = () => {
+    setIsShowStudentList(!isShowStudentList);
+  };
+  const handleShowStudentList = (code) => {
+    setIsShowStudentList(!isShowStudentList);
+    setClass_code(code);
+  }
+  
 
   return (
     <PageLayout title="Lớp">
@@ -367,6 +384,7 @@ export default function Class() {
             classes={classes}
             //handleDelete={handleDelete}
             handleRestore={handleRestore}
+            handleShowStudentList={handleShowStudentList}
             handleSelected={handleSelected}
             isSelected={isSelected}
             handleSelectAll={handleSelectAll}
@@ -388,6 +406,7 @@ export default function Class() {
             classes={classes}
             handleSoftDelete={handleSoftDelete}
             handleShowEditModal={handleShowEditModal}
+            handleShowStudentList={handleShowStudentList}
             isSelectAll={isSelectAll}
             isSelected={isSelected}
             handleSelectAll={handleSelectAll}
@@ -419,6 +438,13 @@ export default function Class() {
           handleUpdateClass={handleUpdateClass}
           editClass={editClass}
         
+        />
+      )}
+      {isShowStudentList && (
+        <StudentListModal
+          closeModal={handleCloseStudentList}
+          class_code={class_code}
+          
         />
       )}
     </PageLayout>

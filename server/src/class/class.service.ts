@@ -34,6 +34,7 @@ export class ClassService {
         const order = getOrder(sort);
         const [classs, total] = await this.classRepostiory.findAndCount({
             where,
+            relations: { lecturer_code: true },
             order,
             take: limit,
             skip: adjustedOffset,
@@ -58,12 +59,21 @@ export class ClassService {
 
     async getOne(code: string) {
         try {
-            const classFound = await this.classRepostiory.findOneBy({ code });
+            const classFound = await this.classRepostiory.findOne({where: { code: code },  relations:{lecturer_code: true} });
             if(!classFound) {
                 throw new HttpException('Class is not fount', HttpStatus.NOT_FOUND);
             } else {
                 return classFound;
             }
+        } catch (error) {
+            throw new HttpException(error.message, error.status);
+        }
+    }
+
+    async getStudentList(code: string) {
+        try {
+           const respone = await this.classRepostiory.findOne({where: {code: code}, relations: ['students', 'students.class_code', 'students.account_id', 'lecturer_code']});
+           return respone;
         } catch (error) {
             throw new HttpException(error.message, error.status);
         }
@@ -75,7 +85,8 @@ export class ClassService {
             if(checkExistCode) {
                 throw new HttpException('Mã lớp đã tồn tại', HttpStatus.BAD_REQUEST);
             } else {
-                const classCreated = await this.classRepostiory.save(createClassDto);
+                const {code, name, lecturer_code} = createClassDto;
+                const classCreated = await this.classRepostiory.save({code, name, lecturer_code:{code: lecturer_code}});
                 return classCreated;
             }
         } catch (error) {
@@ -85,7 +96,9 @@ export class ClassService {
 
     async update(updateClassDto: UpdateClassDto, code: string) {
         try {
-            await this.classRepostiory.update(code , updateClassDto);
+            const classFound = await this.getOne(code);
+            const {name, lecturer_code, is_active} = updateClassDto;
+            await this.classRepostiory.update(code , {name, lecturer_code: {code: lecturer_code||classFound.lecturer_code.code}, is_active});
             return this.getOne(code);
         } catch (error) {
             throw new HttpException(error.message, error.status);

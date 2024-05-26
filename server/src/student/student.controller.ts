@@ -28,11 +28,16 @@ export class StudentController {
         return await this.studentService.getAll(paginationParams, sort, filter);
     }
 
-    @Get('get-one-by-code/:code')
+    @Get('get-one/:code')
     async getOneBycode(@Param('code') code: string){
         return await this.studentService.getOneByCode(code);
     }
 
+    @Post('get-many')
+    async getMany(@Body() codes: string[]){
+        return await this.studentService.getMany(codes);
+        
+    }
 
     @Post('create')
     @UsePipes(ValidationPipe)

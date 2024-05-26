@@ -14,10 +14,13 @@ import { CreateStudentDto } from 'src/dto/student/create-student.dto';
 import { UpdateStudentDto } from 'src/dto/student/update-student.dto';
 import { UpdateAccountDto } from 'src/dto/account/update-account.dto';
 import { UpdateManyStudentDto } from 'src/dto/student/update-many-employee.dto';
+import { Subject } from 'rxjs';
+import { SubjectService } from 'src/subject/subject.service';
 
 @Injectable()
 export class StudentService {
     constructor(
+        @Inject(forwardRef(() => SubjectService)) private subjectService: SubjectService,
         @Inject(forwardRef(() => AuthService)) private authService: AuthService,
         @InjectRepository(Account) private accountRepository:Repository<Account>,
         @InjectRepository(Student) private studentRepository:Repository<Student>,
@@ -71,7 +74,7 @@ export class StudentService {
             },
             relations: {account_id:{role_id:true}, class_code:true}
         });
-       
+        //console.log('studentAccount', studentAccount);
         if(studentAccount){
             
             delete studentAccount.account_id.password;
@@ -99,6 +102,22 @@ export class StudentService {
             } else {
                 throw new HttpException('Student is not found', HttpStatus.NOT_FOUND);
             }
+        }
+        
+    }
+    async getMany(codes: string[]){
+        try{
+            if(codes.length>0){
+                let students = [];
+                await Promise.all(codes.map(async (code) => {
+                    students.push(await this.getOneByCode(code));
+                }));
+                return students;
+            }else {
+                throw new HttpException('No student code is provided', HttpStatus.BAD_REQUEST);
+            }
+        }catch(err){
+            throw new HttpException(err.message, err.status);
         }
         
     }

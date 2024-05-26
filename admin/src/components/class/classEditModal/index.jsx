@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Drawer from "../../modal/drawer";
 import ModalHeader from "../../modal/header";
@@ -7,7 +7,20 @@ import ModalFooter from "../../modal/footer";
 import styles from "./styles.module.css";
 import yup from "../../../utils/yupGlobal";
 import toastMessage from "../../../utils/toastMessage";
+import lecturerAPI from "../../../api/lecturerAPI";
 export default function EditModalClass({ haveCloseModal = true, closeModal, title, titleBtnFooter, handleUpdateClass, editClass }) {
+  useEffect(() => {
+    getAllLecturer();
+  }, []);
+  const [lecturers, setLecturers] = useState([]); 
+  const getAllLecturer = async () => {
+    try {
+      const response = await lecturerAPI.getAllWithoutParams();
+      setLecturers(response.data.filter((item) => item.code !== editClass.lecturer_code.code));
+    }catch (error) {
+      console.log(error);
+    }
+  };
   const schema = yup.object().shape({
     name: yup.string().required("Vui lòng nhập tên lớp."),
     
@@ -62,7 +75,29 @@ export default function EditModalClass({ haveCloseModal = true, closeModal, titl
                 {errors.name && <p className="text-red-500 text-sm">{`*${errors.name.message}`}</p>}
               </div>
             </div>
-
+            <div className={`${styles.item}`}>
+              <div className="w-1/3 text-sm text-gray-700 font-medium dark:text-gray-400">
+                <label>Giảng viên</label>
+              </div>
+              <div className="flex flex-col w-2/3 ">
+                <select
+                  defaultValue={editClass.lecturer_code.code}
+                  {...register("lecturer_code")}
+                  className="block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none"
+                >
+                    <option value={editClass.lecturer_code.code}>
+                      {editClass.lecturer_code.code}-{editClass.lecturer_code.name}
+                    </option>
+                {lecturers.map((item) => (
+                  <option value={item.code} key={item.code}>
+                    {item.code}-{item.name}
+                  </option>
+                ))}
+                    
+                </select>
+                {errors.lecturer_code && <p className="text-red-500 text-sm">{`*${errors.lecturer_code.message}`}</p>}
+              </div>
+            </div>
             
             <input type="submit" hidden id="send" disabled={isLoading} />
           </form>

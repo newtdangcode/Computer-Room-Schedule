@@ -10,7 +10,7 @@ import AddModalSemester from "../../components/semester/semesterAddModal";
 import PageLayout from "../../components/layout/pageLayout";
 import semesterAPI from "../../api/semesterAPI";
 
-export default function Employee() {
+export default function Semester() {
   const [semesters, setSemesters] = useState([]);
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [isSelected, setIsSelected] = useState([]);
@@ -39,6 +39,9 @@ export default function Employee() {
   useEffect(() => {
     if(isSelected.length === semesters.length && semesters.length > 0) {
       setIsSelectAll(true);
+      if(isSelected.length === 0) {
+        setIsSelectAll(false);
+      }
     }
   }, [ isSelected]);
   const handleSelectAll = () => {

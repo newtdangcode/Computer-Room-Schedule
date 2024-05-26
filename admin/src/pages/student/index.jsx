@@ -12,8 +12,12 @@ import EditModalStudent from "../../components/student/studentEditModal";
 import classAPI from "../../api/classAPI";
 import StudentDeletedTable from "../../components/student/StudentDeletedTable";
 import StudentTable from "../../components/student/StudentTable";
+import AddToSubjectModal from "../../components/class/addToClassModal";
+import subjectAPI from "../../api/subjectAPI";
 
 export default function Employee() {
+  
+  const [isShowAddToSubjectModal, setIsShowAddToSubjectModal] = useState(false);
   const [classes, setClasses] = useState([]);
   const [students, setStudents] = useState([]);
   const [isSelectAll, setIsSelectAll] = useState(false);
@@ -44,6 +48,9 @@ export default function Employee() {
   useEffect(() => {
     if(isSelected.length === students.length && students.length > 0) {
       setIsSelectAll(true);
+    }
+    if(isSelected.length === 0) {
+      setIsSelectAll(false);
     }
   }, [ isSelected]);
   const handleSelectAll = () => {
@@ -81,6 +88,9 @@ export default function Employee() {
     params.search = "";
     if (debounceValue) {
       params.search = debounceValue.trim();
+    }
+    if (filterByClasss) {
+      params.class_code = filterByClasss;
     }
     if (sortValue) {
       params = { ...params, ...sortValue };
@@ -159,9 +169,12 @@ export default function Employee() {
   const handleUpdateStudent = async (code, data) => {
     await studentAPI.update(code, data);
   }
-
-  const handleAddToStudentListOfSubject = async () => {
-    
+  const handleShowAddToSubjectModal = () => {
+    setIsShowAddToSubjectModal(!isShowAddToSubjectModal);
+  }
+  const handleAddToSubject = async (subject_id, student_codes) => {
+    return await subjectAPI.addStudentsToSubject(subject_id, student_codes);
+  
   }
   return (
     <PageLayout title="Sinh viên">
@@ -290,7 +303,7 @@ export default function Employee() {
                            ? "bg-white border-primaryRed text-primary cursor-pointer hover:bg-primary hover:text-white"
                            : "bg-white border-red-200 text-red-200 cursor-not-allowed"
                        }`}
-                   onClick={handleAddToStudentListOfSubject}
+                   onClick={handleShowAddToSubjectModal}
                 >
                   <span className="mr-3">
                     <IconImport />
@@ -466,6 +479,13 @@ export default function Employee() {
           handleUpdateStudent={handleUpdateStudent}
           student={editStudent}
         
+        />
+      )}
+      {isShowAddToSubjectModal && (
+        <AddToSubjectModal
+          closeModal={handleShowAddToSubjectModal}
+          student_codes={isSelected}
+          handleAddToSubject={handleAddToSubject}
         />
       )}
     </PageLayout>

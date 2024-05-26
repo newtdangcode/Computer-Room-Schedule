@@ -1,5 +1,5 @@
 import { Tooltip } from "react-tooltip";
-import { IconRestore } from "../../icon";
+import { IconRestore, IconEye, IconView } from "../../icon";
 import DataTableUseCode from "../../DataTableUseCode";
 import formatTimestamp from "../../../utils/formatTimestamp";
 import jsUcfirst from "../../../utils/jsUcfirst";
@@ -8,6 +8,7 @@ export default function ClassDeletedTable({
   classes,
   handleDelete,
   handleRestore,
+  handleShowStudentList,
   isSelectAll,
   isSelected,
   handleSelectAll,
@@ -75,6 +76,14 @@ export default function ClassDeletedTable({
       renderCell: (item) => {
         return (
           <div className="flex justify-center items-center text-gray-400 gap-x-4">
+            <button
+              data-tooltip-id="view"
+              data-tooltip-content="Xem danh sách sinh viên"
+              className="hover:text-primary"
+              onClick={() => handleShowStudentList(item.code)}
+            >
+              <IconView />
+            </button>
             <button
               onClick={() => {
                 Swal.fire({
