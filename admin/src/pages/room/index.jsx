@@ -7,18 +7,28 @@ import PageLayout from "../../components/layout/pageLayout";
 import roomAPI from "../../api/roomAPI";
 import { useSelector } from "react-redux";
 import useDebounce from "../../hooks/useDebounce";
+import AddModalRoom from "../../components/room/roomAddModal";
+import EditModalRoom from "../../components/room/RoomEditModal";
+
+
 
 export default function Room() {
-    const [room, setRooms] = useState([]);
+    const [rooms, setRooms] = useState([]);
+  
     const [isSelectAll, setIsSelectAll] = useState(false);
   const [isSelected, setIsSelected] = useState([]);
-  const [isShowRoomDeletedTable, setIsShowRoomDeletedTable] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [isShowDeletedTable, setIsShowDeletedTable] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1);
   const [totalPageCount, setTotalPageCount] = useState(0);
+  const [nextPage, setNextPage] = useState();
+  const [prevPage, setPrevPage] = useState();
+  const [isShowAddModal, setIsShowAddModal] = useState(false);
   const [limitPerPage, setLimitPerPage] = useState(10);
   const currentUser = useSelector((state) => state.auth.currentUser);
   const [sortValue,setSortValue]=useState("");
+  const [editRoom, setEditRoom] = useState();
   const [searchKeyWord,setSearchKeyWord]=useState("");
+  const [isShowEditModal, setIsShowEditModal] = useState(false)
   const debounceValue = useDebounce(searchKeyWord, 500);
   useEffect(()=>{
     getAllRoom();
@@ -27,74 +37,132 @@ export default function Room() {
     getAllRoom()
   },[
     debounceValue,
-    isShowRoomDeletedTable,
+    isShowDeletedTable,
+    isShowAddModal,
     currentPage,
     limitPerPage,
     sortValue,
   ])
+  useEffect(() => {
+    if(isSelected.length === rooms.length && rooms.length > 0) {
+      setIsSelectAll(true);
+    }
+  }, [ isSelected]);
   const handleSelectAll=()=>{
-    setIsSelectAll(isSelectAll);
+    setIsSelectAll(!isSelectAll);
     if(!isSelectAll){
-      const allRoomIds=room.map((room)=>room.id);
+      const allRoomIds=rooms.map((_room)=>_room.code);
       setIsSelected(allRoomIds);
 
     }else{
       setIsSelected([]);
     }
   };
-  const handleSelected=(event)=>{
-    const {id,check}=event.target;
-    var idInt=parseInt(id,10);
-    setIsSelected([...isSelected,idInt]);
-    console.log(idInt,"",idInt);
-    if(!check){
-      setIsSelected(isSelected.filter((room_id)=>room_id!==idInt));
+  const handleSelected = (event) => {
+    const { id, checked } = event.target;
+    const code = id;
+    //const { code } = event.target.getAttribute("code");
+    //var codeInt=parseInt(code,10);
+    setIsSelected([...isSelected, code]);
+    //console.log(checked, "-", code);
+    if (!checked) {
+      setIsSelected(isSelected.filter((room_code) => room_code !== code));
     }
+    console.log(id);
   };
-  const getAllRoom =async()=>{
-    let params ={page:currentPage,limit:limitPerPage};
-    if(debounceValue){
-      params.search=debounceValue.trim();
+  const getAllRoom = async () => {
+    let params = { page: currentPage, limit: limitPerPage };
+    params.filter = "";
+    params.search = "";
+    if (debounceValue) {
+      params.search = debounceValue.trim();
     }
-    if(sortValue){
-      params={...params,...sortValue};
+    if (sortValue) {
+      params = { ...params, ...sortValue };
     }
-    if(isShowRoomDeletedTable){
+    if(isShowDeletedTable){
       params.is_active=false;
-    }
-    else{
+    }else{
       params.is_active=true;
     }
+    
     try {
-      const response=await roomAPI.getAllRoom(params);
-      if(response.data.length===0&&response.currentPage!==1){
-        setCurrentPage(response.currentPage-1);
+      const response = await roomAPI.getAll(params);
+      if (response.data.length === 0 && response.currentPage !== 1 && response.currentPage > 1) {
+        setCurrentPage(response.currentPage - 1);
       }
       setRooms(response.data);
-      setTotalPageCount(response.totalPages);
+      setTotalPageCount(response.lastPage);
+      setNextPage(response.nextPage);
+      setPrevPage(response.prevPage);
+      console.log(response.data);
     } catch (err) {
-      console.log(err);
+      console.log('Error:', err.response ? err.response.data : err.message);
     }
-  }
-  const handleShowDeletedTable=()=>{
-    setIsShowRoomDeletedTable(!isShowRoomDeletedTable);
-  }
-  const handleSoftDelete = async (id)=>{
+  };
+
+  const handleSoftDelete = async ()=>{
     try {
-      await roomAPI.updateRoomStatus(id, { is_active: false });
+      await roomAPI.updateMany(isSelected.map((code) => ({ code: code, is_active: false,status_id:3 })));
       await getAllRoom();
     } catch (error) {
       console.log(error);
     }
   }
-
-
+  const handleSoftDeleteMany=async()=>{
+    try{
+      await roomAPI.updateMany(isSelected.map((code)=>({ code: code, is_active: false ,status_id:3})))
+      await getAllRoom()
+    }catch(err){
+      console.log(err);
+    }
+  }
+  const handleShowDeletedTable = () => {
+    setIsShowDeletedTable(!isShowDeletedTable);
+  };
+  const handleRestore = async ()=>{
+    try {
+      await roomAPI.updateMany(isSelected.map((code) => ({ code: code, is_active: true,status_id:1 })));
+      await getAllRoom();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const handleRestoreMany = async() => {
+    const data = [];
+    isSelected.map((code)=>{
+      data.push({code:code,is_active:true,status_id:1});
+    });
+    try {
+      await roomAPI.updateMany(data);
+      await getAllRoom();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
+  const handleShowAddModal=()=>{
+    setIsShowAddModal(!isShowAddModal)
+  }
+ const handleAddRoom=async (data)=>{
+    await roomAPI.create(data)
+  }
+  const handleShowEditModal=async(code)=>{
+    const editRoom=await rooms.find((_room)=>_room.code===code);
+    setEditRoom(editRoom);
+    setIsShowEditModal(!isShowEditModal);
+    getAllRoom();
+  }
+  const handleUpdateRoom= async(code,data)=>{
+    await roomAPI.update(code,data);
+  }
+  
   return (
     <PageLayout title="Phòng máy">
       <div className="bg-white rounded-lg ring-1 ring-gray-200 ring-opacity-4 overflow-hidden mb-5 shadow-xs">
         <div className="p-4">
           <div className="flex justify-end items-center py-3 gap-x-4">
-            {isShowRoomDeletedTable ? (
+            {isShowDeletedTable ? (
               <React.Fragment>
                 <button
                   disabled={isSelected.length <= 0}
@@ -110,7 +178,7 @@ export default function Room() {
                       confirmButtonText: "Đồng ý!",
                     }).then((result) => {
                       if (result.isConfirmed) {
-                        //handleRestoreManyStaff();
+                        handleRestoreMany();
                         Swal.fire({
                           title: "Đã Khôi phục",
                           text: "Các phòng máy đã được khôi phục.",
@@ -145,7 +213,7 @@ export default function Room() {
                       confirmButtonText: "Đồng ý!",
                     }).then((result) => {
                       if (result.isConfirmed) {
-                        //handleDeleteManyStaff();
+                        handleSoftDelete();
                         Swal.fire({
                           title: "Đã xoá",
                           text: "Các phòng máy đã được xoá.",
@@ -182,7 +250,7 @@ export default function Room() {
                       confirmButtonText: "Đồng ý!",
                     }).then((result) => {
                       if (result.isConfirmed) {
-                        //handleSoftDeleteManyStaff();
+                        handleSoftDeleteMany()
                         Swal.fire({
                           title: "Đã chuyển vào thùng rác",
                           text: "Các phòng máy đã được chuyển vào thùng rác.",
@@ -209,7 +277,7 @@ export default function Room() {
               className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
                         cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
                         text-white bg-primary border border-transparent hover:bg-[#a41c15] "
-              //onClick={handleShowAddModal}
+              onClick={handleShowAddModal}
             >
               <span className="mr-3">
                 <IconAdd />
@@ -253,16 +321,16 @@ export default function Room() {
                 <option value="" huser_idden="">
                   Sắp xếp
                 </option>
-                <option value={JSON.stringify({ sort: "name" })}>Tên (Tăng dần)</option>
-                <option value={JSON.stringify({ sort: "-name" })}>Tên (Giảm dần)</option>
-                <option value={JSON.stringify({ sort: "machine_quantity" })}>Số máy(Tăng dần)</option>
-                <option value={JSON.stringify({ sort: "-machine_quantity" })}>Số máy (giảm dần)</option>
+                <option value={JSON.stringify({ sort: "name:asc" })}>Tên (Tăng dần)</option>
+                <option value={JSON.stringify({ sort: "name:desc" })}>Tên (Giảm dần)</option>
+                <option value={JSON.stringify({ sort: "machine_quantity:asc" })}>Số máy(Tăng dần)</option>
+                <option value={JSON.stringify({ sort: "machine_quantity:desc" })}>Số máy (giảm dần)</option>
               
               </select>
               
             </div>
             
-            {isShowRoomDeletedTable ? (
+            {isShowDeletedTable ? (
               <button
               className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
               transition-colors duration-150 font-medium px-10 py-2 rounded-lg text-sm 
@@ -299,19 +367,22 @@ export default function Room() {
         </div>
       </div>
       <div className="flex justify-end mb-5 px-[20px]"></div>
-      {/* {isShowRoomDeletedTable ? (
+       {isShowDeletedTable ? (
         <React.Fragment>
           <h1 className="text-black font-bold mb-5">Thùng rác</h1>
           <RoomDeletedTable
-            room={room}
+            rooms={rooms}
             //handleDelete={handleDeleteStaff}
-            //handleRestore={handleRestoreStaff}
+            handleRestore={handleRestore}
             handleSelected={handleSelected}
             isSelected={isSelected}
             handleSelectAll={handleSelectAll}
             isSelectAll={isSelectAll}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
+            nextPage={nextPage}
+
+            prevPage={prevPage}
             totalPageCount={totalPageCount}
             limitPerPage={limitPerPage}
             setLimitPerPage={setLimitPerPage}
@@ -322,9 +393,9 @@ export default function Room() {
         <React.Fragment>
           <h1 className="text-black font-bold mb-5">Danh sách</h1>
           <RoomTable
-            room={room}
+            rooms={rooms}
             handleSoftDelete={handleSoftDelete}
-            //handleShowEditStaffModal={handleShowEditStaffModal}
+            handleShowEditModal={handleShowEditModal}
             isSelectAll={isSelectAll}
             isSelected={isSelected}
             handleSelectAll={handleSelectAll}
@@ -337,7 +408,26 @@ export default function Room() {
             currentUser={currentUser}
           />
         </React.Fragment>
-      )} */}
+      )} {
+        isShowAddModal&&(
+          <AddModalRoom
+          closeModal={handleShowAddModal}
+          title={"Thêm phòng"}
+          titleBtnFooter={"Thêm"}
+          handleAddRoom={handleAddRoom}
+          
+          />
+        )}
+        {isShowEditModal && (
+        <EditModalRoom
+          closeModal={handleShowEditModal}
+          title={"CẬP NHẬT PHÒNG"}
+          titleBtnFooter={"CẬP NHẬT"}
+          handleUpdateRoom={handleUpdateRoom}
+          editRoom={editRoom}
+        
+        />
+      )}
     </PageLayout>
   );
 }
