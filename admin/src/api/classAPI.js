@@ -41,7 +41,7 @@ const classAPI = {
         Authorization: `Bearer ${access_token}`,
       },
     });
-
+  
     return response;
   },
 

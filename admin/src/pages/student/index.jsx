@@ -7,7 +7,7 @@ import { IconBin, IconAdd, IconDelete, IconBack, IconRestore, IconImport } from 
 import PageLayout from "../../components/layout/pageLayout";
 import studentAPI from "../../api/studentAPI";
 import { useSelector } from "react-redux";
-import AddModalStudent from "../../components/student/studentAddModal";
+import AddModalStudent from "../../components/student/StudentAddModal";
 import EditModalStudent from "../../components/student/studentEditModal";
 import classAPI from "../../api/classAPI";
 import StudentDeletedTable from "../../components/student/StudentDeletedTable";

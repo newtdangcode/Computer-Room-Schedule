@@ -11,7 +11,7 @@ export class Room {
   name: string;
 
   @Column({ type: 'int', nullable: true })
-  machineQuantity: number;
+  machine_quantity: number;
 
   @ManyToOne(() => Employee, employee => employee.code)
   @JoinColumn({ name: 'employee_code'})
@@ -22,12 +22,12 @@ export class Room {
   status_id: RoomStatus;
 
   @Column({ type: 'boolean', default: true })
-  isActive: boolean;
+  is_active: boolean;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  updatedAt: Date;
+  updated_at: Date;
 
 }

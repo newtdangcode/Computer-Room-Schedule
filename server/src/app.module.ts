@@ -16,6 +16,10 @@ import { StudentModule } from './student/student.module';
 import { LecturerModule } from './lecturer/lecturer.module';
 import { SemesterModule } from './semester/semester.module';
 import { Semester } from './entities/semester.entity';
+import { RoomModule } from './room/room.module';
+import { Room } from './entities/room.entity';
+import { RoomStatus } from './entities/roomStatus.entity';
+import { RoomStatusModule } from './roomStatus/roomStatus.module';
 
 @Module({
   imports: [
@@ -23,7 +27,7 @@ import { Semester } from './entities/semester.entity';
       type: 'mysql',
       host: 'localhost',
       port: 3306,
-      username:'',
+      username:'root',
       password:'',
       database:'computer-room-schedule',
       entities: [
@@ -34,6 +38,8 @@ import { Semester } from './entities/semester.entity';
         Lecturer,
         Employee,
         Semester,
+        Room,
+        RoomStatus
       ],
       synchronize: false,
 
@@ -45,6 +51,8 @@ import { Semester } from './entities/semester.entity';
     StudentModule,
     LecturerModule,
     SemesterModule,
+    RoomModule,
+    RoomStatusModule
 
   ],
   controllers: [AppController],

@@ -7,7 +7,7 @@ import { IconBin, IconAdd, IconDelete, IconBack, IconRestore } from "../../compo
 import PageLayout from "../../components/layout/pageLayout";
 import lecturerAPI from "../../api/lecturerAPI";
 import { useSelector } from "react-redux";
-import AddModalLecturer from "../../components/lecturer/lecturerAddModal";
+import AddModalLecturer from "../../components/lecturer/LecturerAddModal";
 import EditModalLecturer from "../../components/lecturer/lecturerEditModal";
 
 export default function Employee() {

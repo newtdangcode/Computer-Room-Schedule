@@ -60,6 +60,7 @@ export default function Class() {
     if (!checked) {
       setIsSelected(isSelected.filter((class_code) => class_code !== code));
     }
+    console.log(id);
   };
   const getAllClass = async () => {
     let params = { page: currentPage, limit: limitPerPage };
