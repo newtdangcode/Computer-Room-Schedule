@@ -6,12 +6,13 @@ const employeeAPI={
     const access_token = await localStorage.getItem("access_token");
     
   
-    const url = "/lecturer/get-all";
+    const url = "/employee/get-all";
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
     });
+    console.log(response)
 
     return response;
   },
