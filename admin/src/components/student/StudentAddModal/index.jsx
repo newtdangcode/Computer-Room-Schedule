@@ -283,7 +283,7 @@ export default function AddModalStudent({ closeModal, title, titleBtnFooter, han
                   className="block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none"
                 >
                   
-                  <option value={2}>sinh viên</option>
+                  <option value={4}>sinh viên</option>
                 </select>
               </div>
             </div>

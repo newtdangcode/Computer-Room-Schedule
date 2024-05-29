@@ -264,6 +264,7 @@ export class AuthService {
                 generateTokenData = await this.generateToken(payload);
                 return {...user,...generateTokenData};
             case 4:
+                
                 user = await this.studentService.getOneByUsername(account.username);
                 payload = {
                     id: account.id,

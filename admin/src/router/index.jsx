@@ -84,7 +84,10 @@ const employeeRouter = [
     path: "/lecturers",
     element: Lecturer,
   },
-  
+  {
+    path: "/setting",
+    element: Setting,
+  },
 ];
 const lecturerRouter = [
   {
