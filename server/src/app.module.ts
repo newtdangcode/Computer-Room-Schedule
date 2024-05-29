@@ -21,6 +21,8 @@ import { Subject } from './entities/subject.entity';
 import { BookingStatus } from './entities/bookingStatus.entity';
 import { Room } from './entities/room.entity';
 import { RoomStatus } from './entities/roomStatus.entity';
+import { RoomModule } from './room/room.module';
+import { RoomStatusModule } from './roomStatus/roomStatus.module';
 
 
 @Module({
@@ -42,7 +44,8 @@ import { RoomStatus } from './entities/roomStatus.entity';
         Semester,
         Subject,
         BookingStatus,
-        
+        Room,
+        RoomStatus,
 
       ],
       synchronize: false,
@@ -56,7 +59,8 @@ import { RoomStatus } from './entities/roomStatus.entity';
     LecturerModule,
     SemesterModule,
     SubjectModule,
-    
+    RoomModule,
+    RoomStatusModule
 
   ],
   controllers: [AppController],

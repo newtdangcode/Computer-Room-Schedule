@@ -32,6 +32,7 @@
     "socket.io-client": "^4.6.2",
     "sweetalert2": "^11.7.5",
     "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5",
     "yup": "^1.0.2"
   },
   "scripts": {

@@ -14,9 +14,10 @@ import StudentDeletedTable from "../../components/student/StudentDeletedTable";
 import StudentTable from "../../components/student/StudentTable";
 import AddToSubjectModal from "../../components/class/addToClassModal";
 import subjectAPI from "../../api/subjectAPI";
+import * as XLSX from "xlsx";
 
 export default function Employee() {
-  
+  const [file, setFile] = useState(null);
   const [isShowAddToSubjectModal, setIsShowAddToSubjectModal] = useState(false);
   const [classes, setClasses] = useState([]);
   const [students, setStudents] = useState([]);
@@ -174,7 +175,21 @@ export default function Employee() {
   }
   const handleAddToSubject = async (subject_id, student_codes) => {
     return await subjectAPI.addStudentsToSubject(subject_id, student_codes);
-  
+  }
+  const handleUploadFile = async (e) => {
+    console.log('reading input file:');
+    const file = e.target.files[0];
+    const data = await file.arrayBuffer();
+    const workbook = XLSX.read(data);
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+        header: 1,
+        defval: "",
+    });
+
+    //console.log(e.target.files[0]);
+    //console.log(workbook);
+    console.log(jsonData);
   }
   return (
     <PageLayout title="Sinh viên">
@@ -324,6 +339,31 @@ export default function Employee() {
               </span>
               Thêm Sinh Viên
             </button>
+
+            
+          </div>
+        
+        </div>
+      </div>
+      <div  className="bg-white rounded-lg ring-1 ring-gray-200 ring-opacity-4 overflow-huser_idden mb-5 shadow-xs">
+        <div className="p-4">
+          <div className="flex justify-end items-center py-3 gap-x-4">
+            <input 
+              onInput={(e) => handleUploadFile(e)}
+              className="h-12 border border-primary inline-flex items-center justify-center"
+              type="file" 
+            />
+            <button
+                className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
+                cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
+                text-primary bg-white border border-primaryRed  hover:bg-primary hover:text-white "
+                
+              >
+                <span className="mr-3">
+                  <IconAdd />
+                </span>
+                Nhập danh sách sinh viên
+              </button>
           </div>
         </div>
       </div>
