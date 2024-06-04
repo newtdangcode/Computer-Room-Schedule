@@ -5,6 +5,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: 'http://localhost:3000' , // Chỉ định nguồn cho phép truy cập
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
     credentials: true, // Cho phép sử dụng cookies trong yêu cầu
   });
   await app.listen(8080);

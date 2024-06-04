@@ -141,6 +141,7 @@ export default function SemesterTable({
       totalPageCount={totalPageCount}
       limitPerPage={limitPerPage}
       setLimitPerPage={setLimitPerPage}
+      currentUser={currentUser}
     />
   );
 }

@@ -35,21 +35,19 @@ export default function Subject() {
   const debounceValue = useDebounce(searchKeyWord, 500);
   useEffect(() => {
     getAllSubject();
-    
   }, []);
   useEffect(() => {
-    
     getAllSubject();
     //console.log('EMPLOYESS ',subjects);
   }, [debounceValue, isShowDeletedTable, currentPage, limitPerPage, sortValue, isShowAddModal, isShowEditModal]);
   useEffect(() => {
-    if(isSelected.length === subjects.length && subjects.length > 0) {
+    if (isSelected.length === subjects.length && subjects.length > 0) {
       setIsSelectAll(true);
     }
-    if(isSelected.length === 0) {
+    if (isSelected.length === 0) {
       setIsSelectAll(false);
     }
-  }, [ isSelected]);
+  }, [isSelected]);
   const handleSelectAll = () => {
     setIsSelectAll(!isSelectAll);
     if (!isSelectAll) {
@@ -61,9 +59,9 @@ export default function Subject() {
   };
   const handleSelected = (event) => {
     const { id, checked } = event.target;
-   
+
     //const { code } = event.target.getAttribute("code");
-    const idInt=parseInt(id,10);
+    const idInt = parseInt(id, 10);
     setIsSelected([...isSelected, idInt]);
     //console.log(checked, "-", code);
     if (!checked) {
@@ -74,6 +72,7 @@ export default function Subject() {
     let params = { page: currentPage, limit: limitPerPage };
     params.filter = "";
     params.search = "";
+    params.currentUser = currentUser;
     if (debounceValue) {
       params.search = debounceValue.trim();
     }
@@ -100,10 +99,10 @@ export default function Subject() {
       console.log(err);
     }
   };
-  
+
   const handleSoftDelete = async (id) => {
     try {
-      const idInt=parseInt(id,10);
+      const idInt = parseInt(id, 10);
       await subjectAPI.update(idInt, { is_active: false });
       await getAllSubject();
     } catch (error) {
@@ -123,17 +122,17 @@ export default function Subject() {
   };
   const handleRestore = async (id) => {
     try {
-      const idInt=parseInt(id,10);
+      const idInt = parseInt(id, 10);
       await subjectAPI.update(idInt, { is_active: true });
       await getAllSubject();
     } catch (err) {
       console.log(err);
     }
   };
-  const handleRestoreMany = async() => {
+  const handleRestoreMany = async () => {
     const data = [];
-    isSelected.map((id)=>{
-      data.push({id:id,is_active:true});
+    isSelected.map((id) => {
+      data.push({ id: id, is_active: true });
     });
     try {
       await subjectAPI.updateMany(data);
@@ -149,162 +148,163 @@ export default function Subject() {
     //console.log("fontend ",data);
     await subjectAPI.create(data);
   };
-  const handleShowEditModal = async(id) => {
-    const idInt=parseInt(id,10);
+  const handleShowEditModal = async (id) => {
+    const idInt = parseInt(id, 10);
     const editSubject = await subjects.find((subject) => subject.id === idInt);
     //console.log(subjects);
     setEditSubject(editSubject);
     setIsShowEditModal(!isShowEditModal);
   };
   const handleUpdateSubject = async (id, data) => {
-    const idInt=parseInt(id,10);
+    const idInt = parseInt(id, 10);
     await subjectAPI.update(idInt, data);
-  }
+  };
   const handleCloseStudentList = () => {
     setIsShowStudentList(!isShowStudentList);
   };
   const handleShowStudentList = (id) => {
     setIsShowStudentList(!isShowStudentList);
     setSubject_id(id);
-  }
-  
+  };
 
   return (
-    <PageLayout title="Học môn học">
-      <div className="bg-white rounded-lg ring-1 ring-gray-200 ring-opacity-4 overflow-hidden mb-5 shadow-xs">
-        <div className="p-4">
-          <div className="flex justify-end items-center py-3 gap-x-4">
-            {isShowDeletedTable ? (
-              <React.Fragment>
-                <button
-
-                  disabled={isSelected.length <= 0}
-                  onClick={() => {
-                    Swal.fire({
-                      title: "Bạn chắc chắn muốn xoá?",
-                      text: "Các Học môn học sẽ được xoá và không thể khôi phục.",
-                      icon: "question",
-                      showCancelButton: true,
-                      confirmButtonColor: "#0E9F6E",
-                      cancelButtonColor: "#d33",
-                      cancelButtonText: "Huỷ bỏ",
-                      confirmButtonText: "Đồng ý!",
-                    }).then((result) => {
-                      if (result.isConfirmed) {
-                        //handleDeleteMany();
-                        Swal.fire({
-                          title: "Đã xoá",
-                          text: "Các Học môn học đã được xoá.",
-                          confirmButtonColor: "#0E9F6E",
-                        });
-                      }
-                    });
-                  }}
-                  className={` h-12 align-bottom inline-flex leading-5 items-center justify-center 
+    <PageLayout title="Môn học">
+      {currentUser.account_id.role_id.id === 3 ? null : (
+        <div className="bg-white rounded-lg ring-1 ring-gray-200 ring-opacity-4 overflow-hidden mb-5 shadow-xs">
+          <div className="p-4">
+            <div className="flex justify-end items-center py-3 gap-x-4">
+              {isShowDeletedTable ? (
+                <React.Fragment>
+                  <button
+                    disabled={isSelected.length <= 0}
+                    onClick={() => {
+                      Swal.fire({
+                        title: "Bạn chắc chắn muốn xoá?",
+                        text: "Các Môn học sẽ được xoá và không thể khôi phục.",
+                        icon: "question",
+                        showCancelButton: true,
+                        confirmButtonColor: "#0E9F6E",
+                        cancelButtonColor: "#d33",
+                        cancelButtonText: "Huỷ bỏ",
+                        confirmButtonText: "Đồng ý!",
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          //handleDeleteMany();
+                          Swal.fire({
+                            title: "Đã xoá",
+                            text: "Các Môn học đã được xoá.",
+                            confirmButtonColor: "#0E9F6E",
+                          });
+                        }
+                      });
+                    }}
+                    className={` h-12 align-bottom inline-flex leading-5 items-center justify-center 
                       transition-colors duration-150 font-medium px-10 py-2 rounded-lg text-sm 
                       text-white border border-transparent hidden ${
                         isSelected.length > 0
                           ? "bg-red-600 cursor-pointer hover:bg-red-800"
                           : "bg-red-300 cursor-not-allowed"
                       }`}
-                >
-                  <span className="mr-3">
-                    <IconDelete />
-                  </span>
-                  Xoá
-                </button>
-                <button
-                  disabled={isSelected.length <= 0}
-                  onClick={() => {
-                    Swal.fire({
-                      title: "Bạn chắc chắn muốn khôi phục?",
-                      text: "Các Học môn học sẽ được khôi phục.",
-                      icon: "question",
-                      showCancelButton: true,
-                      confirmButtonColor: "#0E9F6E",
-                      cancelButtonColor: "#d33",
-                      cancelButtonText: "Huỷ bỏ",
-                      confirmButtonText: "Đồng ý!",
-                    }).then((result) => {
-                      if (result.isConfirmed) {
-                        handleRestoreMany();
-                        Swal.fire({
-                          title: "Đã Khôi phục",
-                          text: "Các Học môn học đã được khôi phục.",
-                          confirmButtonColor: "#0E9F6E",
-                        });
-                      }
-                    });
-                  }}
-                  className={`h-12 align-bottom inline-flex leading-5 items-center justify-center 
+                  >
+                    <span className="mr-3">
+                      <IconDelete />
+                    </span>
+                    Xoá
+                  </button>
+                  <button
+                    disabled={isSelected.length <= 0}
+                    onClick={() => {
+                      Swal.fire({
+                        title: "Bạn chắc chắn muốn khôi phục?",
+                        text: "Các Môn học sẽ được khôi phục.",
+                        icon: "question",
+                        showCancelButton: true,
+                        confirmButtonColor: "#0E9F6E",
+                        cancelButtonColor: "#d33",
+                        cancelButtonText: "Huỷ bỏ",
+                        confirmButtonText: "Đồng ý!",
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          handleRestoreMany();
+                          Swal.fire({
+                            title: "Đã Khôi phục",
+                            text: "Các Môn học đã được khôi phục.",
+                            confirmButtonColor: "#0E9F6E",
+                          });
+                        }
+                      });
+                    }}
+                    className={`h-12 align-bottom inline-flex leading-5 items-center justify-center 
                       transition-colors duration-150 font-medium px-10 py-2 rounded-lg text-sm 
                        border  ${
                          isSelected.length > 0
                            ? "bg-white border-primaryRed text-primary cursor-pointer hover:bg-primary hover:text-white"
                            : "bg-white border-red-200 text-red-200 cursor-not-allowed"
                        }`}
-                >
-                  <span className="mr-3">
-                    <IconRestore />
-                  </span>
-                  Khôi phục
-                </button>
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                <button
-                  disabled={isSelected.length <= 0}
-                  onClick={() => {
-                    Swal.fire({
-                      title: "Bạn chắc chắn muốn xoá?",
-                      text: "Các Học môn học sẽ được chuyển vào thùng rác.",
-                      icon: "question",
-                      showCancelButton: true,
-                      confirmButtonColor: "#0E9F6E",
-                      cancelButtonColor: "#d33",
-                      cancelButtonText: "Huỷ bỏ",
-                      confirmButtonText: "Đồng ý!",
-                    }).then((result) => {
-                      if (result.isConfirmed) {
-                        handleSoftDeleteMany();
-                        Swal.fire({
-                          title: "Đã chuyển vào thùng rác",
-                          text: "Các Học môn học đã được chuyển vào thùng rác.",
-                          confirmButtonColor: "#0E9F6E",
-                        });
-                      }
-                    });
-                  }}
-                  className={`h-12 align-bottom inline-flex leading-5 items-center justify-center 
+                  >
+                    <span className="mr-3">
+                      <IconRestore />
+                    </span>
+                    Khôi phục
+                  </button>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <button
+                    disabled={isSelected.length <= 0}
+                    onClick={() => {
+                      Swal.fire({
+                        title: "Bạn chắc chắn muốn xoá?",
+                        text: "Các Môn học sẽ được chuyển vào thùng rác.",
+                        icon: "question",
+                        showCancelButton: true,
+                        confirmButtonColor: "#0E9F6E",
+                        cancelButtonColor: "#d33",
+                        cancelButtonText: "Huỷ bỏ",
+                        confirmButtonText: "Đồng ý!",
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          handleSoftDeleteMany();
+                          Swal.fire({
+                            title: "Đã chuyển vào thùng rác",
+                            text: "Các Môn học đã được chuyển vào thùng rác.",
+                            confirmButtonColor: "#0E9F6E",
+                          });
+                        }
+                      });
+                    }}
+                    className={`h-12 align-bottom inline-flex leading-5 items-center justify-center 
                         transition-colors duration-150 font-medium px-10 py-2 rounded-lg text-sm 
                         text-white border border-transparent ${
                           isSelected.length > 0
                             ? "bg-red-600 cursor-pointer hover:bg-red-800"
                             : "bg-red-300 cursor-not-allowed"
                         }`}
-                >
-                  <span className="mr-3">
-                    <IconDelete />
-                  </span>
-                  Xoá
-                </button>
-              </React.Fragment>
-            )}
+                  >
+                    <span className="mr-3">
+                      <IconDelete />
+                    </span>
+                    Xoá
+                  </button>
+                </React.Fragment>
+              )}
 
-            <button
-              className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
+              <button
+                className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
               cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
               text-primary bg-white border border-primaryRed  hover:bg-primary hover:text-white "
-              onClick={handleShowAddModal}
-            >
-              <span className="mr-3">
-                <IconAdd />
-              </span>
-              Thêm Học môn học
-            </button>
+                onClick={handleShowAddModal}
+              >
+                <span className="mr-3">
+                  <IconAdd />
+                </span>
+                Thêm Môn học
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
       <div className="bg-white rounded-lg ring-1 ring-gray-200 ring-opacity-4 overflow-huser_idden mb-5 shadow-xs">
         <div className="p-4">
           <div className="py-3 flex gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex">
@@ -348,38 +348,42 @@ export default function Subject() {
                 <option value={JSON.stringify({ sort: "created_at:desc" })}>Ngày thêm (Giảm dần)</option>
               </select>
             </div>
-            {isShowDeletedTable ? (
-              <button
-                className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
+            {currentUser.account_id.role_id.id == 3 ? null : (
+              <>
+                {isShowDeletedTable ? (
+                  <button
+                    className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
               transition-colors duration-150 font-medium px-10 py-2 rounded-lg text-sm 
               text-white bg-red-500 hover:bg-red-700 border border-transparent"
-                onClick={() => {
-                  handleShowDeletedTable();
-                  setIsSelected([]);
-                  setIsSelectAll(false);
-                }}
-              >
-                <span className="mr-3">
-                  <IconBack />
-                </span>
-                Quay lại
-              </button>
-            ) : (
-              <button
-                className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
+                    onClick={() => {
+                      handleShowDeletedTable();
+                      setIsSelected([]);
+                      setIsSelectAll(false);
+                    }}
+                  >
+                    <span className="mr-3">
+                      <IconBack />
+                    </span>
+                    Quay lại
+                  </button>
+                ) : (
+                  <button
+                    className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
                         transition-colors duration-150 font-medium px-10 py-2 rounded-lg text-sm 
                         text-white bg-red-500 hover:bg-red-700 border border-transparent"
-                onClick={() => {
-                  handleShowDeletedTable();
-                  setIsSelected([]);
-                  setIsSelectAll(false);
-                }}
-              >
-                <span className="mr-3">
-                  <IconBin />
-                </span>
-                Thùng rác
-              </button>
+                    onClick={() => {
+                      handleShowDeletedTable();
+                      setIsSelected([]);
+                      setIsSelectAll(false);
+                    }}
+                  >
+                    <span className="mr-3">
+                      <IconBin />
+                    </span>
+                    Thùng rác
+                  </button>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -433,7 +437,7 @@ export default function Subject() {
       {isShowAddModal && (
         <AddModalSubject
           closeModal={handleShowAddModal}
-          title={"THÊM HỌC MÔN HỌC"}
+          title={"THÊM Môn học"}
           titleBtnFooter={"THÊM"}
           handleAddSubject={handleAddSubject}
         />
@@ -441,19 +445,13 @@ export default function Subject() {
       {isShowEditModal && (
         <EditModalSubject
           closeModal={handleShowEditModal}
-          title={"CẬP NHẬT HỌC MÔN HỌC"}
+          title={"CẬP NHẬT Môn học"}
           titleBtnFooter={"CẬP NHẬT"}
           handleUpdateSubject={handleUpdateSubject}
           editSubject={editSubject}
-        
         />
       )}
-      {isShowStudentList && (
-        <StudentListModal
-          closeModal={handleCloseStudentList}
-          subject_id={subject_id}
-        />
-      )}
+      {isShowStudentList && <StudentListModal closeModal={handleCloseStudentList} subject_id={subject_id} />}
     </PageLayout>
   );
 }

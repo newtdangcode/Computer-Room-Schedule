@@ -45,3 +45,5 @@ export { default as IconProfileAvatar } from "./profileAvatar";
 export { default as IconClock } from "./clock";
 export { default as IconList } from "./list";
 export { default as IconClass } from "./class";
+export { default as IconReject } from "./reject";
+export { default as IconAccept } from "./accept";

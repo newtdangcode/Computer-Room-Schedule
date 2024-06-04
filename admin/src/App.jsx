@@ -9,7 +9,7 @@ import ProtectedRoute from "./router/ProtectedRoute";
 import Loading from "./components/loading";
 import authAPI from "./api/authAPI";
 import { setUserSuccess, setUserFail } from "./features/auth/authSlice";
-import { unwrapResult } from "@reduxjs/toolkit";
+import { current, unwrapResult } from "@reduxjs/toolkit";
 import { fetchNotification } from "./features/auth/notificationSlice";
 import { adminRouter, employeeRouter, lecturerRouter, studentRouter } from "./router";
 import { USER_ROLES } from "./utils/Constant";
@@ -18,17 +18,20 @@ import notificationSound from "./assets/sound/notification-sound.mp3";
 import NotFoundPage from "./pages/NotFoundPage/index";
 import Login from "./pages/login";
 import io from "socket.io-client";
-const socket = io(process.env.REACT_APP_SOCKET_SERVER_URL);
+const socket = io('http://localhost:8080' ,{
+  withCredentials: true,
+});
 
 function App() {
   const auth = useSelector((state) => state.auth);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   const checkIsLogin = async () => {
     try {
       const response = await authAPI.checkLogin();
       dispatch(setUserSuccess(response.data));
-      //unwrapResult(await dispatch(fetchNotification()));
+      unwrapResult(await dispatch(fetchNotification()));
     } catch {
       dispatch(setUserFail);
     } finally {
@@ -36,37 +39,47 @@ function App() {
     }
   };
   useEffect(() => {
-    
     checkIsLogin();
+    const setUserInteracted = () => setHasUserInteracted(true);
+    document.addEventListener('mousedown', setUserInteracted);
+    return () => {
+        document.removeEventListener('mousedown', setUserInteracted);
+    };
+    
   }, []);
 
-  // useEffect(() => {
-  //   const handleCustomerOrder = async (data) => {
-  //     const audio = new Audio(notificationSound);
-  //     audio.play();
-  //     toast.success(data, {
-  //       position: "top-right",
-  //       autoClose: 5000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //       theme: "light",
-  //     });
-  //     try {
-  //       unwrapResult(await dispatch(fetchNotification()));
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
+  useEffect(() => {
+    if(auth.isAuth){
+    if(auth?.currentUser?.account_id?.role_id?.id === 1 || auth?.currentUser?.account_id?.role_id?.id === 2){
+    const handleLecturerBooking = async (data) => {
+      if (!hasUserInteracted) return; // Don't play audio if the user hasn't interacted
 
-  //   socket.on("customerOrder", handleCustomerOrder);
+      const audio = new Audio(notificationSound);
+      audio.play();
+      toast.success(data, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      try {
+        unwrapResult(await dispatch(fetchNotification()));
+      } catch (err) {
+        console.log(err);
+      }
+    };
 
-  //   return () => {
-  //     socket.off("customerOrder", handleCustomerOrder);
-  //   };
-  // }, []);
+    socket.on("lecturerBooking", handleLecturerBooking);
+
+    return () => {
+      socket.off("lecturerBooking", handleLecturerBooking);
+    };
+  }}
+  }, [auth, hasUserInteracted]);
 
   const router = createBrowserRouter(
     createRoutesFromElements(

@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, BaseEntity, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
 import { Account } from './account.entity';
+import { Booking } from './booking.entity';
 @Entity({name: "employee"})
 export class Employee extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -20,6 +21,9 @@ export class Employee extends BaseEntity {
 
   @Column({ default: true })
   is_active: boolean;
+
+  @OneToMany(() => Booking, booking => booking.employee_code)
+  booking: Booking[];
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

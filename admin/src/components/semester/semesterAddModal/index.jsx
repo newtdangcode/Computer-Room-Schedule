@@ -31,6 +31,10 @@ export default function AddModalSemester({ closeModal, title, titleBtnFooter, ha
   const onSubmit = async (data) => {
     try {
       setIsLoading(true);
+      const localStartTime = new Date(data.start_time);
+      const localEndTime = new Date(data.end_time);
+      data.start_time = localStartTime.toLocaleDateString('en-CA');
+      data.end_time = localEndTime.toLocaleDateString('en-CA');
       await handleAddSemester(data);
       toastMessage({ type: "success", message: "Thêm học kỳ thành công." });
       closeModal();
@@ -71,7 +75,7 @@ export default function AddModalSemester({ closeModal, title, titleBtnFooter, ha
               <div className="flex flex-col w-2/3">
                 <input
                   type="date"
-                  onChange={(e) => setValue("start_time", e.target.value)}
+                  onChange={(e) => {console.log(e.target.value); setValue("start_time", e.target.value)}}
                   className={` ${errors.start_time ? "border-red-500" : ""} block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none`}
                 />
                 {errors.start_time && <p className="text-red-500 text-sm">{`*${errors.start_time.message}`}</p>}
@@ -84,7 +88,7 @@ export default function AddModalSemester({ closeModal, title, titleBtnFooter, ha
               <div className="flex flex-col w-2/3">
                 <input
                   type="date"
-                  onChange={(e) => setValue("end_time", e.target.value)}
+                  onChange={(e) => { console.log(e.target.value); setValue("end_time", e.target.value)}}
                   className={` ${errors.end_time ? "border-red-500" : ""} block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none`}
                 />
                 {errors.end_time && <p className="text-red-500 text-sm">{`*${errors.end_time.message}`}</p>}

@@ -10,9 +10,10 @@ import { AuthService } from 'src/auth/auth.service';
 import { AuthModule } from 'src/auth/auth.module';
 import { UpdateEmployeeDto } from 'src/dto/employee/update-employee.dto';
 import { UpdateManyEmployeeDto } from 'src/dto/employee/update-many-employee.dto';
+import { Booking } from 'src/entities/booking.entity';
 @Module({
   imports:[
-    TypeOrmModule.forFeature([Account,Employee]),
+    TypeOrmModule.forFeature([Account,Employee,Booking]),
     ConfigModule,
     CreateEmployeeDto,
     UpdateEmployeeDto,

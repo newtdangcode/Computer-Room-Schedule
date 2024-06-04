@@ -13,7 +13,7 @@ import studentAPI from "../../api/studentAPI";
 import { set } from "react-hook-form";
 import StudentListModal from "../../components/student/studentListModal";
 
-export default function Class() {
+export default function Classes() {
   const [class_code, setClass_code] = useState();
   const [classes, setClasses] = useState([]);
   const [isSelectAll, setIsSelectAll] = useState(false);

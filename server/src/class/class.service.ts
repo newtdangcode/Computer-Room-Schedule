@@ -73,6 +73,9 @@ export class ClassService {
     async getStudentList(code: string) {
         try {
            const respone = await this.classRepostiory.findOne({where: {code: code}, relations: ['students', 'students.class_code', 'students.account_id', 'lecturer_code']});
+           respone.students.map((student) => {
+            delete student.account_id.password;
+        });
            return respone;
         } catch (error) {
             throw new HttpException(error.message, error.status);

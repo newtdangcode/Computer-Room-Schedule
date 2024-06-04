@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, BaseEntity, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
 import { Account } from './account.entity';
 import { join } from 'path';
+import { Booking } from './booking.entity';
 
 @Entity({name: "lecturer"})
 export class Lecturer extends BaseEntity {
@@ -19,6 +20,9 @@ export class Lecturer extends BaseEntity {
 
   @Column({ nullable: true })
   phone_number: string;
+
+  @OneToMany(() => Booking, booking => booking.lecturer_code)
+  booking: Booking[];
 
   @Column({ default: true })
   is_active: boolean;

@@ -29,6 +29,10 @@ export default function EditModalSemester({ haveCloseModal = true, closeModal, t
   const onSubmit = async (data) => {
     try {
       setIsLoading(true);
+      const localStartTime = new Date(data.start_time);
+      const localEndTime = new Date(data.end_time);
+      data.start_time = localStartTime.toLocaleDateString('en-CA');
+      data.end_time = localEndTime.toLocaleDateString('en-CA');
       await handleUpdateSemester(editSemester.id, data);
       toastMessage({ type: "success", message: "Cập nhật thành công." });
     } catch (error) {

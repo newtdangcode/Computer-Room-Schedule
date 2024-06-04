@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Employee } from './employee.entity';
 import { RoomStatus } from './roomStatus.entity';
+import { Booking } from './booking.entity';
 
 @Entity('room')
 export class Room {
@@ -20,6 +21,9 @@ export class Room {
   @ManyToOne(() => RoomStatus, room_status => room_status.id)
   @JoinColumn({ name: 'status_id'})
   status_id: RoomStatus;
+
+  @OneToMany(() => Booking, booking => booking.room_code)
+  bookings: Booking[];
 
   @Column({ type: 'boolean', default: true })
   is_active: boolean;

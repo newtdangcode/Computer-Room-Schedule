@@ -15,6 +15,22 @@ const semesterAPI = {
 
     return response;
   },
+
+  getAllByDate: async (params) => {
+
+    const access_token = await localStorage.getItem("access_token");
+    
+    const url = "/semester/get-all";
+    const response = await axios.get(url, {
+      params,
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    return response;
+  },
+
   getAll: async (params) => {
     
   

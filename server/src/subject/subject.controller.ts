@@ -21,7 +21,7 @@ export class SubjectController {
     async getAll( 
             @PaginationParams() paginationParams: Pagination,
             @SortingParams(['name', 'code', 'is_active', 'created_at', 'updated_at']) sort?: Sorting,
-            @FilteringParams(['name', 'code', 'is_active', 'created_at', 'updated_at']) filter?: Filtering[],
+            @FilteringParams(['name', 'code', 'is_active', 'lecturer_code.code', 'semester_id.id', 'created_at', 'updated_at']) filter?: Filtering[],
         ): Promise<PaginatedResource<Partial<Subject>>> {
         console.log('Subject get all api...');
         return await this.subjectService.getAll(paginationParams, sort, filter);
@@ -41,7 +41,7 @@ export class SubjectController {
 
     @Patch('add-students-to-subject/:id')
     async addStudentsToSubject(@Param('id') id: number, @Body() student_codes: string[]) {
-        console.log(student_codes);
+       
         console.log('Subject add students to subject api...');
         return await this.subjectService.addStudentsToSubject(id, student_codes);
     }

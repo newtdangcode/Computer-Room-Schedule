@@ -26,6 +26,26 @@ export class RoomController {
     return await this.roomService.getAll(paginationParams, sort, filter);
   }
 
+  @Post('get-schedule-in-week/:code')
+  async getScheduleInWeekByRoom(@Param('code') code: string, @Body() { start_time, end_time }) {
+    console.log('room-get-schedule-in-week api . . .');
+    return await this.roomService.getScheduleInWeekByRoom(code, start_time, end_time);
+  }
+  @Post('get-schedule-in-week-lecturer/:code/:lecturer_code')
+  async getScheduleInWeekByRoomLecturer(  @Param('code') code: string, 
+                                          @Param('lecturer_code') lecturer_code: string, 
+                                          @Body() { start_time, end_time }) {
+    console.log('room-get-schedule-in-week api . . .');
+    return await this.roomService.getScheduleInWeekByRoomLecturer(code, start_time, end_time, lecturer_code);
+  }
+  @Post('get-schedule-in-week-student/:code/:student_code')
+  async getScheduleInWeekByRoomStudent(  @Param('code') code: string, 
+                                          @Param('student_code') student_code: string, 
+                                          @Body() { start_time, end_time }) {
+    console.log('room-get-schedule-in-week api . . .');
+    return await this.roomService.getScheduleInWeekByRoomStudent(code, start_time, end_time, student_code);
+  }
+
   @Get('get-one/:code')
   async getOne(@Param('code') code: string) {
     console.log('room-get-one api . . .');

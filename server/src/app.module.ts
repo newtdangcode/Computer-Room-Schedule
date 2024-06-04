@@ -23,6 +23,12 @@ import { Room } from './entities/room.entity';
 import { RoomStatus } from './entities/roomStatus.entity';
 import { RoomModule } from './room/room.module';
 import { RoomStatusModule } from './roomStatus/roomStatus.module';
+import { BookingModule } from './booking/booking.module';
+import { Booking } from './entities/booking.entity';
+import { Shift } from './entities/shift.entity';
+import { ShiftModule } from './shift/shift.module';
+import { NotificationModule } from './notification/notification.module';
+import { Notification } from './entities/notification.entity';
 
 
 @Module({
@@ -46,7 +52,9 @@ import { RoomStatusModule } from './roomStatus/roomStatus.module';
         BookingStatus,
         Room,
         RoomStatus,
-
+        Booking,
+        Shift,
+        Notification
       ],
       synchronize: false,
 
@@ -60,7 +68,10 @@ import { RoomStatusModule } from './roomStatus/roomStatus.module';
     SemesterModule,
     SubjectModule,
     RoomModule,
-    RoomStatusModule
+    RoomStatusModule,
+    BookingModule,
+    ShiftModule,
+    NotificationModule
 
   ],
   controllers: [AppController],

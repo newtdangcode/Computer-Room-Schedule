@@ -9,10 +9,11 @@ import { CreateLecturerDto } from 'src/dto/lecturer/create-lecturer.dto';
 import { UpdateLecturerDto } from 'src/dto/lecturer/update-lecturer.dto';
 import { UpdateManyEmployeeDto } from 'src/dto/employee/update-many-employee.dto';
 import { AuthModule } from 'src/auth/auth.module';
+import { Booking } from 'src/entities/booking.entity';
 
 @Module({
   imports:[
-    TypeOrmModule.forFeature([Account, Lecturer]),
+    TypeOrmModule.forFeature([Account, Lecturer, Booking]),
     ConfigModule,
     CreateLecturerDto,
     UpdateLecturerDto,

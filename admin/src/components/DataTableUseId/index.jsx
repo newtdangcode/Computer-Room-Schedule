@@ -18,6 +18,7 @@ function DataTableUseId({
   totalPageCount,
   limitPerPage,
   setLimitPerPage,
+  currentUser,
 }) {
   
   return (
@@ -31,7 +32,7 @@ function DataTableUseId({
             <table className="w-full whitespace-nowrap ">
               <thead className="text-xs font-semibold tracking-wide text-left text-white uppercase border-b border-gray-20 bg-primary">
                 <tr>
-                  {select ? (
+                  {select && currentUser.account_id.role_id.id !== 3 ? (
                     <td className="px-4 py-3">
                       <input
                         className="h-[16px] w-[16px]"
@@ -58,7 +59,7 @@ function DataTableUseId({
               <tbody className="bg-white divide-y divide-gray-10 text-gray-700">
                 {rowData.map((rowItem, index) => (
                   <tr key={rowItem.id}>
-                    {select? (
+                    {select && currentUser.account_id.role_id.id !== 3 ? (
                       
                       <td className="px-4 py-3">
                         <input

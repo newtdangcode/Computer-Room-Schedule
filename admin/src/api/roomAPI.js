@@ -11,7 +11,6 @@ const RoomAPI={
                 Authorization:`Bearer ${access_token}`,
             },
         })
-        console.log(response)
         return response;
     },
     getAll:async(params)=>{
@@ -39,6 +38,36 @@ const RoomAPI={
         return response;
       
     },
+    getScheduleInWeekByRoom:async(code, data)=>{
+        const url=`/room/get-schedule-in-week/${code}`;
+        const access_token = await localStorage.getItem("access_token");
+        const response = await axios.post(url, data, {
+            headers:{
+                Authorization:`Bearer ${access_token}`,
+            },
+        });
+        return response;
+    },
+    getScheduleInWeekByRoomLecturer:async(code, lecturer_code, data)=>{
+        const url=`/room/get-schedule-in-week-lecturer/${code}/${lecturer_code}`;
+        const access_token = await localStorage.getItem("access_token");
+        const response = await axios.post(url, data, {
+            headers:{
+                Authorization:`Bearer ${access_token}`,
+            },
+        });
+        return response;
+    },
+    getScheduleInWeekByRoomStudent:async(code, student_code, data)=>{
+        const url=`/room/get-schedule-in-week-student/${code}/${student_code}`;
+        const access_token = await localStorage.getItem("access_token");
+        const response = await axios.post(url, data, {
+            headers:{
+                Authorization:`Bearer ${access_token}`,
+            },
+        });
+        return response;
+    },
     create:async(data)=>{
         const url ="/room/create";
         const access_token= await localStorage.getItem("access_token");
@@ -47,13 +76,12 @@ const RoomAPI={
                 Authorization:`Bearer ${access_token}`,
             },
         });
-        console.log(response);
+        
         return response;
     },
     update:async(code,data)=>{
         const url=`/room/update/${code}`;
         const access_token = await localStorage.getItem("access_token");
-        console.log(url);
         const response =await axios.patch(url,data,{
             headers:{
                 Authorization:`Bearer ${access_token}`,

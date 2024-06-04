@@ -22,7 +22,7 @@ export default function Semester() {
   const [prevPage, setPrevPage] = useState();
   const [lastPage, setLastPage] = useState();
   const currentUser = useSelector((state) => state.auth.currentUser);
-  const [sortValue, setSortValue] = useState("");
+  const [sortValue, setSortValue] = useState({sort: "start_time:desc"});
   const [isShowAddModal, setIsShowAddModal] = useState(false);
   const [isShowEditModal, setIsShowEditModal] = useState(false);
   const [editSemester, setEditSemester] = useState();
@@ -80,7 +80,6 @@ export default function Semester() {
       params.is_active = true;
     }
     try {
-      console.log(params);
       const response = await semesterAPI.getAll(params);
       if (response.data.length === 0 && response.currentPage !== 1 && response.currentPage > 1) {
         setCurrentPage(response.currentPage - 1);
@@ -89,7 +88,6 @@ export default function Semester() {
       setTotalPageCount(response.lastPage);
       setNextPage(response.nextPage);
       setPrevPage(response.prevPage);
-      console.log(response.data);
     } catch (err) {
       console.log(err);
     }
@@ -312,25 +310,21 @@ export default function Semester() {
                 onChange={(e) => {
                   if (e.target.value) {
                     setSortValue(JSON.parse(e.target.value));
-                  } else {
-                    setSortValue("");
-                  }
+                  } 
                 }}
                 className="block w-full h-12 px-2 py-1 text-sm focus:outline-none leading-5 
                         rounded-md focus:border-gray-200 border-gray-200 bg-gray-100 ring-1 ring-gray-200
                         focus:bg-white border-transparent form-select "
               >
-                <option value="" huser_idden="">
-                  Sắp xếp
-                </option>
+                
+                <option value={JSON.stringify({ sort: "start_time:desc" })}>Ngày bắt đầu (Giảm dần)</option>
+                <option value={JSON.stringify({ sort: "start_time:asc" })}>Ngày bắt đầu (Tăng dần)</option>
+                <option value={JSON.stringify({ sort: "end_time:desc" })}>Ngày kết thúc (Giảm dần)</option>
+                <option value={JSON.stringify({ sort: "end_time:desc" })}>Ngày kết thúc (Tăng dần)</option>
                 <option value={JSON.stringify({ sort: "name:asc" })}>Tên (Tăng dần)</option>
                 <option value={JSON.stringify({ sort: "name:desc" })}>Tên (Giảm dần)</option>
-                <option value={JSON.stringify({ sort: "start_time:asc" })}>Ngày bắt đầu (Tăng dần)</option>
-                <option value={JSON.stringify({ sort: "start_time:desc" })}>Ngày bắt đầu (Giảm dần)</option>
-                <option value={JSON.stringify({ sort: "end_time:asc" })}>Ngày kết thúc (Tăng dần)</option>
-                <option value={JSON.stringify({ sort: "end_time:desc" })}>Ngày kết thúc (Giảm dần)</option>
-                <option value={JSON.stringify({ sort: "created_at:asc" })}>Ngày thêm (Tăng dần)</option>
-                <option value={JSON.stringify({ sort: "created_at:desc" })}>Ngày thêm (Giảm dần)</option>
+                <option value={JSON.stringify({ sort: "created_at:desc" })}>Ngày thêm (Mới nhất)</option>
+                <option value={JSON.stringify({ sort: "created_at:desc" })}>Ngày thêm (Cũ nhất)</option>
               </select>
             </div>
             {isShowDeletedTable ? (

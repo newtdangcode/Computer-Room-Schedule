@@ -9,6 +9,4 @@ export class BookingStatus {
   @Column({ nullable: false })
   name: string;
 
-  @Column({ default: true })
-  is_active: boolean;
 }

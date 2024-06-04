@@ -184,6 +184,7 @@ export default function SubjectDeletedTable({
       totalPageCount={totalPageCount}
       limitPerPage={limitPerPage}
       setLimitPerPage={setLimitPerPage}
+      currentUser={currentUser}
     />
   );
 }

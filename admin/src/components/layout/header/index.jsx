@@ -46,8 +46,9 @@ export default function Header() {
           </Link>
         </li>
       </ul>
+      
       <ul className="flex items-center cursor-pointer">
-        
+      {currentUser?.account_id?.role_id?.id === 1 || currentUser?.account_id?.role_id?.id === 2 ? (
         <li ref={notificationsRef} className=" relative ml-8 text-textSecondary" onClick={handleDropdownMenu}>
           <IconNotification />
           <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 flex items-center justify-center">
@@ -55,6 +56,9 @@ export default function Header() {
           </div>
           {isDropdown && <NotificationList notifications={notifications} />}
         </li>
+      ):(null)
+    }
+        
 
         <li className="ml-8">
           <Link to="/setting" className="cursor-pointer  flex items-center gap-x-1 text-textSecondary">

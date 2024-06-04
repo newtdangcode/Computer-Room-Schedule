@@ -16,6 +16,21 @@ const subjectAPI = {
     return response;
   },
 
+  getAllBySemesterAndLecturer: async (params) => {
+    const access_token = await localStorage.getItem("access_token");
+    
+    const url = "/subject/get-all";
+    const response = await axios.get(url, {
+      params,
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    return response;
+  },
+
+
   getAll: async (params) => {
     
   
@@ -25,7 +40,9 @@ const subjectAPI = {
       params.filter = "is_active:eq:" + params.is_active;
       delete params.is_active;
     }
-    
+    if(params.currentUser.account_id.role_id.id === 3){
+      params.filter = params.filter + ",lecturer_code.code:eq:" + params.currentUser.code;
+    }
 
     if (params.search !== "") {
       params.search = removeAccents(params.search);

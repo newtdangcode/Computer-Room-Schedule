@@ -34,7 +34,7 @@ export class SubjectService {
         const order = getOrder(sort);
         const [subjects, total] = await this.subjectRepository.findAndCount({
             where,
-            relations: { lecturer_code: true, semester_id: true, students: true},
+            relations: { lecturer_code: true, semester_id: true, students: {account_id: true, class_code: true}},
             order,
             take: limit,
             skip: adjustedOffset,
@@ -44,7 +44,11 @@ export class SubjectService {
         const nextPage = page < lastPage ? page + 1 : null;
         const prevPage = page > 1 ? page - 1 : null;
     
-        
+        subjects.map((subject) => {
+            subject.students.map((student) => {
+                delete student.account_id.password;
+            });
+        });
     
         return {
             data: subjects,
@@ -82,6 +86,11 @@ export class SubjectService {
             if(!subjectFound) {
                 throw new HttpException('Subject is not fount', HttpStatus.NOT_FOUND);
             } else {
+               
+                    subjectFound.students.map((student) => {
+                        delete student.account_id.password;
+                    });
+              
                 return subjectFound;
             }
         } catch (error) {
@@ -106,11 +115,10 @@ export class SubjectService {
         await Promise.all(student_codes.map(async (student_code) => {
             
             const student = await this.studentService.getOneByCode(student_code);
-            console.log(student);
+           
             students.push(student);
         }));
         const studentsSet = new Set(students);
-        console.log(students)
         subject.students = Array.from(studentsSet);
         await this.subjectRepository.save(subject);
         return await this.getOneById(subject_id);

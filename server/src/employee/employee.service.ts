@@ -32,7 +32,8 @@ export class EmployeeService {
         const adjustedOffset = (page - 1) * limit;
     
         let where: any = getWhere(filter);
-        
+        where = [...where, { account_id: {role_id: {id: Not(1) }}}];
+
         where = where.reduce((prev, cur) => ({ ...prev, ...cur }), {});
     
         const order = getOrder(sort);
@@ -74,9 +75,9 @@ export class EmployeeService {
         const adjustedOffset = (page - 1) * limit;
     
         let where: any = getWhere(filter);
-        if (code) {
-            where = [...where, { code: Not(code) }];
-        }
+        
+        where = [...where, { account_id: {role_id: {id: Not(1) }}}];
+        
         // Combine conditions in the where array with the AND operator
         where = where.reduce((prev, cur) => ({ ...prev, ...cur }), {});
     

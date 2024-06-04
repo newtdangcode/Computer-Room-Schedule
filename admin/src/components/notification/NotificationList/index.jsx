@@ -9,7 +9,7 @@ export default function NotificationList({ notifications = [] }) {
             <div className="box-border border">
               <ul className="block text-sm border-t border-gray-100 rounded-md">
                 {notifications.length ? (
-                  notifications.map((item) => <NotificationItem key={item._id} data={item} />)
+                  notifications.map((item) => <NotificationItem key={item.id} data={item} />)
                 ) : (
                   <h1 className="text-center p-5">Chưa có thông báo</h1>
                 )}

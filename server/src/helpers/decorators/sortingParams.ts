@@ -9,7 +9,6 @@ export interface Sorting {
 export const SortingParams = createParamDecorator((validParams, ctx: ExecutionContext): Sorting => {
     const req: Request = ctx.switchToHttp().getRequest();
     const sort = req.query.sort as string;
-    
     if (!sort) return null;
     
     
@@ -18,7 +17,7 @@ export const SortingParams = createParamDecorator((validParams, ctx: ExecutionCo
     if (typeof validParams != 'object') throw new BadRequestException('Invalid sort parameter');
 
     // check the format of the sort query param
-    const sortPattern = /^([a-zA-Z0-9_]+):(asc|desc)$/;
+    const sortPattern = /^([a-zA-Z0-9_.]+):(asc|desc)$/;
     if (!sort.match(sortPattern)) throw new BadRequestException('Invalid sort parameter');
 
     // extract the property name and direction and check if they are valid

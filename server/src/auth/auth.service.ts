@@ -296,11 +296,12 @@ export class AuthService {
                 case 1:
                 case 2:
                     return await this.employeeService.getOneByUsername(account.username);
-                    break;
+                  
                 case 3:
-                    break;
+                    return await this.lecturerService.getOneByUsername(account.username);
+                   
                 case 4:
-                    break;
+                    return await this.studentService.getOneByUsername(account.username);;
                 default:
                     break;
                 

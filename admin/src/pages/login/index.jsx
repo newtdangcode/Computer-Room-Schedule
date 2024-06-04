@@ -66,7 +66,7 @@ export default function Login() {
                 <input
                   id="username"
                   type="username"
-                  placeholder="admin000"
+                  placeholder="username"
                   className={`${
                     errors.username ? "border-red-500" : ""
                   } block w-full h-12 px-3 py-1 text-sm rounded-md border-[1px] border-gray-200 bg-gray-100 focus:outline-none focus:bg-transparent`}

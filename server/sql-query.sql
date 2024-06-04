@@ -149,16 +149,15 @@ INSERT INTO shift (name) VALUES
 ('Chiều');
 
 CREATE TABLE booking_status (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    is_active BOOLEAN DEFAULT TRUE
+    id INT PRIMARY KEY NOT NULL,
+    name VARCHAR(255) NOT NULL
 );
 
-INSERT INTO booking_status (name) VALUES
-('Chờ xác nhận'),
-('Đã xác nhận'),
-('Đã huỷ'),
-('Đã từ chối');
+INSERT INTO booking_status (id, name) VALUES
+(1,'Chờ xác nhận'),
+(2,'Đã xác nhận'),
+(3,'Đã huỷ'),
+(4,'Đã từ chối');
 
 CREATE TABLE booking (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -169,7 +168,7 @@ CREATE TABLE booking (
   subject_id INT NOT NULL,
   status_id INT NOT NULL,
   semester_id INT NOT NULL,
-  employee_code VARCHAR(255) NOT NULL,
+  employee_code VARCHAR(255),
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -177,7 +176,7 @@ CREATE TABLE booking (
   FOREIGN KEY (shift_id) REFERENCES shift(id),
   FOREIGN KEY (lecturer_code) REFERENCES lecturer(code),
   FOREIGN KEY (subject_id) REFERENCES subject(id),
-  FOREIGN KEY (status_id) REFERENCES room_status(id),
+  FOREIGN KEY (status_id) REFERENCES booking_status(id),
   FOREIGN KEY (semester_id) REFERENCES semester(id),
   FOREIGN KEY (employee_code) REFERENCES employee(code)
 

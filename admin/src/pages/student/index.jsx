@@ -12,7 +12,7 @@ import EditModalStudent from "../../components/student/studentEditModal";
 import classAPI from "../../api/classAPI";
 import StudentDeletedTable from "../../components/student/StudentDeletedTable";
 import StudentTable from "../../components/student/StudentTable";
-import AddToSubjectModal from "../../components/class/addToClassModal";
+import AddToSubjectModal from "../../components/subject/addToSubjectModal";
 import subjectAPI from "../../api/subjectAPI";
 import * as XLSX from "xlsx";
 
@@ -323,7 +323,7 @@ export default function Employee() {
                   <span className="mr-3">
                     <IconImport />
                   </span>
-                  Thêm vào danh sách sinh viên của môn học
+                  Thêm vào môn học
                 </button>
               </React.Fragment>
             )}

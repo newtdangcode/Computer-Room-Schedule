@@ -75,7 +75,7 @@ export default function AddToSubjectModal({ closeModal, student_codes , handleAd
         </div>
 
         <div className={`${styles.navbar} w-full h-full`}>
-          <div className="h-[50px] text-primary text-[40px] px-4">Thêm sinh viên đã chọn vào lớp</div>
+          <div className="h-[50px] text-primary text-[40px] px-4">Thêm sinh viên đã chọn vào môn học</div>
           {isLoading ? (
             <div className="flex justify-center items-center h-full">
               <div>Loading...</div>
@@ -93,7 +93,7 @@ export default function AddToSubjectModal({ closeModal, student_codes , handleAd
                           onChange={(e)=>setSubject_id(e.target.value)}
                           className="block px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none"
                         >
-                          <option value="">Chọn lớp</option>
+                          <option value="">Chọn môn học</option>
                           {subjects.map((item) => (
                             <option value={item.id} key={item.id}>
                               {item.code} - {item.name}
@@ -101,7 +101,7 @@ export default function AddToSubjectModal({ closeModal, student_codes , handleAd
                           ))}
                         </select>
                       </div>
-                      <button  onClick={(e)=>onSubmit()} className={`rounded-md ml-[20px] w-2/6 h-full font-[700]  ${subject_id?'hover:bg-primary bg-red-400 text-white  border border-primary':'bg-white text-red-400 border border-red-400 cursor-not-allowed'} `}>Thêm vào Lớp</button>
+                      <button  onClick={(e)=>onSubmit()} className={`rounded-md ml-[20px] w-2/6 h-full font-[700]  ${subject_id?'hover:bg-primary bg-red-400 text-white  border border-primary':'bg-white text-red-400 border border-red-400 cursor-not-allowed'} `}>Thêm vào môn học</button>
                    
                   </div>
                 </div>

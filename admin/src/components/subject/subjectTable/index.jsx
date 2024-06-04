@@ -152,7 +152,30 @@ export default function SubjectTable({
       },
     },
   ];
-
+  if(currentUser.account_id.role_id.id === 3){
+    columnData.pop();
+    columnData.push(
+      {
+        field: "actions",
+        headerName: "Thao tác",
+        renderCell: (item) => {
+          return (
+            <div className="flex justify-center items-center text-gray-400 gap-x-4">
+              <button
+                data-tooltip-id="view"
+                data-tooltip-content="Xem danh sách sinh viên"
+                className="hover:text-primary"
+                onClick={() => handleShowStudentList(item.id)}
+              >
+                <IconView />
+              </button>
+              
+            </div>
+          );
+        },
+      }
+    )
+  }
   return (
     <DataTableUseId
       columnData={columnData}
@@ -169,6 +192,7 @@ export default function SubjectTable({
       totalPageCount={totalPageCount}
       limitPerPage={limitPerPage}
       setLimitPerPage={setLimitPerPage}
+      currentUser={currentUser}
     />
   );
 }

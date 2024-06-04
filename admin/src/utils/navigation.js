@@ -19,7 +19,7 @@ const adminNavigation = [
   },
   {
     title: "Đăng ký phòng",
-    path: "/books",
+    path: "/bookings",
     icon: IconBook,
   },
   {
@@ -39,7 +39,7 @@ const adminNavigation = [
   },
   {
     title: "Lớp học",
-    path: "/class",
+    path: "/classes",
     icon: IconClass,
   },
   {
@@ -72,7 +72,7 @@ const employeeNavigation = [
   },
   {
     title: "Đăng ký phòng",
-    path: "/books",
+    path: "/bookings",
     icon: IconBook,
   },
   {
@@ -92,7 +92,7 @@ const employeeNavigation = [
   },
   {
     title: "Lớp học",
-    path: "/class",
+    path: "/classes",
     icon: IconClass,
   },
   {
@@ -117,6 +117,16 @@ const lecturerNavigation = [
     title: "Thời Khoá biểu",
     path: "",
     icon: IconSchedule,
+  },
+  {
+    title: "Đăng ký phòng",
+    path: "/bookings",
+    icon: IconBook,
+  },
+  {
+    title: "Môn học",
+    path: "/subjects",
+    icon: IconList,
   },
   {
     title: "Cài đặt",

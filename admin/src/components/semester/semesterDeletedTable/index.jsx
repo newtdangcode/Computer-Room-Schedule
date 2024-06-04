@@ -156,6 +156,7 @@ export default function SemesterDeletedTable({
       totalPageCount={totalPageCount}
       limitPerPage={limitPerPage}
       setLimitPerPage={setLimitPerPage}
+      currentUser={currentUser}
     />
   );
 }

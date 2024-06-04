@@ -2,13 +2,24 @@ import axios from "./axios";
 
 const notificationAPI = {
   getAllNotification: async () => {
-    const url = "/notifications";
-    const response = await axios.get(url);
-    return response;
+    const access_token = await localStorage.getItem("access_token");
+    const url = "/notification/get-all";
+    const response = await axios.get(url, {
+      headers: {
+          Authorization: `Bearer ${access_token}`,
+      },
+  });
+  return response;
   },
   updateNotification: async (id) => {
-    const url = `/notifications/${id}`;
-    const response = await axios.patch(url);
+    const access_token = await localStorage.getItem("access_token");
+    const url = `/notification/update/${id}`;
+    const data={};
+    const response = await axios.patch(url, data,{
+      headers: {
+          Authorization: `Bearer ${access_token}`,
+      },
+  });
     return response;
   },
 };
