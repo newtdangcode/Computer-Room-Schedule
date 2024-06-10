@@ -1,3 +1,4 @@
+import { ref } from "yup";
 import axios from "./axios";
 
 const authAPI = {
@@ -6,8 +7,15 @@ const authAPI = {
        
         const response = await axios.post(url, { username, password });
         localStorage.setItem('access_token', response.data.access_token);
-        localStorage.setItem('refresh_token', response.data.account_id.refresh_token);
+        localStorage.setItem('refresh_token', response.data.refresh_token);
        
+        return response;
+    },
+    refreshToken: async () => {
+        const url = "/auth/refresh-token";
+        const refresh_token = await localStorage.getItem('refresh_token');
+        const response = await axios.post(url, { refresh_token });
+        localStorage.setItem('access_token', response.data.access_token);
         return response;
     },
     checkLogin: async() => {
@@ -29,6 +37,12 @@ const authAPI = {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
     },
+    checkAccessToken: async () => {
+        const url = "/auth/check-access-token";
+        const access_token = await localStorage.getItem('access_token');
+        const response = await axios.post(url, access_token);
+        return response;
+    }
 };
 
 export default authAPI;

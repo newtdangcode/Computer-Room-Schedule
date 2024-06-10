@@ -9,15 +9,20 @@ import { UpdateStudentDto } from 'src/dto/student/update-student.dto';
 import { UpdateManyStudentDto } from 'src/dto/student/update-many-employee.dto';
 import { Student } from 'src/entities/student.entity';
 import { StudentModule } from 'src/student/student.module';
+import { Lecturer } from 'src/entities/lecturer.entity';
+import { Semester } from 'src/entities/semester.entity';
+import { Booking } from 'src/entities/booking.entity';
+import { BookingModule } from 'src/booking/booking.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Subject, Student]),
+    TypeOrmModule.forFeature([Subject, Student, Lecturer, Semester]),
     ConfigModule,
     CreateStudentDto,
     UpdateStudentDto,
     UpdateManyStudentDto,
     forwardRef(() => StudentModule),
+    forwardRef(() => BookingModule),
   ],
   controllers: [SubjectController],
   providers: [SubjectService],

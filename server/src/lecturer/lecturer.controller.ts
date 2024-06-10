@@ -42,6 +42,15 @@ export class LecturerController {
         //return { message: 'Employee created successfully', data: createdEmployee };
     }
 
+    @Post('create-many')
+    @UsePipes(ValidationPipe)
+    async createMany(@Body() createLecturerDto: CreateLecturerDto[]) {
+        console.log('lecturer createMany api...');
+        
+        return await this.lecturerService.createMany(createLecturerDto);
+        //return { message: 'Employee created successfully', data: createdEmployee };
+    }
+
     @Patch('update/:code')
     @UsePipes(ValidationPipe)
     async update(@Param('code') code: string, @Body() updateLecturerDto: UpdateLecturerDto) {

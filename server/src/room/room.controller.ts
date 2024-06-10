@@ -59,6 +59,13 @@ export class RoomController {
     return this.roomService.create(createRoomDto);
   }
 
+  @Post('create-many')
+  @UsePipes(ValidationPipe)
+  async createMany(@Body() createManyRoomDto: CreateRoomDto[]) {
+    console.log('room createMany api');
+    return this.roomService.createMany(createManyRoomDto);
+  }
+
   @Patch('update/:code')
   @UsePipes(ValidationPipe)
   async update(@Param('code') code: string, @Body() updateRoomDto: UpdateRoomDto) {

@@ -64,6 +64,19 @@ export class SemesterService {
             throw new HttpException(error.message, error.status);
         }
     }
+    
+    async getOneByName(name: string) {
+        try {
+            const semesterFound = await this.semesterRepository.findOneBy({ name });
+            if(!semesterFound) {
+                throw new HttpException('Semester is not fount', HttpStatus.NOT_FOUND);
+            } else {
+                return semesterFound;
+            }
+        } catch (error) {
+            throw new HttpException(error.message, error.status);
+        }
+    }
 
     async create(createSemesterDto: CreateSemesterDto) {
         try {

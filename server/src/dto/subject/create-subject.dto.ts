@@ -1,4 +1,4 @@
-import { IsDateString, IsNotEmpty } from "class-validator";
+import { IsDateString, IsNotEmpty, IsOptional } from "class-validator";
 
 export class CreateSubjectDto {
     @IsNotEmpty()
@@ -9,5 +9,7 @@ export class CreateSubjectDto {
     lecturer_code: string;
     @IsNotEmpty()
     semester_id: number;
+    @IsOptional()
+    semester_name: string;
    
 }

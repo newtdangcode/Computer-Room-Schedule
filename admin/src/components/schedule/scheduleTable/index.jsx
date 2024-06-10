@@ -1,4 +1,3 @@
-// File: ScheduleTable.js
 import React, { useEffect, useState } from "react";
 import roomAPI from "../../../api/roomAPI";
 export default function ScheduleTable({ room, startDate, endDate, currentUser }) {
@@ -58,13 +57,13 @@ export default function ScheduleTable({ room, startDate, endDate, currentUser })
         {currentUser.account_id.role_id.id === 3 ? (
           <>
             {found.status_id.id === 1 ? (
-              <div className="w-full h-full text-[15px] font-[600] text-black bg-gray-400 flex text-center justify-center items-center">
-                Đang chờ phê duyệt ({found.lecturer_code.code === currentUser.code ? "Của tôi" : "Người khác"})
+              <div className={`w-full h-full text-[15px] font-[600] text-black flex text-center justify-center items-center ${found.lecturer_code.code === currentUser.code ? "bg-orange-200" : "bg-gray-300"}`}>
+                
               </div>
             ) : (
               <>
                 {found.lecturer_code.code === currentUser.code ? (
-                  <div className="w-full h-full text-start  px-2">
+                  <div className="w-full h-full text-start py-4 px-2">
                     <div className="w-full text-start font-bold">
                       {found.subject_id.name} ({found.subject_id.code})
                     </div>
@@ -76,7 +75,7 @@ export default function ScheduleTable({ room, startDate, endDate, currentUser })
                     </div>
                   </div>
                 ) : (
-                  <div className="w-full h-full text-[15px] font-[600] text-black bg-red-400 flex text-center justify-center items-center">
+                  <div className="w-full h-full text-[15px] font-[600] text-black bg-red-200 flex text-center justify-center items-center">
                     
                   </div>
                 )}
@@ -86,7 +85,7 @@ export default function ScheduleTable({ room, startDate, endDate, currentUser })
         ) : (
           <div className="w-full h-full">
             {found.status_id.id === 2 ? (
-              <div className="w-full h-full text-start  px-2">
+              <div className="w-full h-full text-start py-4 px-2">
                 <div className="w-full text-start font-bold">
                   {found.subject_id.name} ({found.subject_id.code})
                 </div>
@@ -98,9 +97,8 @@ export default function ScheduleTable({ room, startDate, endDate, currentUser })
                 </div>
               </div>
             ) : (
-              <div className="w-full h-full text-[15px] font-[600] text-black bg-gray-400 flex text-center justify-center items-center">
-                Đang chờ phê duyệt
-                ({found.lecturer_code.first_name} {found.lecturer_code.last_name})
+              <div className="w-full h-full text-[15px] font-[600] text-black bg-gray-300 flex text-center justify-center items-center">
+                                ({found.lecturer_code.first_name} {found.lecturer_code.last_name})
               </div>
             )}
           </div>
@@ -111,7 +109,7 @@ export default function ScheduleTable({ room, startDate, endDate, currentUser })
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-[13px] border-collapse h-[200px] mb-5 rounded-lg">
+      <table className="w-full text-[13px] border-collapse h-[200px] mb-3 rounded-lg">
         <thead className="w-full h-[30px] bg-primary text-white">
           <tr className="w-full h-[30px] text-[15px]">
             <th className=" w-[9%] text-primary bg-white">Phòng {room.name}</th>
@@ -122,8 +120,8 @@ export default function ScheduleTable({ room, startDate, endDate, currentUser })
             ))}
           </tr>
         </thead>
-        <tbody className="w-full h-[200px]">
-          <tr className="w-full  h-[100px] ">
+        <tbody className="w-full h-[280px]">
+          <tr className="w-full  h-[140px] ">
             <td className="border border-gray-400 w-[9%] items-center text-center font-bold bg-primary text-white text-[15px]">
               Sáng
             </td>
@@ -133,7 +131,7 @@ export default function ScheduleTable({ room, startDate, endDate, currentUser })
               </td>
             ))}
           </tr>
-          <tr className="w-full  h-[100px]">
+          <tr className="w-full  h-[140px]">
             <td className="border border-gray-400 w-[9%] items-center text-center font-bold bg-primary text-white text-[15px]">
               Chiều
             </td>

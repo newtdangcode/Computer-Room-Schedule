@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { RouterProvider, createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, createRoutesFromElements, Route, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Root from "./pages/root";
 
@@ -8,7 +8,7 @@ import Root from "./pages/root";
 import ProtectedRoute from "./router/ProtectedRoute";
 import Loading from "./components/loading";
 import authAPI from "./api/authAPI";
-import { setUserSuccess, setUserFail } from "./features/auth/authSlice";
+import { setUserSuccess, setUserFail, setLogoutUser } from "./features/auth/authSlice";
 import { current, unwrapResult } from "@reduxjs/toolkit";
 import { fetchNotification } from "./features/auth/notificationSlice";
 import { adminRouter, employeeRouter, lecturerRouter, studentRouter } from "./router";
@@ -18,7 +18,8 @@ import notificationSound from "./assets/sound/notification-sound.mp3";
 import NotFoundPage from "./pages/NotFoundPage/index";
 import Login from "./pages/login";
 import io from "socket.io-client";
-const socket = io('http://localhost:8080' ,{
+import toastMessage from "./utils/toastMessage";
+const socket = io('http://localhost:8080', {
   withCredentials: true,
 });
 
@@ -27,6 +28,7 @@ function App() {
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
+
   const checkIsLogin = async () => {
     try {
       const response = await authAPI.checkLogin();
@@ -38,56 +40,82 @@ function App() {
       setIsLoading(false);
     }
   };
+
+  const checkAccessToken = async () => {
+    try {
+      await authAPI.checkAccessToken();
+      
+    } catch(error) {
+      try{
+        await authAPI.refreshToken();
+      }catch(error){
+        await authAPI.logout();
+        dispatch(setLogoutUser());
+        const errorMessage = error.response.data.message;
+        toastMessage({ type: "error", message: `Đăng nhập hết hạn.` })
+        return <Navigate to="/login" />;
+      }
+      
+    }
+  };
+
   useEffect(() => {
     checkIsLogin();
     const setUserInteracted = () => setHasUserInteracted(true);
     document.addEventListener('mousedown', setUserInteracted);
     return () => {
-        document.removeEventListener('mousedown', setUserInteracted);
+      document.removeEventListener('mousedown', setUserInteracted);
     };
-    
   }, []);
 
   useEffect(() => {
-    if(auth.isAuth){
-    if(auth?.currentUser?.account_id?.role_id?.id === 1 || auth?.currentUser?.account_id?.role_id?.id === 2){
-    const handleLecturerBooking = async (data) => {
-      if (!hasUserInteracted) return; // Don't play audio if the user hasn't interacted
+    if (auth.isAuth) {
+      const interval = setInterval(checkAccessToken, 60000); // Check token every 1 minute
+      return () => clearInterval(interval); // Cleanup interval on component unmount
+    }
+  }, [auth.isAuth]);
 
-      const audio = new Audio(notificationSound);
-      audio.play();
-      toast.success(data, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      try {
-        unwrapResult(await dispatch(fetchNotification()));
-      } catch (err) {
-        console.log(err);
+  useEffect(() => {
+    if (auth.isAuth) {
+      if (auth?.currentUser?.account_id?.role_id?.id === 1 || auth?.currentUser?.account_id?.role_id?.id === 2) {
+        const handleLecturerBooking = async (data) => {
+          if (!hasUserInteracted) return; // Don't play audio if the user hasn't interacted
+
+          const audio = new Audio(notificationSound);
+          audio.play();
+          toast.success(data, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          try {
+            unwrapResult(await dispatch(fetchNotification()));
+          } catch (err) {
+            console.log(err);
+          }
+        };
+
+        socket.on("lecturerBooking", handleLecturerBooking);
+
+        return () => {
+          socket.off("lecturerBooking", handleLecturerBooking);
+        };
       }
-    };
-
-    socket.on("lecturerBooking", handleLecturerBooking);
-
-    return () => {
-      socket.off("lecturerBooking", handleLecturerBooking);
-    };
-  }}
+    }
   }, [auth, hasUserInteracted]);
 
   const router = createBrowserRouter(
     createRoutesFromElements(
       <React.Fragment>
         <Route path="/login" element={<Login />} />
-    
+
         {/*<Route path="/forget-password" element={<ForgotPassword />} />
-    <Route path="/reset-password/:resetToken" element={<ResetPassword />} />*/ }
+        <Route path="/reset-password/:resetToken" element={<ResetPassword />} />*/ }
         <Route
           path="/"
           element={
@@ -96,39 +124,39 @@ function App() {
             </ProtectedRoute>
           }
         >
-          
+
           {auth.currentUser?.account_id?.role_id?.id === USER_ROLES.ADMIN
-            ?(
+            ? (
               adminRouter.map((item) => {
                 const Page = item.element;
                 return <Route key={item.path} path={item.path} element={<Page />} />;
               })
             )
-            :(  
+            : (
               auth.currentUser?.account_id?.role_id?.id === USER_ROLES.EMPLOYEE
-              ?(
-                employeeRouter.map((item) => {
-                  const Page = item.element;
-                  return <Route key={item.path} path={item.path} element={<Page />} />;
-                })
-              )
-              :(
-                auth.currentUser?.account_id?.role_id?.id === USER_ROLES.LECTURER
-                ?(
-                  lecturerRouter.map((item) => {
+                ? (
+                  employeeRouter.map((item) => {
                     const Page = item.element;
                     return <Route key={item.path} path={item.path} element={<Page />} />;
                   })
                 )
-                :(
-                  studentRouter.map((item) => {
-                    const Page = item.element;
-                    return <Route key={item.path} path={item.path} element={<Page />} />;
-                  })
-                
+                : (
+                  auth.currentUser?.account_id?.role_id?.id === USER_ROLES.LECTURER
+                    ? (
+                      lecturerRouter.map((item) => {
+                        const Page = item.element;
+                        return <Route key={item.path} path={item.path} element={<Page />} />;
+                      })
+                    )
+                    : (
+                      studentRouter.map((item) => {
+                        const Page = item.element;
+                        return <Route key={item.path} path={item.path} element={<Page />} />;
+                      })
+
+                    )
                 )
-              )
-            )    
+            )
           }
         </Route>
         <Route path="*" element={<NotFoundPage />} />
@@ -144,7 +172,7 @@ function App() {
       ) : (
         <RouterProvider router={router} />
       )}
-      
+
     </React.Fragment>
   );
 }

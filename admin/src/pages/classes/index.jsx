@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import useDebounce from "../../hooks/useDebounce";
-import { IconBin, IconAdd, IconDelete, IconBack, IconRestore } from "../../components/icon";
+import { IconBin, IconAdd, IconDelete, IconBack, IconRestore, IconUploadFile } from "../../components/icon";
 import { useSelector } from "react-redux";
 import EditModalClass from "../../components/class/classEditModal";
 import ClassDeletedTable from "../../components/class/classDeletedTable";
@@ -12,6 +12,7 @@ import PageLayout from "../../components/layout/pageLayout";
 import studentAPI from "../../api/studentAPI";
 import { set } from "react-hook-form";
 import StudentListModal from "../../components/student/studentListModal";
+import UploadFileModal from "../../components/uploadFileModal";
 
 export default function Classes() {
   const [class_code, setClass_code] = useState();
@@ -30,6 +31,7 @@ export default function Classes() {
   const [isShowAddModal, setIsShowAddModal] = useState(false);
   const [isShowEditModal, setIsShowEditModal] = useState(false);
   const [isShowStudentList, setIsShowStudentList] = useState(false);
+  const [isShowUploadFileModal, setIsShowUploadFileModal] = useState(false);
   const [editClass, setEditClass] = useState();
   const [searchKeyWord, setSearchKeyWord] = useState("");
   const debounceValue = useDebounce(searchKeyWord, 500);
@@ -40,7 +42,17 @@ export default function Classes() {
   useEffect(() => {
     getAllClass();
     //console.log('EMPLOYESS ',classes);
-  }, [debounceValue, isShowDeletedTable, currentPage, limitPerPage, sortValue, isShowAddModal, isShowEditModal, isShowStudentList]);
+  }, [
+    debounceValue, 
+    isShowDeletedTable, 
+    currentPage, 
+    limitPerPage, 
+    sortValue, 
+    isShowAddModal, 
+    isShowEditModal, 
+    isShowStudentList,
+    isShowUploadFileModal,
+  ]);
   useEffect(() => {
     if(isSelected.length === classes.length && classes.length > 0) {
       setIsSelectAll(true);
@@ -160,8 +172,27 @@ export default function Classes() {
   const handleShowStudentList = (code) => {
     setIsShowStudentList(!isShowStudentList);
     setClass_code(code);
-  }
-  
+  };
+  const handleShowUploadFileModal = () => {
+    setIsShowUploadFileModal(!isShowUploadFileModal);
+  };
+  const handleUploadFile = async (data) => {
+    const classList = [];
+
+    // Sử dụng for...of để chờ đợi các promise
+    for (const item of data) {
+      const _class = {
+        name: item[1],
+        code: item[2],
+        lecturer_code: item[3],
+      };
+      classList.push(_class);
+    }
+
+    if (classList.length > 0) {
+      return await classAPI.createMany(classList);
+    }
+  };
 
   return (
     <PageLayout title="Lớp">
@@ -284,7 +315,17 @@ export default function Classes() {
                 </button>
               </React.Fragment>
             )}
-
+            <button
+              className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
+                cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
+                text-primary bg-white border border-primaryRed  hover:bg-primary hover:text-white "
+              onClick={handleShowUploadFileModal}
+            >
+              <span className="mr-3">
+                <IconUploadFile />
+              </span>
+              Nhập danh sách từ file
+            </button>
             <button
               className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
               cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
@@ -446,6 +487,9 @@ export default function Classes() {
           class_code={class_code}
           
         />
+      )}
+      {isShowUploadFileModal && (
+        <UploadFileModal closeModal={handleShowUploadFileModal} handleUploadFile={handleUploadFile} />
       )}
     </PageLayout>
   );

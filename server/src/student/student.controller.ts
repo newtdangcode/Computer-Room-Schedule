@@ -47,6 +47,14 @@ export class StudentController {
         return await this.studentService.creat(createStudentDto);
     }
 
+    @Post('create-many')
+    @UsePipes(ValidationPipe)
+    async createMany(@Body() createStudentDto: CreateStudentDto[]) {
+        console.log('student createMany api...');
+        
+        return await this.studentService.createMany(createStudentDto);
+    }
+
     @Patch('update/:code')
     @UsePipes(ValidationPipe)
     async update(@Param('code') code: string, @Body() updateStudentDto: UpdateStudentDto) {

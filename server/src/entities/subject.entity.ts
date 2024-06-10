@@ -29,20 +29,7 @@ export class Subject {
     inverseJoinColumn: { name: 'student_code'}
   })
   students: Student[];
-  // @ManyToMany(()=>Student ,{onDelete: 'NO ACTION', onUpdate: 'NO ACTION'})
-  // @JoinTable()
-  // students: Student[];
-  // @ManyToMany(
-  //   () => Student,
-  //   student => student.subjects,
-  //   {onDelete: 'NO ACTION', onUpdate: 'NO ACTION'}
-  // )
-  // @JoinTable({
-  //   name: 'subject_student',
-  //   joinColumn: { name: 'subject_id', referencedColumnName: 'id' },
-  //   inverseJoinColumn: { name: 'student_code', referencedColumnName: 'code' }
-  // })
-  //students?: Student[];
+  
   @Column({ type: 'boolean', default: true })
   is_active: boolean;
 

@@ -95,15 +95,26 @@ export default function EditAcc({
                 <label>Email</label>
               </div>
               <div className="flex flex-col w-2/3">
-                <input
-                  defaultValue={employee.account_id.email}
-                  type="email"
-                  placeholder="Nhập email"
-                  className={`${
-                    errors.email ? "border-red-500" : ""
-                  } block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-5 border-[1px] focus:bg-transparent focus:outline-none`}
-                  {...register("email")}
-                />
+                {haveCloseModal ? (
+                  <input
+                    defaultValue={employee.account_id.email}
+                    type="email"
+                    placeholder="Nhập email"
+                    className={`${
+                      errors.email ? "border-red-500" : ""
+                    } block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-5 border-[1px] focus:bg-transparent focus:outline-none`}
+                    {...register("email")}
+                  />
+                ) : (
+                  <input
+                    defaultValue={employee.account_id.email}
+                    type="email"
+                    readOnly
+                    className={` block w-full px-3 py-1 text-sm font-[600] text-gray-400 h-12 rounded-md bg-gray-100 focus:bg-gray-5 border-[1px] `}
+                    {...register("email")}
+                  />
+                )}
+
                 {errors.email && <p className="text-red-500 text-sm">{`*${errors.email.message}`}</p>}
               </div>
             </div>

@@ -12,4 +12,7 @@ export class ShiftService {
     async getAll() {
         return await this.shiftRepository.find();
     }
+    async getOneByName(name: string) {
+        return await this.shiftRepository.findOneBy({ name });
+    }
 }

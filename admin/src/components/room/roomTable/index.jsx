@@ -65,11 +65,11 @@ export default function RoomTable({
         let styleClasses;
     
         if (statusName === 'Đang bảo trì') {
-          styleClasses = 'text-black bg-yellow-100';
+          styleClasses = 'text-orange-500 bg-slate-100';
         } else if (statusName === 'Đang hoạt động') {
-          styleClasses = 'text-white bg-green-500';
+          styleClasses = 'text-black bg-slate-100';
         } else {
-          styleClasses = 'text-white bg-gray-500';
+          styleClasses = 'text-red-500 bg-slate-100';
         }
     
         return (

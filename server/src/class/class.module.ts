@@ -8,11 +8,12 @@ import { ConfigModule } from '@nestjs/config';
 import { CreateClassDto } from 'src/dto/class/create-class.dto';
 import { UpdateClassDto } from 'src/dto/class/update-class.dto';
 import { UpdateManyClassDto } from 'src/dto/class/update-many-class.dto';
+import { Lecturer } from 'src/entities/lecturer.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Class]),
-    ConfigModule,
+    TypeOrmModule.forFeature([Class, Lecturer]),
+    ConfigModule, 
     CreateClassDto,
     UpdateClassDto,
     UpdateManyClassDto,

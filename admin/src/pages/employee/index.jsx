@@ -3,12 +3,13 @@ import Swal from "sweetalert2";
 import EmployeeTable from "../../components/employee/employeeTable";
 import useDebounce from "../../hooks/useDebounce";
 import EmployeeDeletedTable from "../../components/employee/employeeDeletedTable";
-import { IconBin, IconAdd, IconDelete, IconBack, IconRestore } from "../../components/icon";
+import { IconBin, IconAdd, IconDelete, IconBack, IconRestore, IconUploadFile } from "../../components/icon";
 import PageLayout from "../../components/layout/pageLayout";
 import employeeAPI from "../../api/employeeAPI";
 import { useSelector } from "react-redux";
 import AddModalEmployee from "../../components/employee/employeeAddModal";
 import EditModalEmployee from "../../components/employee/employeeEditModal/index";
+import UploadFileModal from "../../components/uploadFileModal";
 
 export default function Employee() {
   const [employees, setEmployees] = useState([]);
@@ -25,6 +26,7 @@ export default function Employee() {
   const [sortValue, setSortValue] = useState("");
   const [isShowAddModal, setIsShowAddModal] = useState(false);
   const [isShowEditModal, setIsShowEditModal] = useState(false);
+  const [isShowUploadFileModal, setIsShowUploadFileModal] = useState(false);
   const [editEmployee, setEditEmployee] = useState();
   const [searchKeyWord, setSearchKeyWord] = useState("");
   const debounceValue = useDebounce(searchKeyWord, 500);
@@ -35,7 +37,16 @@ export default function Employee() {
   useEffect(() => {
     getAllEmployee();
     //console.log('EMPLOYESS ',employees);
-  }, [debounceValue, isShowEmployeeDeletedTable, currentPage, limitPerPage, sortValue, isShowAddModal, isShowEditModal]);
+  }, [
+    debounceValue, 
+    isShowEmployeeDeletedTable, 
+    currentPage, 
+    limitPerPage, 
+    sortValue, 
+    isShowAddModal, 
+    isShowEditModal,
+    isShowUploadFileModal,
+  ]);
   useEffect(() => {
     if(isSelected.length === employees.length && employees.length > 0) {
       setIsSelectAll(true);
@@ -147,7 +158,31 @@ export default function Employee() {
   const handleUpdateEmployee = async (code, data) => {
     await employeeAPI.update(code, data);
   }
+  const handleShowUploadFileModal = () => {
+    setIsShowUploadFileModal(!isShowUploadFileModal);
+  };
+  const handleUploadFile = async (data) => {
+    const employeeList = [];
+    
+    // Sử dụng for...of để chờ đợi các promise
+    for (const item of data) {
+      const employee = {
+        first_name: item[1],
+        last_name: item[2],
+        code: item[3],
+        email: item[4],
+        username: item[5],
+        password: item[6],
+        phone_number: item[7],
+        role_id: 2,
+      };
+      employeeList.push(employee);
+    }
 
+    if (employeeList.length > 0) {
+      return await employeeAPI.createMany(employeeList);
+    }
+  };
   return (
     <PageLayout title="Nhân viên">
       <div className="bg-white rounded-lg ring-1 ring-gray-200 ring-opacity-4 overflow-hidden mb-5 shadow-xs">
@@ -269,7 +304,17 @@ export default function Employee() {
                 </button>
               </React.Fragment>
             )}
-
+            <button
+              className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
+                cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
+                text-primary bg-white border border-primaryRed  hover:bg-primary hover:text-white "
+              onClick={handleShowUploadFileModal}
+            >
+              <span className="mr-3">
+                <IconUploadFile />
+              </span>
+              Nhập danh sách từ file
+            </button>
             <button
               className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
               cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
@@ -420,6 +465,9 @@ export default function Employee() {
           employee={editEmployee}
         
         />
+      )}
+      {isShowUploadFileModal && (
+        <UploadFileModal closeModal={handleShowUploadFileModal} handleUploadFile={handleUploadFile} />
       )}
     </PageLayout>
   );

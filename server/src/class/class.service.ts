@@ -12,11 +12,13 @@ import { CreateClassDto } from 'src/dto/class/create-class.dto';
 import { UpdateAccountDto } from 'src/dto/account/update-account.dto';
 import { UpdateClassDto } from 'src/dto/class/update-class.dto';
 import { UpdateManyClassDto } from 'src/dto/class/update-many-class.dto';
+import { Lecturer } from 'src/entities/lecturer.entity';
 
 @Injectable()
 export class ClassService {
     constructor(
         @InjectRepository(Class) private classRepostiory: Repository<Class>,
+        @InjectRepository(Lecturer) private lecturerRepository: Repository<Lecturer>,
     ) {}
 
     async getAll(
@@ -84,9 +86,12 @@ export class ClassService {
 
     async create(createClassDto: CreateClassDto) {
         try {
+            const checkExistLecturer = await this.lecturerRepository.findOneBy({ code: createClassDto.lecturer_code });
             const checkExistCode = await this.classRepostiory.findOneBy({ code: createClassDto.code });
             if(checkExistCode) {
                 throw new HttpException('Mã lớp đã tồn tại', HttpStatus.BAD_REQUEST);
+            } else if (!checkExistLecturer) {
+                throw new HttpException('Giảng viên không tồn tại', HttpStatus.BAD_REQUEST);
             } else {
                 const {code, name, lecturer_code} = createClassDto;
                 const classCreated = await this.classRepostiory.save({code, name, lecturer_code:{code: lecturer_code}});
@@ -94,6 +99,18 @@ export class ClassService {
             }
         } catch (error) {
             throw new HttpException(error.message, error.status);
+        }
+    }
+
+    async createMany(createManyClassDto: CreateClassDto[]) {
+        try {
+            const results = await Promise.all(createManyClassDto.map(async (item) => {
+                return this.create(item);
+            }));
+            return results;
+        } catch (error) {
+            // Bắt lỗi nếu có bất kỳ promise nào bị từ chối
+            throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -8,10 +8,11 @@ import { CreateRoomDto } from 'src/dto/room/create-room.dto';
 import { UpdateRoomDto } from 'src/dto/room/update-room.dto';
 import { UpdateManyRoomDto } from 'src/dto/room/update-many-room.dto';
 import { Booking } from 'src/entities/booking.entity';
+import { Employee } from 'src/entities/employee.entity';
 
 @Module({
     imports:[
-        TypeOrmModule.forFeature([Room, Booking]),
+        TypeOrmModule.forFeature([Room, Booking, Employee]),
         ConfigModule,
         CreateRoomDto,
         UpdateRoomDto,

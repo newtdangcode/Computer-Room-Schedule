@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { parse } from 'path';
 import { PaginatedResource } from 'src/dto/pagination/paginated-resource.dto';
@@ -7,6 +7,9 @@ import { Filtering } from 'src/helpers/decorators/filteringParams';
 import { Pagination } from 'src/helpers/decorators/paginationParams';
 import { Sorting } from 'src/helpers/decorators/sortingParams';
 import { getOrder, getWhere } from 'src/helpers/features';
+import { SemesterService } from 'src/semester/semester.service';
+import { ShiftService } from 'src/shift/shift.service';
+import { SubjectService } from 'src/subject/subject.service';
 import { Between, In, Not, Repository } from 'typeorm';
 
 
@@ -14,7 +17,9 @@ import { Between, In, Not, Repository } from 'typeorm';
 export class BookingService {
     constructor(
         @InjectRepository(Booking) private bookingRepository: Repository<Booking>,
-        
+        @Inject(forwardRef(() => SubjectService)) private subjectService: SubjectService,
+        @Inject(forwardRef(() => SemesterService)) private semesterService: SemesterService,
+        @Inject(forwardRef(() => ShiftService)) private shiftService: ShiftService,
     ) {}
     
     async getAll(
@@ -232,6 +237,69 @@ export class BookingService {
             throw new HttpException(error.message, error.status);
         }
     };
+
+    async getAllWeeks(semesterStartDate: Date, semesterEndDate: Date) {
+        const dayOfWeek = semesterStartDate.getDay();
+        const dayDifference = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+        const startOfWeek = new Date(semesterStartDate.getTime() - dayDifference * 24 * 60 * 60 * 1000);
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(endOfWeek.getDate() + 6);
+    
+        const weeks = [];
+        const semesterEndDatetemp = new Date(semesterEndDate);
+        semesterEndDatetemp.setDate(semesterEndDatetemp.getDate() + 7);
+    
+        while (endOfWeek < semesterEndDatetemp) {
+            weeks.push({ start: new Date(startOfWeek), end: new Date(endOfWeek), weekNumber: weeks.length + 1 });
+            startOfWeek.setDate(startOfWeek.getDate() + 7);
+            endOfWeek.setDate(endOfWeek.getDate() + 7);
+        }
+        return weeks;
+    }
+    
+    async createMany(list_from_file: any[]) {
+        try {
+            const results = await Promise.all(list_from_file.map(async (item) => {
+                const semester = await this.semesterService.getOneByName(item.semester_name);
+                const subject = await this.subjectService.getOneByCodeAndSemester(item.subject_code, semester.id);
+                const shift = await this.shiftService.getOneByName(item.shift_name);
+    
+                // Chuyển đổi start_time và end_time sang đối tượng Date
+                const semesterStartDate = new Date(semester.start_time);
+                const semesterEndDate = new Date(semester.end_time);
+    
+                const weeks = await this.getAllWeeks(semesterStartDate, semesterEndDate);
+    
+                const date = new Date(weeks[item.week_start - 1].start);
+                date.setDate(date.getDate() + item.day_of_week - 2);
+    
+                // Tạo danh sách các tuần để đặt lịch
+                const bookings = [];
+                for (let i = 0; i < item.week_quantity; i++) {
+                    const bookingDate = new Date(date);
+                    bookingDate.setDate(date.getDate() + (i * 7));
+                    bookings.push({
+                        room_code: { code: item.room_code },
+                        date: bookingDate,
+                        shift_id: { id: shift.id },
+                        lecturer_code: { code: subject.lecturer_code.code },
+                        subject_id: { id: subject.id },
+                        status_id: { id: 2 },
+                        semester_id: { id: semester.id },
+                    });
+                }
+                
+                // Lưu tất cả các đặt lịch
+                await Promise.all(bookings.map(booking => this.bookingRepository.save(booking)));
+            }));
+    
+            return results;
+        } catch (error) {
+            throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    };
+    
+    
 
     async update(updateBookingDto: any, id: number) {
         try {

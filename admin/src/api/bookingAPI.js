@@ -68,6 +68,16 @@ const bookingAPI = {
         });
         return response;
     },
+    createMany: async(data) => {
+        const access_token = await localStorage.getItem("access_token");
+        const url = "/booking/create-many";
+        const response = await axios.post(url, data, {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        });
+        return response;
+    },
     update: async(id, data) => {
         const access_token = await localStorage.getItem("access_token");
         const url = `/booking/update/${id}`;

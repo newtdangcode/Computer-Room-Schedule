@@ -154,6 +154,19 @@ export class EmployeeService {
        return await this.authService.employeeRegister(createEmployeeDto);
     }
 
+    async createMany(createEmployeeDto: CreateEmployeeDto[]) {
+        try {
+            // Sử dụng Promise.all để chờ đợi tất cả các promise từ Lecturer
+            const results = await Promise.all(createEmployeeDto.map(async (item) => {
+                return this.authService.employeeRegister(item);
+            }));
+            return results;
+        } catch (error) {
+            // Bắt lỗi nếu có bất kỳ promise nào bị từ chối
+            throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }  
+
     async update(updateEmployeeDto: UpdateEmployeeDto, code:string) {
         //console.log('updateEmployeeDto', updateEmployeeDto, 'code', code);
         const employee = await this.getOneByCode(code);

@@ -126,6 +126,19 @@ export class StudentService {
         return await this.authService.studentRegister(createStudentDto);
     }
 
+    async createMany(createStudentDto: CreateStudentDto[]) {
+        try {
+            // Sử dụng Promise.all để chờ đợi tất cả các promise từ studentRegister
+            const results = await Promise.all(createStudentDto.map(async (item) => {
+                return this.authService.studentRegister(item);
+            }));
+            return results;
+        } catch (error) {
+            // Bắt lỗi nếu có bất kỳ promise nào bị từ chối
+            throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }    
+
     async update(updateStudentDto: UpdateStudentDto, code:string) {
         //console.log('updateEmployeeDto', updateEmployeeDto, 'code', code);
         const student = await this.getOneByCode(code);

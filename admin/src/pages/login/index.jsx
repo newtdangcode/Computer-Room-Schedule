@@ -15,7 +15,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState("");
   const schema = yup.object().shape({
     username: yup.string().required("Vui lòng nhập Username của bạn "),
     password: yup.string().required("Vui lòng nhập mật khẩu của bạn"),
@@ -35,9 +35,10 @@ export default function Login() {
       dispatch(setUserSuccess(response.data));
       console.log(response.data);
       navigate("/", { replace: true });
-    } catch {
+    } catch(error) {
       dispatch(setUserFail());
       setIsError(true);
+      setErrorMessage(error.response.data.message);
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +56,7 @@ export default function Login() {
             <h1 className="text-2xl font-semibold mb-6 text-gray-800">Đăng Nhập</h1>
             {isError && (
               <div className="my-4 py-3 px-4 bg-red-100 border-[1px] border-[#ff424f33]">
-                <p className="text-[#222222]">Đăng nhập không thành công username hoặc mật khẩu không đúng</p>
+                <p className="text-[#222222]">Đăng nhập không thành công. {errorMessage}</p>
               </div>
             )}
             <form onSubmit={handleSubmit(onSubmit)}>

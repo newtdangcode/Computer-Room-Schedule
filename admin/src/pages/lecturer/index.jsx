@@ -3,12 +3,13 @@ import Swal from "sweetalert2";
 import LecturerTable from "../../components/lecturer/lecturerTable";
 import useDebounce from "../../hooks/useDebounce";
 import LecturerDeletedTable from "../../components/lecturer/lecturerDeletedTable";
-import { IconBin, IconAdd, IconDelete, IconBack, IconRestore } from "../../components/icon";
+import { IconBin, IconAdd, IconDelete, IconBack, IconRestore, IconUploadFile } from "../../components/icon";
 import PageLayout from "../../components/layout/pageLayout";
 import lecturerAPI from "../../api/lecturerAPI";
 import { useSelector } from "react-redux";
 import AddModalLecturer from "../../components/lecturer/lecturerAddModal";
 import EditModalLecturer from "../../components/lecturer/lecturerEditModal";
+import UploadFileModal from "../../components/uploadFileModal";
 
 export default function Employee() {
   const [lecturers, setLecturers] = useState([]);
@@ -23,6 +24,7 @@ export default function Employee() {
   const [lastPage, setLastPage] = useState();
   const currentUser = useSelector((state) => state.auth.currentUser);
   const [sortValue, setSortValue] = useState("");
+  const [isShowUploadFileModal, setIsShowUploadFileModal] = useState(false);
   const [isShowAddModal, setIsShowAddModal] = useState(false);
   const [isShowEditModal, setIsShowEditModal] = useState(false);
   const [editLecturer, setEditLecturer] = useState();
@@ -30,21 +32,30 @@ export default function Employee() {
   const debounceValue = useDebounce(searchKeyWord, 500);
   useEffect(() => {
     getAllLecturer();
-    
   }, []);
   useEffect(() => {
     getAllLecturer();
-    
+
     //console.log('EMPLOYESS ',lecturers);
-  }, [debounceValue, isShowDeletedTable, currentPage, limitPerPage, sortValue, isShowAddModal, isShowEditModal]);
+  }, [
+    debounceValue,
+    isShowDeletedTable,
+    currentPage,
+    limitPerPage,
+    sortValue,
+    isShowAddModal,
+    isShowEditModal,
+    isShowUploadFileModal,
+    isShowUploadFileModal,
+  ]);
   useEffect(() => {
-    if(isSelected.length === lecturers.length && lecturers.length > 0) {
+    if (isSelected.length === lecturers.length && lecturers.length > 0) {
       setIsSelectAll(true);
     }
-    if(isSelected.length === 0) {
+    if (isSelected.length === 0) {
       setIsSelectAll(false);
     }
-  }, [ isSelected]);
+  }, [isSelected]);
   const handleSelectAll = () => {
     setIsSelectAll(!isSelectAll);
     if (!isSelectAll) {
@@ -85,7 +96,7 @@ export default function Employee() {
       if (response.data.length === 0 && response.currentPage !== 1 && response.currentPage > 1) {
         setCurrentPage(response.currentPage - 1);
       }
-      
+
       setLecturers(response.data);
       setTotalPageCount(response.lastPage);
       setNextPage(response.nextPage);
@@ -121,10 +132,10 @@ export default function Employee() {
       console.log(err);
     }
   };
-  const handleRestoreMany = async() => {
+  const handleRestoreMany = async () => {
     const data = [];
-    isSelected.map((code)=>{
-      data.push({code:code,is_active:true});
+    isSelected.map((code) => {
+      data.push({ code: code, is_active: true });
     });
     try {
       await lecturerAPI.updateMany(data);
@@ -140,16 +151,40 @@ export default function Employee() {
     //console.log("fontend ",data);
     await lecturerAPI.create(data);
   };
-  const handleShowEditModal = async(code) => {
+  const handleShowEditModal = async (code) => {
     const editLecturer = await lecturers.find((lecturer) => lecturer.code === code);
-    
+
     setEditLecturer(editLecturer);
     setIsShowEditModal(!isShowEditModal);
   };
   const handleUpdateLecturer = async (code, data) => {
     await lecturerAPI.update(code, data);
-  }
+  };
+  const handleShowUploadFileModal = () => {
+    setIsShowUploadFileModal(!isShowUploadFileModal);
+  };
+  const handleUploadFile = async (data) => {
+    const lecturerList = [];
 
+    // Sử dụng for...of để chờ đợi các promise
+    for (const item of data) {
+      const lecturer = {
+        first_name: item[1],
+        last_name: item[2],
+        code: item[3],
+        email: item[4],
+        username: item[5],
+        password: item[6],
+        phone_number: item[7],
+        role_id: 3,
+      };
+      lecturerList.push(lecturer);
+    }
+
+    if (lecturerList.length > 0) {
+      return await lecturerAPI.createMany(lecturerList);
+    }
+  };
   return (
     <PageLayout title="Giảng viên">
       <div className="bg-white rounded-lg ring-1 ring-gray-200 ring-opacity-4 overflow-hidden mb-5 shadow-xs">
@@ -158,7 +193,6 @@ export default function Employee() {
             {isShowDeletedTable ? (
               <React.Fragment>
                 <button
-
                   disabled={isSelected.length <= 0}
                   onClick={() => {
                     Swal.fire({
@@ -271,7 +305,17 @@ export default function Employee() {
                 </button>
               </React.Fragment>
             )}
-
+            <button
+              className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
+                cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
+                text-primary bg-white border border-primaryRed  hover:bg-primary hover:text-white "
+              onClick={handleShowUploadFileModal}
+            >
+              <span className="mr-3">
+                <IconUploadFile />
+              </span>
+              Nhập danh sách từ file
+            </button>
             <button
               className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
               cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
@@ -420,8 +464,11 @@ export default function Employee() {
           titleBtnFooter={"CẬP NHẬT"}
           handleUpdateLecturer={handleUpdateLecturer}
           lecturer={editLecturer}
-        
         />
+      )}
+
+      {isShowUploadFileModal && (
+        <UploadFileModal closeModal={handleShowUploadFileModal} handleUploadFile={handleUploadFile} />
       )}
     </PageLayout>
   );

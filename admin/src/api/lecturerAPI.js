@@ -55,6 +55,20 @@ const lecturerAPI={
       return response; 
   },
 
+  createMany: async (data) => {
+    const url = "/lecturer/create-many";
+    const access_token = await localStorage.getItem('access_token');
+    
+   
+      const response = await axios.post(url, data, {
+        headers: {
+          Authorization: `Bearer ${access_token}`
+        }
+      });
+      
+      return response; 
+  },
+
   update: async (code, data) => {
     const url = `/lecturer/update/${code}`;
     const access_token = await localStorage.getItem('access_token');

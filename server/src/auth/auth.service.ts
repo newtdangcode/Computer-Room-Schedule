@@ -17,6 +17,7 @@ import { Lecturer } from 'src/entities/lecturer.entity';
 import { StudentService } from 'src/student/student.service';
 import { LecturerService } from 'src/lecturer/lecturer.service';
 import { RegisterLecturerDto } from 'src/dto/account/register-lecturer.dto';
+import { Class } from 'src/entities/class.entity';
 @Injectable()
 export class AuthService {
     constructor(
@@ -28,7 +29,7 @@ export class AuthService {
         @InjectRepository(Employee) private employeeRepository:Repository<Employee>,
         @InjectRepository(Student) private studentRepository:Repository<Student>,
         @InjectRepository(Lecturer) private lecturerRepository:Repository<Lecturer>,
-
+        @InjectRepository(Class) private classRepository:Repository<Class>,
         private jwtService:JwtService,
         private configService:ConfigService,
     ){}
@@ -40,7 +41,7 @@ export class AuthService {
         return hash;
     }
 
-    private async generateToken(payload:{id:number, username:string}) {
+    private async generateToken(payload:{id:number, username:string, is_active:boolean}) {
         const access_token = await this.jwtService.signAsync(payload, {
             //expiresIn: process.env.EXP_IN_ACCESS_TOKEN,
             expiresIn: '1h',
@@ -54,25 +55,37 @@ export class AuthService {
             {username: payload.username},
             {refresh_token: refresh_token}
         )
-        return {access_token};
+        return {access_token, refresh_token};
     }
+    async checkAccessToken(access_token: string) {
+        try {
+          const decoded = await this.jwtService.verifyAsync(access_token);
+          return decoded; // Trả về thông tin giải mã nếu token hợp lệ
+        } catch (error) {
+          throw new UnauthorizedException("Access token đã hết hạn hoặc không hợp lệ");
+        }
+      }
     async refreshToken(refresh_token: string){
         try {
-            const verify = await this.jwtService.verifyAsync(refresh_token,{
-                secret:process.env.SECRET,
+            const verify = await this.jwtService.verifyAsync(refresh_token, {
+                secret: this.configService.get<string>('SECRET')
             })
-            console.log(verify);
             const checkExistToken = await this.accountRepository.findOneBy({
                 username: verify.username, 
                 refresh_token
             });
-            
             if(checkExistToken) {
                 const payload = {
                     id: verify.id,
                     username: verify.username,
+                    is_active: verify.is_active
                 };
-                return this.generateToken(payload);
+                const access_token = await this.jwtService.signAsync(payload, {
+                    //expiresIn: process.env.EXP_IN_ACCESS_TOKEN,
+                    expiresIn: '1h',
+                });
+                return {access_token};
+                 
             } else {
                 throw new HttpException('Refresh token is not valid', HttpStatus.BAD_REQUEST);
             }
@@ -92,7 +105,7 @@ export class AuthService {
                 email: registerEmployeeDto.email,
                 role_id: {id: registerEmployeeDto.role_id}
             };
-
+           
             const checkExistUsername = await this.accountRepository.findOneBy({
                 username: account.username,
             });
@@ -102,7 +115,7 @@ export class AuthService {
             const checkExistCode = await this.employeeRepository.findOneBy({
                 code: registerEmployeeDto.code,
             });
-
+            
             if(checkExistUsername) {
                 throw new HttpException('Username đã tồn tại', HttpStatus.BAD_REQUEST);
             } else if(checkExistEmail) {
@@ -198,13 +211,19 @@ export class AuthService {
                 code: registerStudentDto.code,
             });
 
+            const checkExistClass = await this.classRepository.findOneBy({
+                code: registerStudentDto.class_code
+            });
+
             if(checkExistUsername) {
                 throw new HttpException('Username đã tồn tại', HttpStatus.BAD_REQUEST);
             } else if(checkExistEmail) {
                 throw new HttpException('Email đã tồn tại', HttpStatus.BAD_REQUEST);
             } else if(checkExistCode) {
                 throw new HttpException('Mã sinh viên đã tồn tại', HttpStatus.BAD_REQUEST);
-            } else {
+            } else if(!checkExistClass) {
+                throw new HttpException('Lớp không tồn tại', HttpStatus.BAD_REQUEST);
+            }else{
                 
                 const accountCreated = await this.accountRepository.save(account);
                 console.log(accountCreated);
@@ -243,6 +262,9 @@ export class AuthService {
         if(!checkPass) {
             throw new HttpException("Mật khẩu không chính xác!", HttpStatus.UNAUTHORIZED);
         }
+        if(!account.is_active) {
+            throw new HttpException("Tài khoản đã bị vô hiệu hoá!", HttpStatus.UNAUTHORIZED);
+        }
         let user, payload, generateTokenData;
         switch(account.role_id.id) {
 
@@ -252,6 +274,7 @@ export class AuthService {
                 payload = {
                     id: account.id,
                     username: account.username,
+                    is_active: account.is_active,
                 };
                 generateTokenData = await this.generateToken(payload);
                 return {...user,...generateTokenData};
@@ -260,6 +283,7 @@ export class AuthService {
                 payload = {
                     id: account.id,
                     username: account.username,
+                    is_active: account.is_active,
                 };
                 generateTokenData = await this.generateToken(payload);
                 return {...user,...generateTokenData};
@@ -269,6 +293,7 @@ export class AuthService {
                 payload = {
                     id: account.id,
                     username: account.username,
+                    is_active: account.is_active,
                 };
                 generateTokenData = await this.generateToken(payload);
                 return {...user,...generateTokenData};

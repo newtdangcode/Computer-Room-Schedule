@@ -38,6 +38,13 @@ export class SubjectController {
         console.log('Subject create api...');
         return await this.subjectService.create(createSubjectDto);
     }
+    
+    @Post('create-many')
+    @UsePipes(ValidationPipe)
+    async createMany(@Body() createManySubjectDto: CreateSubjectDto[]) {
+        console.log('Subject create many api...');
+        return await this.subjectService.createMany(createManySubjectDto);
+    }
 
     @Patch('add-students-to-subject/:id')
     async addStudentsToSubject(@Param('id') id: number, @Body() student_codes: string[]) {

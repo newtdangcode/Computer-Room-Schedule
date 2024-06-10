@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import useDebounce from "../../hooks/useDebounce";
-import { IconBin, IconAdd, IconDelete, IconBack, IconRestore, IconReject, IconAccept } from "../../components/icon";
+import { IconBin, IconAdd, IconDelete, IconBack, IconRestore, IconReject, IconAccept, IconUploadFile } from "../../components/icon";
 import { useSelector } from "react-redux";
 import PageLayout from "../../components/layout/pageLayout";
 import bookingAPI from "../../api/bookingAPI";
 import AddModalBooking from "../../components/booking/bookingAddModal";
 import BookingTable from "../../components/booking/bookingTable";
+import UploadFileModal from "../../components/uploadFileModal";
+import { io } from "socket.io-client";
+const socket = io('http://localhost:8080');
 
 export default function Booking() {
+  
   const [bookings, setBookings] = useState([]);
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [isSelected, setIsSelected] = useState([]);
@@ -23,6 +27,7 @@ export default function Booking() {
   const [sortValue, setSortValue] = useState({ sort: "created_at:desc" });
   const [isShowAddModal, setIsShowAddModal] = useState(false);
   const [isShowEditModal, setIsShowEditModal] = useState(false);
+  const [isShowUploadFileModal, setIsShowUploadFileModal] = useState(false);
   const [editBooking, setEditBooking] = useState();
   const [searchKeyWord, setSearchKeyWord] = useState("");
   const debounceValue = useDebounce(searchKeyWord, 500);
@@ -32,7 +37,16 @@ export default function Booking() {
   useEffect(() => {
     getAllBooking();
     //console.log('EMPLOYESS ',bookings);
-  }, [debounceValue, isShowDeletedTable, currentPage, limitPerPage, sortValue, isShowAddModal, isShowEditModal]);
+  }, [
+    debounceValue, 
+    isShowDeletedTable, 
+    currentPage, 
+    limitPerPage, 
+    sortValue, 
+    isShowAddModal, 
+    isShowEditModal,
+    isShowUploadFileModal,
+  ]);
   useEffect(() => {
     if (isSelected.length === bookings.length && bookings.length > 0) {
       setIsSelectAll(true);
@@ -159,6 +173,13 @@ export default function Booking() {
       status_id: status_id,
       employee_code: currentUser.account_id.role_id.id === 3 ? null : currentUser.code,
     });
+    if (currentUser.account_id.role_id.id === 3 && status_id===3) {
+      socket.emit("lecturerBooking", {
+        account_id: currentUser.account_id.id,
+        content: `${currentUser.first_name} ${currentUser.last_name} đã huỷ 1 đăng ký phòng.`
+      });
+      
+    }
     getAllBooking();
   };
 
@@ -172,6 +193,30 @@ export default function Booking() {
       await getAllBooking();
     } catch (error) {
       console.log(error);
+    }
+  };
+  const handleShowUploadFileModal = () => {
+    setIsShowUploadFileModal(!isShowUploadFileModal);
+  };
+  const handleUploadFile = async (data) => {
+    const bookingList = [];
+
+    // Sử dụng for...of để chờ đợi các promise
+    for (const item of data) {
+      const booking = {
+       subject_code: item[1],
+       room_code: item[2],
+       shift_name: item[3],
+       day_of_week: item[4],
+       week_start: item[5],
+       week_quantity: item[6],
+       semester_name: item[7],
+      };
+      bookingList.push(booking);
+    }
+
+    if (bookingList.length > 0) {
+      return await bookingAPI.createMany(bookingList);
     }
   };
   return (
@@ -255,7 +300,20 @@ export default function Booking() {
                 </button>
               </React.Fragment>
             ) : null}
-
+            {currentUser.account_id.role_id.id !== 3 && (
+              <button
+              className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
+                cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
+                text-primary bg-white border border-primaryRed  hover:bg-primary hover:text-white "
+              onClick={handleShowUploadFileModal}
+            >
+              <span className="mr-3">
+                <IconUploadFile />
+              </span>
+              Nhập danh sách từ file
+            </button>
+            )}
+            
             <button
               className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
               cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
@@ -341,16 +399,9 @@ export default function Booking() {
           handleAddBooking={handleAddBooking}
         />
       )}
-      {/* {isShowEditModal && (
-        <EditModalBooking
-          closeModal={handleShowEditModal}
-          title={"CẬP NHẬT ĐĂNG KÝ PHÒNG MÁY"}
-          titleBtnFooter={"CẬP NHẬT"}
-          handleUpdateBooking={handleUpdateBooking}
-          editBooking={editBooking}
-        
-        />
-      )} */}
+      {isShowUploadFileModal && (
+        <UploadFileModal closeModal={handleShowUploadFileModal} handleUploadFile={handleUploadFile} />
+      )}
     </PageLayout>
   );
 }

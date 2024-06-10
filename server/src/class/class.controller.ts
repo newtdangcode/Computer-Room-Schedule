@@ -42,6 +42,13 @@ export class ClassController {
         return await this.classService.create(createClassDto);
     }
 
+    @Post('create-many')
+    @UsePipes(ValidationPipe)
+    async createMnay(@Body() createManyClassDto: CreateClassDto[]) {
+        console.log('class create many api...');
+        return await this.classService.createMany(createManyClassDto);
+    }
+
     @Patch('update/:code')
     @UsePipes(ValidationPipe)
     async update(@Param('code') code: string, @Body() updateClassDto: UpdateClassDto) {

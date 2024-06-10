@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import EmployeeTable from "../../components/employee/employeeTable";
 import useDebounce from "../../hooks/useDebounce";
 import EmployeeDeletedTable from "../../components/employee/employeeDeletedTable";
-import { IconBin, IconAdd, IconDelete, IconBack, IconRestore, IconImport } from "../../components/icon";
+import { IconBin, IconAdd, IconDelete, IconBack, IconRestore, IconImport, IconUploadFile } from "../../components/icon";
 import PageLayout from "../../components/layout/pageLayout";
 import studentAPI from "../../api/studentAPI";
 import { useSelector } from "react-redux";
@@ -14,10 +14,11 @@ import StudentDeletedTable from "../../components/student/StudentDeletedTable";
 import StudentTable from "../../components/student/StudentTable";
 import AddToSubjectModal from "../../components/subject/addToSubjectModal";
 import subjectAPI from "../../api/subjectAPI";
-import * as XLSX from "xlsx";
+
+import UploadFileModal from "../../components/uploadFileModal";
 
 export default function Employee() {
-  const [file, setFile] = useState(null);
+  const [isShowUploadFileModal, setIsShowUploadFileModal] = useState(false);
   const [isShowAddToSubjectModal, setIsShowAddToSubjectModal] = useState(false);
   const [classes, setClasses] = useState([]);
   const [students, setStudents] = useState([]);
@@ -45,15 +46,25 @@ export default function Employee() {
   useEffect(() => {
     getAllStudent();
     //console.log('EMPLOYESS ',students);
-  }, [debounceValue, isShowDeletedTable, currentPage, limitPerPage, sortValue, isShowAddModal, isShowEditModal, filterByClasss]);
+  }, [
+    debounceValue,
+    isShowDeletedTable,
+    currentPage,
+    limitPerPage,
+    sortValue,
+    isShowAddModal,
+    isShowEditModal,
+    isShowUploadFileModal,
+    filterByClasss,
+  ]);
   useEffect(() => {
-    if(isSelected.length === students.length && students.length > 0) {
+    if (isSelected.length === students.length && students.length > 0) {
       setIsSelectAll(true);
     }
-    if(isSelected.length === 0) {
+    if (isSelected.length === 0) {
       setIsSelectAll(false);
     }
-  }, [ isSelected]);
+  }, [isSelected]);
   const handleSelectAll = () => {
     setIsSelectAll(!isSelectAll);
     if (!isSelectAll) {
@@ -81,8 +92,7 @@ export default function Employee() {
     } catch (err) {
       console.log(err);
     }
-
-  }
+  };
   const getAllStudent = async () => {
     let params = { page: currentPage, limit: limitPerPage };
     params.filter = "";
@@ -116,7 +126,6 @@ export default function Employee() {
   };
   const handleSoftDelete = async (code) => {
     try {
-      
       await studentAPI.update(code, { is_active: false });
       await getAllStudent();
     } catch (error) {
@@ -142,10 +151,10 @@ export default function Employee() {
       console.log(err);
     }
   };
-  const handleRestoreMany = async() => {
+  const handleRestoreMany = async () => {
     const data = [];
-    isSelected.map((code)=>{
-      data.push({code:code,is_active:true});
+    isSelected.map((code) => {
+      data.push({ code: code, is_active: true });
     });
     try {
       await studentAPI.updateMany(data);
@@ -161,7 +170,7 @@ export default function Employee() {
     //console.log("fontend ",data);
     await studentAPI.create(data);
   };
-  const handleShowEditModal = async(code) => {
+  const handleShowEditModal = async (code) => {
     const editStudent = await students.find((student) => student.code === code);
     //console.log(editStudent);
     setEditStudent(editStudent);
@@ -169,28 +178,39 @@ export default function Employee() {
   };
   const handleUpdateStudent = async (code, data) => {
     await studentAPI.update(code, data);
-  }
+  };
   const handleShowAddToSubjectModal = () => {
     setIsShowAddToSubjectModal(!isShowAddToSubjectModal);
-  }
+  };
   const handleAddToSubject = async (subject_id, student_codes) => {
     return await subjectAPI.addStudentsToSubject(subject_id, student_codes);
-  }
-  const handleUploadFile = async (e) => {
-    console.log('reading input file:');
-    const file = e.target.files[0];
-    const data = await file.arrayBuffer();
-    const workbook = XLSX.read(data);
-    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    const jsonData = XLSX.utils.sheet_to_json(worksheet, {
-        header: 1,
-        defval: "",
-    });
+  };
+  const handleShowUploadFileModal = () => {
+    setIsShowUploadFileModal(!isShowUploadFileModal);
+  };
+  const handleUploadFile = async (data) => {
+    const studentList = [];
 
-    //console.log(e.target.files[0]);
-    //console.log(workbook);
-    console.log(jsonData);
-  }
+    // Sử dụng for...of để chờ đợi các promise
+    for (const item of data) {
+      const student = {
+        first_name: item[1],
+        last_name: item[2],
+        code: item[3],
+        class_code: item[4],
+        email: item[5],
+        username: item[6],
+        password: item[7],
+        phone_number: item[8],
+        role_id: 4,
+      };
+      studentList.push(student);
+    }
+
+    if (studentList.length > 0) {
+      return await studentAPI.createMany(studentList);
+    }
+  };
   return (
     <PageLayout title="Sinh viên">
       <div className="bg-white rounded-lg ring-1 ring-gray-200 ring-opacity-4 overflow-huser_idden mb-5 shadow-xs">
@@ -309,6 +329,7 @@ export default function Employee() {
                   </span>
                   Xoá
                 </button>
+
                 <button
                   disabled={isSelected.length <= 0}
                   className={`h-12 align-bottom inline-flex leading-5 items-center justify-center 
@@ -318,7 +339,7 @@ export default function Employee() {
                            ? "bg-white border-primaryRed text-primary cursor-pointer hover:bg-primary hover:text-white"
                            : "bg-white border-red-200 text-red-200 cursor-not-allowed"
                        }`}
-                   onClick={handleShowAddToSubjectModal}
+                  onClick={handleShowAddToSubjectModal}
                 >
                   <span className="mr-3">
                     <IconImport />
@@ -327,7 +348,17 @@ export default function Employee() {
                 </button>
               </React.Fragment>
             )}
-
+            <button
+              className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
+                cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
+                text-primary bg-white border border-primaryRed  hover:bg-primary hover:text-white "
+              onClick={handleShowUploadFileModal}
+            >
+              <span className="mr-3">
+                <IconUploadFile />
+              </span>
+              Nhập danh sách từ file
+            </button>
             <button
               className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
               cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
@@ -339,34 +370,10 @@ export default function Employee() {
               </span>
               Thêm Sinh Viên
             </button>
+          </div>
+        </div>
+      </div>
 
-            
-          </div>
-        
-        </div>
-      </div>
-      <div  className="bg-white rounded-lg ring-1 ring-gray-200 ring-opacity-4 overflow-huser_idden mb-5 shadow-xs">
-        <div className="p-4">
-          <div className="flex justify-end items-center py-3 gap-x-4">
-            <input 
-              onInput={(e) => handleUploadFile(e)}
-              className="h-12 border border-primary inline-flex items-center justify-center"
-              type="file" 
-            />
-            <button
-                className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
-                cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
-                text-primary bg-white border border-primaryRed  hover:bg-primary hover:text-white "
-                
-              >
-                <span className="mr-3">
-                  <IconAdd />
-                </span>
-                Nhập danh sách sinh viên
-              </button>
-          </div>
-        </div>
-      </div>
       <div className="bg-white rounded-lg ring-1 ring-gray-200 ring-opacity-4 overflow-huser_idden mb-5 shadow-xs">
         <div className="p-4">
           <div className="py-3 flex gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex">
@@ -421,7 +428,7 @@ export default function Employee() {
                 <option value={JSON.stringify({ sort: "-createdAt" })}>Ngày thêm (Giảm dần)</option>
               </select>
             </div>
-            
+
             {isShowDeletedTable ? (
               <button
                 className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
@@ -518,7 +525,6 @@ export default function Employee() {
           titleBtnFooter={"CẬP NHẬT"}
           handleUpdateStudent={handleUpdateStudent}
           student={editStudent}
-        
         />
       )}
       {isShowAddToSubjectModal && (
@@ -527,6 +533,9 @@ export default function Employee() {
           student_codes={isSelected}
           handleAddToSubject={handleAddToSubject}
         />
+      )}
+      {isShowUploadFileModal && (
+        <UploadFileModal closeModal={handleShowUploadFileModal} handleUploadFile={handleUploadFile} />
       )}
     </PageLayout>
   );

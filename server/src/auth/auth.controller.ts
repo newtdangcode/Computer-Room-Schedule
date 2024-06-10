@@ -12,12 +12,16 @@ export class AuthController {
         private authService: AuthService,
        
     ){}
-
+    @Post('check-access-token')
+    async checkToken(@Body() access_token: string) {
+        console.log('check token...');
+        return await this.authService.checkAccessToken(access_token);
+    }
     @Post('refresh-token')
     async refreshToken(@Body() {refresh_token}) {
         console.log('refresh token...');
         const refreshedToken = await this.authService.refreshToken(refresh_token);
-        return { message: 'Employee refreshed token successfully', data: refreshedToken};
+        return { message: 'Refreshed token successfully', data: refreshedToken};
     }
 
     @UseGuards(AuthGuard)

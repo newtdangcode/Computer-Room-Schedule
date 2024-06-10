@@ -107,6 +107,19 @@ export class LecturerService {
         return await this.authService.lecturerRegister(createLecturerDto);
     }
 
+    async createMany(createLecturerDto: CreateLecturerDto[]) {
+        try {
+            // Sử dụng Promise.all để chờ đợi tất cả các promise từ Lecturer
+            const results = await Promise.all(createLecturerDto.map(async (item) => {
+                return this.authService.lecturerRegister(item);
+            }));
+            return results;
+        } catch (error) {
+            // Bắt lỗi nếu có bất kỳ promise nào bị từ chối
+            throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }  
+
     async update(updateLecturerDto: UpdateLecturerDto, code:string) {
         //console.log('updateEmployeeDto', updateEmployeeDto, 'code', code);
         const employee = await this.getOneByCode(code);

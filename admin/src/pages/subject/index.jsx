@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import useDebounce from "../../hooks/useDebounce";
-import { IconBin, IconAdd, IconDelete, IconBack, IconRestore } from "../../components/icon";
+import { IconBin, IconAdd, IconDelete, IconBack, IconRestore, IconUploadFile } from "../../components/icon";
 import { useSelector } from "react-redux";
 import AddModalSubject from "../../components/subject/subjectAddModal";
 import EditModalSubject from "../../components/subject/subjectEditModal";
@@ -10,6 +10,7 @@ import SubjectDeletedTable from "../../components/subject/subjectDeletedTable";
 import PageLayout from "../../components/layout/pageLayout";
 import subjectAPI from "../../api/subjectAPI";
 import StudentListModal from "../../components/student/studentListModal";
+import UploadFileModal from "../../components/uploadFileModal";
 
 export default function Subject() {
   const [subject_id, setSubject_id] = useState();
@@ -30,6 +31,7 @@ export default function Subject() {
   const [isShowAddModal, setIsShowAddModal] = useState(false);
   const [isShowEditModal, setIsShowEditModal] = useState(false);
   const [isShowStudentList, setIsShowStudentList] = useState(false);
+  const [isShowUploadFileModal, setIsShowUploadFileModal] = useState(false);
   const [editSubject, setEditSubject] = useState();
   const [searchKeyWord, setSearchKeyWord] = useState("");
   const debounceValue = useDebounce(searchKeyWord, 500);
@@ -39,7 +41,16 @@ export default function Subject() {
   useEffect(() => {
     getAllSubject();
     //console.log('EMPLOYESS ',subjects);
-  }, [debounceValue, isShowDeletedTable, currentPage, limitPerPage, sortValue, isShowAddModal, isShowEditModal]);
+  }, [
+    debounceValue, 
+    isShowDeletedTable, 
+    currentPage, 
+    limitPerPage, 
+    sortValue, 
+    isShowAddModal, 
+    isShowEditModal,
+    isShowUploadFileModal,
+  ]);
   useEffect(() => {
     if (isSelected.length === subjects.length && subjects.length > 0) {
       setIsSelectAll(true);
@@ -166,6 +177,27 @@ export default function Subject() {
     setIsShowStudentList(!isShowStudentList);
     setSubject_id(id);
   };
+  const handleShowUploadFileModal = () => {
+    setIsShowUploadFileModal(!isShowUploadFileModal);
+  };
+  const handleUploadFile = async (data) => {
+    const subjectList = [];
+
+    // Sử dụng for...of để chờ đợi các promise
+    for (const item of data) {
+      const subject = {
+        'name': item[1],
+        'code': item[2],
+        'lecturer_code': item[3],
+        'semester_name': item[4],
+      };
+      subjectList.push(subject);
+    }
+
+    if (subjectList.length > 0) {
+      return await subjectAPI.createMany(subjectList);
+    }
+  };
 
   return (
     <PageLayout title="Môn học">
@@ -288,7 +320,17 @@ export default function Subject() {
                   </button>
                 </React.Fragment>
               )}
-
+              <button
+              className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
+                cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
+                text-primary bg-white border border-primaryRed  hover:bg-primary hover:text-white "
+              onClick={handleShowUploadFileModal}
+            >
+              <span className="mr-3">
+                <IconUploadFile />
+              </span>
+              Nhập danh sách từ file
+            </button>
               <button
                 className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
               cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
@@ -452,6 +494,9 @@ export default function Subject() {
         />
       )}
       {isShowStudentList && <StudentListModal closeModal={handleCloseStudentList} subject_id={subject_id} />}
+      {isShowUploadFileModal && (
+        <UploadFileModal closeModal={handleShowUploadFileModal} handleUploadFile={handleUploadFile} />
+      )}
     </PageLayout>
   );
 }

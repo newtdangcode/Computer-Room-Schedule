@@ -10,9 +10,9 @@ export class CreateRoomDto{
     machine_quantity:number
 
     @IsNotEmpty()
-    employee_code:Employee
+    employee_code:string
     @IsNotEmpty()
-    status_id:RoomStatus
+    status_id:number
     
     
 

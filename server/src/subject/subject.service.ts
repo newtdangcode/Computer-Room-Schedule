@@ -4,6 +4,8 @@ import { PaginatedResource } from 'src/dto/pagination/paginated-resource.dto';
 import { CreateSubjectDto } from 'src/dto/subject/create-subject.dto';
 import { UpdateManySubjectDto } from 'src/dto/subject/update-many-subject.dto';
 import { UpdateSubjectDto } from 'src/dto/subject/update-subject.dto';
+import { Lecturer } from 'src/entities/lecturer.entity';
+import { Semester } from 'src/entities/semester.entity';
 import { Subject } from 'src/entities/subject.entity';
 import { Filtering } from 'src/helpers/decorators/filteringParams';
 import { Pagination } from 'src/helpers/decorators/paginationParams';
@@ -14,9 +16,10 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class SubjectService {
     constructor(
-        
         @Inject(forwardRef(()=> StudentService)) private studentService: StudentService,
         @InjectRepository(Subject) private subjectRepository: Repository<Subject>,
+        @InjectRepository(Lecturer) private lecturerRepository: Repository<Lecturer>,
+        @InjectRepository(Semester) private semesterRepository: Repository<Semester>,
     ) {}
 
     async getAll(
@@ -97,18 +100,57 @@ export class SubjectService {
             throw new HttpException(error.message, error.status);
         }
     }
+    
+    async getOneByCodeAndSemester(code: string, semester_id: number) {
+        try {
+            const subjectFound = await this.subjectRepository.findOne({
+                where: { code: code, semester_id: {id: semester_id}},
+                relations: ['lecturer_code', 'semester_id', 'students', 'students.account_id', 'students.class_code']
+            });
+            if(!subjectFound) {
+                throw new HttpException('Subject is not fount', HttpStatus.NOT_FOUND);
+            } else {
+                return subjectFound;
+            }
+        } catch (error) {
+            throw new HttpException(error.message, error.status);
+        }
+    }
 
     async create(createSubjectDto: CreateSubjectDto) {
         try {
-            
-            const {name, code, lecturer_code, semester_id} = createSubjectDto;
-            const classCreated = await this.subjectRepository.save({name, code, lecturer_code:{code: lecturer_code}, semester_id: {id: semester_id}});
-            return classCreated;
+            const checkExistSemester = await this.semesterRepository.findOneBy({id: createSubjectDto.semester_id});
+            const checkExistLecturer = await this.lecturerRepository.findOneBy({code: createSubjectDto.lecturer_code});
+            if(!checkExistSemester) {
+                throw new HttpException('Học kỳ không tồn tại', HttpStatus.NOT_FOUND);
+            } else if (!checkExistLecturer) {
+                throw new HttpException('Giảng viên không tồn tại', HttpStatus.NOT_FOUND);
+            } else{
+                const {name, code, lecturer_code, semester_id} = createSubjectDto;
+                const classCreated = await this.subjectRepository.save({name, code, lecturer_code:{code: lecturer_code}, semester_id: {id: semester_id}});
+                return classCreated;
+            }
         
         } catch (error) {
             throw new HttpException(error.message, error.status);
         }
     }
+
+    async createMany(createManySubjectDto: CreateSubjectDto[]) {
+        try {
+            const results = await Promise.all(createManySubjectDto.map(async (item) => {
+                const semester = await this.semesterRepository.findOneBy({name: item.semester_name});
+                item.semester_id = semester.id;
+                delete item.semester_name;
+                return this.create(item);
+            }));
+            return results;
+        } catch (error) {
+            // Bắt lỗi nếu có bất kỳ promise nào bị từ chối
+            throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     async addStudentsToSubject(subject_id: number, student_codes: string[]) {
         const subject = await this.getOneById(subject_id)
         let students =subject.students || [];

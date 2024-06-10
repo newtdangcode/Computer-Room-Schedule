@@ -4,6 +4,7 @@ import { PaginatedResource } from "src/dto/pagination/paginated-resource.dto";
 import { CreateRoomDto } from "src/dto/room/create-room.dto";
 import { UpdateManyRoomDto } from "src/dto/room/update-many-room.dto";
 import { UpdateRoomDto } from "src/dto/room/update-room.dto";
+import { Employee } from "src/entities/employee.entity";
 import { Room } from "src/entities/room.entity";
 import { Filtering } from "src/helpers/decorators/filteringParams";
 import { Pagination } from "src/helpers/decorators/paginationParams";
@@ -14,6 +15,7 @@ import { Between, Brackets, In, Not, Or, Repository } from "typeorm";
 @Injectable()
 export class RoomService{
     constructor(
+        @InjectRepository(Employee) private employeeRepository:Repository<Employee>,
         @InjectRepository(Room) private roomRepository:Repository<Room>,
     ){}
     async getAll(
@@ -177,15 +179,30 @@ export class RoomService{
     }
     async create(createRoomDto:CreateRoomDto) {
         try {
-            const checkExistCode = await this.roomRepository.findOneBy({ code: createRoomDto.code });
+            const {name, code, machine_quantity, employee_code, status_id} = createRoomDto;
+            const checkExistEmployee = await this.employeeRepository.findOne({where:{ code: employee_code }});
+            const checkExistCode = await this.roomRepository.findOneBy({ code: code});
             if(checkExistCode) {
                 throw new HttpException('Mã phòng đã tồn tại', HttpStatus.BAD_REQUEST);
-            } else {
-                const roomCreated = await this.roomRepository.save(createRoomDto);
+            } else if(!checkExistEmployee) {
+                throw new HttpException('Nhân viên không tồn tại', HttpStatus.BAD_REQUEST);
+            }else {
+                const roomCreated = await this.roomRepository.save({name, code, machine_quantity, employee_code:{code:employee_code}, status_id:{id:status_id}});
                 return roomCreated;
             }
         } catch (error) {
             throw new HttpException(error.message, error.status);
+        }
+    }
+    async createMany(createManyRoomDto: CreateRoomDto[]) {
+        try {
+            const results = await Promise.all(createManyRoomDto.map(async (item) => {
+                return this.create(item);
+            }));
+            return results;
+        } catch (error) {
+            // Bắt lỗi nếu có bất kỳ promise nào bị từ chối
+            throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     async update(updateRoomDto: UpdateRoomDto, code: string) {

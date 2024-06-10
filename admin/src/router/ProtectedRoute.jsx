@@ -24,6 +24,7 @@ export default function ProtectedRoute({ children }) {
     <React.Fragment>
 
       {auth.isAuth ? (
+          
           children
         ) : (
           <Navigate to="/login" />

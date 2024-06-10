@@ -12,10 +12,12 @@ import { StudentModule } from 'src/student/student.module';
 import { Student } from 'src/entities/student.entity';
 import { Lecturer } from 'src/entities/lecturer.entity';
 import { LecturerModule } from 'src/lecturer/lecturer.module';
+import { Class } from 'src/entities/class.entity';
+import { AuthGuard } from './auth.guard';
 
 @Module({
   imports:[
-    TypeOrmModule.forFeature([Account,Employee,Lecturer,Student]),
+    TypeOrmModule.forFeature([Account,Employee,Lecturer,Student,Class]),
     JwtModule.register({
       global: true,
       secret:'123456',
@@ -27,7 +29,7 @@ import { LecturerModule } from 'src/lecturer/lecturer.module';
     forwardRef(() => LecturerModule),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, AuthGuard],
   exports: [AuthService],
 })
 export class AuthModule {}

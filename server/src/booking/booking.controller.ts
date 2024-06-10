@@ -48,6 +48,11 @@ export class BookingController {
         console.log('Booking create api...');
         return await this.bookingService.create(createBookingDto);
     }
+    @Post('create-many')
+    async createMany(@Body() list_from_file: any[]) {
+        console.log('Booking create many api...');
+        return await this.bookingService.createMany(list_from_file);
+    }
 
     @Patch('update/:id')
     async update(@Param('id') id: number, @Body() updateBookingDto: UpdateBookingDto) {

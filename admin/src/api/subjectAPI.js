@@ -98,6 +98,19 @@ const subjectAPI = {
     return response;
   },
 
+  createMany: async (data) => {
+    const url = "/subject/create-many";
+    const access_token = await localStorage.getItem("access_token");
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    console.log(response);
+    return response;
+  },
+
   update: async (id, data) => {
     const url = `/subject/update/${id}`;
     const access_token = await localStorage.getItem("access_token");

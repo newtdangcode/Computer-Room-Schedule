@@ -144,11 +144,32 @@ export default function BookingTable({
                 <button
                   className="ml-1 py-1 px-2 bg-primary text-white rounded-full text-xs hover:bg-red-800 font-semibold"
                   onClick={() => {
-                    handleUpdateStatus(item.id, 3);
+                    Swal.fire({
+                      title: "Bạn chắc chắn muốn huỷ?",
+                      text: "Đăng ký sẽ bị huỷ và không thể khôi phục.",
+                      icon: "question",
+                      showCancelButton: true,
+                      confirmButtonColor: "#0E9F6E",
+                      cancelButtonColor: "#d33",
+                      cancelButtonText: "Huỷ bỏ",
+                      confirmButtonText: "Đồng ý!",
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        handleUpdateStatus(item.id,3);
+                        Swal.fire({
+                          title: "Huỷ đăng ký thành công",
+                          text: "Đăng ký đã được huỷ và không thể khôi phục.",
+                          confirmButtonColor: "#0E9F6E",
+                        });
+                      }
+                    });
                   }}
+                  data-tooltip-id="cancel"
+                  data-tooltip-content="Huỷ đăng ký"
                 >
                   Huỷ
                 </button>
+                <Tooltip id="cancel" style={{ backgroundColor: "#EF4444" }} />
               </div>
             );
           }else{

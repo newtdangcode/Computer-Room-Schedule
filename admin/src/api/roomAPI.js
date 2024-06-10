@@ -79,6 +79,17 @@ const RoomAPI={
         
         return response;
     },
+    createMany:async(data)=>{
+        const url ="/room/create-many";
+        const access_token= await localStorage.getItem("access_token");
+        const response= await axios.post(url,data,{
+            headers:{
+                Authorization:`Bearer ${access_token}`,
+            },
+        });
+        
+        return response;
+    },
     update:async(code,data)=>{
         const url=`/room/update/${code}`;
         const access_token = await localStorage.getItem("access_token");

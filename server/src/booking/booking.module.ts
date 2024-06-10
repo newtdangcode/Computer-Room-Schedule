@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { BookingController } from './booking.controller';
 import { BookingService } from './booking.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -14,6 +14,9 @@ import { ConfigModule } from '@nestjs/config';
 import { CreateBookingtDto } from 'src/dto/booking/create-booking.dto';
 import { UpdateBookingDto } from 'src/dto/booking/update-booking.dto';
 import { UpdateManyBookingDto } from 'src/dto/booking/update-many-booking.dto';
+import { SubjectModule } from 'src/subject/subject.module';
+import { SemesterModule } from 'src/semester/semester.module';
+import { ShiftModule } from 'src/shift/shift.module';
 
 @Module({
   imports: [
@@ -30,7 +33,11 @@ import { UpdateManyBookingDto } from 'src/dto/booking/update-many-booking.dto';
     ConfigModule,
     CreateBookingtDto,
     UpdateBookingDto,
-    UpdateManyBookingDto
+    UpdateManyBookingDto,
+    forwardRef(() => SubjectModule),
+    forwardRef(() => SemesterModule),
+    forwardRef(() => ShiftModule),
+
   ],
   controllers: [BookingController],
   providers: [BookingService],

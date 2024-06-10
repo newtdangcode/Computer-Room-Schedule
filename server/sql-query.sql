@@ -182,3 +182,12 @@ CREATE TABLE booking (
 
 );
 
+CREATE TABLE notification(
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  account_id INT NOT NULL,
+  content VARCHAR(255),
+  unread BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (account_id) REFERENCES account(id)
+);
