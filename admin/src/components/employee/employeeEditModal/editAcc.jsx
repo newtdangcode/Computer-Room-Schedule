@@ -12,10 +12,10 @@ import yup from "../../../utils/yupGlobal";
 import toastMessage from "../../../utils/toastMessage";
 
 export default function EditAcc({
-  employee,
+  user,
   title,
   titleBtnFooter,
-  handleUpdateEmployee,
+  handleUpdateUser,
   isEditInfor,
   setIsEditInfor,
   closeModal,
@@ -52,7 +52,7 @@ export default function EditAcc({
   const onSubmit = async (data) => {
     try {
       setIsLoading(true);
-      handleUpdateEmployee(employee.code, data);
+      handleUpdateUser(user.code, data);
       toastMessage({ type: "success", message: "Cập nhật thành công." });
     } catch (error) {
       toastMessage({ type: "error", message: `Cập nhật thất bại. ${error}.` });
@@ -97,7 +97,7 @@ export default function EditAcc({
               <div className="flex flex-col w-2/3">
                 {haveCloseModal ? (
                   <input
-                    defaultValue={employee.account_id.email}
+                    defaultValue={user.account_id.email}
                     type="email"
                     placeholder="Nhập email"
                     className={`${
@@ -107,7 +107,7 @@ export default function EditAcc({
                   />
                 ) : (
                   <input
-                    defaultValue={employee.account_id.email}
+                    defaultValue={user.account_id.email}
                     type="email"
                     readOnly
                     className={` block w-full px-3 py-1 text-sm font-[600] text-gray-400 h-12 rounded-md bg-gray-100 focus:bg-gray-5 border-[1px] `}
@@ -124,7 +124,7 @@ export default function EditAcc({
               </div>
               <div className="flex flex-col w-2/3">
                 <input
-                  defaultValue={employee.account_id.username}
+                  defaultValue={user.account_id.username}
                   type="username"
                   placeholder="Nhập username"
                   className={`${

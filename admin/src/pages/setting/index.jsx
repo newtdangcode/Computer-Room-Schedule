@@ -6,16 +6,26 @@ import employeeAPI from "../../api/employeeAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserSuccess } from "../../features/auth/authSlice";
 import authAPI from "../../api/authAPI";
+import lecturerAPI from "../../api/lecturerAPI";
+import studentAPI from "../../api/studentAPI";
 export default function Setting() {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
-  const employee = auth.currentUser;
+ 
+  const user = auth.currentUser;
   const [isEditInfor, setIsEditInfor] = useState(true);
   const title = "Cập nhật thông tin tài khoản";
   const titleBtnFooter = "Cập nhật";
-  const handleUpdateEmployee = async (code, data) => {
-    await employeeAPI.update(code, data);
-    const response = await authAPI.employeeCheckLogin();
+  const handleUpdateUser = async (code, data) => {
+    if(user.account_id.role_id.id === 1 || user.account_id.role_id.id === 2){
+      await employeeAPI.update(code, data);
+    } else if(user.account_id.role_id.id === 3){
+      await lecturerAPI.update(code, data);
+    } else {
+      await studentAPI.update(code, data);
+    }
+    
+    const response = await authAPI.checkLogin();
     dispatch(setUserSuccess(response.data));
   }
   
@@ -32,8 +42,8 @@ export default function Setting() {
         <EditInfor
           title={title}
           titleBtnFooter={titleBtnFooter}
-          employee={employee}
-          handleUpdateEmployee={handleUpdateEmployee}
+          user={user}
+          handleUpdateUser={handleUpdateUser}
           isEditInfor={isEditInfor}
           setIsEditInfor={setIsEditInfor}
           closeModal={closeModal}
@@ -43,8 +53,8 @@ export default function Setting() {
         <EditAcc
           title={title}
           titleBtnFooter={titleBtnFooter}
-          employee={employee}
-          handleUpdateEmployee={handleUpdateEmployee}
+          user={user}
+          handleUpdateUser={handleUpdateUser}
           isEditInfor={isEditInfor}
           setIsEditInfor={setIsEditInfor}
           closeModal={closeModal}

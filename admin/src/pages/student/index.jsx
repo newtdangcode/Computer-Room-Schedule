@@ -178,6 +178,7 @@ export default function Employee() {
   };
   const handleUpdateStudent = async (code, data) => {
     await studentAPI.update(code, data);
+    getAllStudent();
   };
   const handleShowAddToSubjectModal = () => {
     setIsShowAddToSubjectModal(!isShowAddToSubjectModal);

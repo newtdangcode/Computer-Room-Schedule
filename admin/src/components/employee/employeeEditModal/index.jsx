@@ -13,8 +13,8 @@ export default function EditModalEmployee({ closeModal, title, titleBtnFooter, h
         <EditInfor
           title={title}
           titleBtnFooter={titleBtnFooter}
-          employee={employee}
-          handleUpdateEmployee={handleUpdateEmployee}
+          user={employee}
+          handleUpdateUser={handleUpdateEmployee}
           isEditInfor={isEditInfor}
           setIsEditInfor={setIsEditInfor}
           closeModal={closeModal}
@@ -23,8 +23,8 @@ export default function EditModalEmployee({ closeModal, title, titleBtnFooter, h
         <EditAcc
           title={title}
           titleBtnFooter={titleBtnFooter}
-          employee={employee}
-          handleUpdateEmployee={handleUpdateEmployee}
+          user={employee}
+          handleUpdateUser={handleUpdateEmployee}
           isEditInfor={isEditInfor}
           setIsEditInfor={setIsEditInfor}
           closeModal={closeModal}

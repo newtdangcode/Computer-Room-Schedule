@@ -12,10 +12,10 @@ import yup from "../../../utils/yupGlobal";
 import toastMessage from "../../../utils/toastMessage";
 
 export default function EditInfor({
-  employee,
+  user,
   title,
   titleBtnFooter,
-  handleUpdateEmployee,
+  handleUpdateUser,
   isEditInfor,
   setIsEditInfor,
   closeModal,
@@ -42,7 +42,7 @@ export default function EditInfor({
   const onSubmit = async (data) => {
     try {
       setIsLoading(true);
-      handleUpdateEmployee(employee.code, data);
+      handleUpdateUser(user.code, data);
       toastMessage({ type: "success", message: "Cập nhật thành công." });
     } catch (error) {
       toastMessage({ type: "error", message: `Cập nhật thất bại. ${error}.` });
@@ -87,7 +87,7 @@ export default function EditInfor({
               </div>
               <div className="flex flex-col w-2/3">
                 <input
-                  defaultValue={employee.first_name}
+                  defaultValue={user.first_name}
                   type="text"
                   placeholder="Nhập họ"
                   className={`${
@@ -104,7 +104,7 @@ export default function EditInfor({
               </div>
               <div className="flex flex-col w-2/3">
                 <input
-                  defaultValue={employee.last_name}
+                  defaultValue={user.last_name}
                   type="text"
                   placeholder="Nhập tên"
                   className={`${
@@ -123,7 +123,7 @@ export default function EditInfor({
                 <div
                   className={`flex text-center items-center w-full px-3 py-1 text-sm font-[600] text-gray-400 h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] `}
                   
-                >{employee.code}</div>
+                >{user.code}</div>
                 
               </div>
             </div>
@@ -133,7 +133,7 @@ export default function EditInfor({
               </div>
               <div className="flex flex-col w-2/3">
                 <input
-                  defaultValue={employee.phone_number}
+                  defaultValue={user.phone_number}
                   type="tel"
                   placeholder="Nhập SĐT"
                   className={`${
@@ -150,11 +150,11 @@ export default function EditInfor({
               </div>
               <div className="flex flex-col w-2/3">
                 <select
-                  defaultValue={employee.role_id}
+                  defaultValue={user.role_id}
                   className="block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none"
                   {...register("role_id")}
                 >
-                  <option value={employee.account_id.role_id.id}>{employee.account_id.role_id.name}</option>
+                  <option value={user.account_id.role_id.id}>{user.account_id.role_id.name}</option>
                 </select>
               </div>
             </div>

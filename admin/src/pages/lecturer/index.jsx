@@ -159,6 +159,7 @@ export default function Employee() {
   };
   const handleUpdateLecturer = async (code, data) => {
     await lecturerAPI.update(code, data);
+    getAllLecturer();
   };
   const handleShowUploadFileModal = () => {
     setIsShowUploadFileModal(!isShowUploadFileModal);

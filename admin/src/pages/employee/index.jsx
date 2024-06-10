@@ -157,6 +157,7 @@ export default function Employee() {
   };
   const handleUpdateEmployee = async (code, data) => {
     await employeeAPI.update(code, data);
+    getAllEmployee();
   }
   const handleShowUploadFileModal = () => {
     setIsShowUploadFileModal(!isShowUploadFileModal);
