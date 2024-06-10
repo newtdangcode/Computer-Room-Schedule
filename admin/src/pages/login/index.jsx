@@ -104,11 +104,11 @@ export default function Login() {
                   "Đăng nhập"
                 )}
               </button>
-              <div className=" flex pt-5 justify-start pl-2 items-center w-full h-full">
+              {/* <div className=" flex pt-5 justify-start pl-2 items-center w-full h-full">
                 <Link to="/forget-password" className="underline text-sm text-primary">
                   Quên mật khẩu?
                 </Link>
-              </div>
+              </div> */}
 
              
             </form>
