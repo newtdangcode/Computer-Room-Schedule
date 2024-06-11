@@ -60,6 +60,8 @@ export default function Employee() {
   useEffect(() => {
     if (isSelected.length === students.length && students.length > 0) {
       setIsSelectAll(true);
+    }else{
+      setIsSelectAll(false);
     }
     if (isSelected.length === 0) {
       setIsSelectAll(false);

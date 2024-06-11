@@ -111,6 +111,29 @@ const subjectAPI = {
     return response;
   },
 
+  deleteStudentFromSubject: async (id, data) => {
+    
+    const url = `/subject/delete-student-from-subject/${id}`;
+    const access_token = await localStorage.getItem("access_token");
+    const response = await axios.patch(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    return response;
+  },
+
+  deleteManyStudentsFromSubject: async (id, data) => {
+    const url = `/subject/delete-many-students-from-subject/${id}`;
+    const access_token = await localStorage.getItem("access_token");
+    const response = await axios.patch(url, data, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    return response;
+  },
+
   update: async (id, data) => {
     const url = `/subject/update/${id}`;
     const access_token = await localStorage.getItem("access_token");

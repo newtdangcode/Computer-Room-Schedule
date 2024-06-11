@@ -50,6 +50,8 @@ export default function Booking() {
   useEffect(() => {
     if (isSelected.length === bookings.length && bookings.length > 0) {
       setIsSelectAll(true);
+    }else{
+      setIsSelectAll(false);
     }
     if (isSelected.length === 0) {
       setIsSelectAll(false);

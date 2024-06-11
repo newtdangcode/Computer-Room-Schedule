@@ -37,11 +37,13 @@ export default function Semester() {
     //console.log('EMPLOYESS ',semesters);
   }, [debounceValue, isShowDeletedTable, currentPage, limitPerPage, sortValue, isShowAddModal, isShowEditModal]);
   useEffect(() => {
-    if(isSelected.length === semesters.length && semesters.length > 0) {
+    if (isSelected.length === semesters.length && semesters.length > 0) {
       setIsSelectAll(true);
-      if(isSelected.length === 0) {
-        setIsSelectAll(false);
-      }
+    }else{
+      setIsSelectAll(false);
+    }
+    if (isSelected.length === 0) {
+      setIsSelectAll(false);
     }
   }, [ isSelected]);
   const handleSelectAll = () => {

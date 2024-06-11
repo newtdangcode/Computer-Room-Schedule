@@ -42,7 +42,23 @@ const authAPI = {
         const access_token = await localStorage.getItem('access_token');
         const response = await axios.post(url, access_token);
         return response;
-    }
+    },
+    updatePassword: async (data) => {
+        const url = "/auth/updatePassword";
+        await axios.patch(url, data);
+    },
+    forgotPassword: async (data) => {
+        const url = "/auth/forgotPassword";
+        await axios.post(url, data);
+    },
+    resetPassword: async (data, resetToken) => {
+        const url = `/auth/resetPassword/${resetToken}`;
+        await axios.patch(url, data);
+    },
+    getStatusResetPasswordToken: async (resetToken) => {
+        const url = `/auth/resetPassword/${resetToken}`;
+        await axios.get(url);
+    },
 };
 
 export default authAPI;

@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { RouterProvider, createBrowserRouter, createRoutesFromElements, Route, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Root from "./pages/root";
-
-//import ForgotPassword from "./pages/forgotPassword";
-//import ResetPassword from "./pages/resetPassword";
+import ForgotPassword from "./pages/forgotPassword";
+import ResetPassword from "./pages/resetPassword";
 import ProtectedRoute from "./router/ProtectedRoute";
 import Loading from "./components/loading";
 import authAPI from "./api/authAPI";
@@ -114,8 +113,8 @@ function App() {
       <React.Fragment>
         <Route path="/login" element={<Login />} />
 
-        {/*<Route path="/forget-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:resetToken" element={<ResetPassword />} />*/ }
+        {/* <Route path="/forget-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:resetToken" element={<ResetPassword />} /> */}
         <Route
           path="/"
           element={

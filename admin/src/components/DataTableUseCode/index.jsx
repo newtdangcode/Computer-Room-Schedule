@@ -4,7 +4,7 @@ import { IconPrevious, IconNext } from "../icon";
 import styles from "./styles.module.css";
 import Pagination from "../Pagination";
 function DataTableUseCode({
-  
+  isSubjectStudentList=false,
   columnData,
   rowData = [],
   select = false,
@@ -87,7 +87,7 @@ function DataTableUseCode({
               </tbody>
             </table>
           </div>
-          {select&&<Pagination
+          {select&&!isSubjectStudentList&&<Pagination
             currentPage={currentPage}
             onPageChange={setCurrentPage}
             totalPageCount={totalPageCount}

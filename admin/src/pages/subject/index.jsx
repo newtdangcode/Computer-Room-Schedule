@@ -54,6 +54,8 @@ export default function Subject() {
   useEffect(() => {
     if (isSelected.length === subjects.length && subjects.length > 0) {
       setIsSelectAll(true);
+    }else{
+      setIsSelectAll(false);
     }
     if (isSelected.length === 0) {
       setIsSelectAll(false);
@@ -96,7 +98,6 @@ export default function Subject() {
       params.is_active = true;
     }
     try {
-      console.log(params);
       const response = await subjectAPI.getAll(params);
       if (response.data.length === 0 && response.currentPage !== 1 && response.currentPage > 1) {
         setCurrentPage(response.currentPage - 1);
@@ -105,7 +106,6 @@ export default function Subject() {
       setTotalPageCount(response.lastPage);
       setNextPage(response.nextPage);
       setPrevPage(response.prevPage);
-      console.log(response.data);
     } catch (err) {
       console.log(err);
     }
@@ -493,7 +493,12 @@ export default function Subject() {
           editSubject={editSubject}
         />
       )}
-      {isShowStudentList && <StudentListModal closeModal={handleCloseStudentList} subject_id={subject_id} />}
+      {isShowStudentList && (
+        <StudentListModal 
+          closeModal={handleCloseStudentList} 
+          subject_id={subject_id} 
+        />
+      )}
       {isShowUploadFileModal && (
         <UploadFileModal closeModal={handleShowUploadFileModal} handleUploadFile={handleUploadFile} />
       )}

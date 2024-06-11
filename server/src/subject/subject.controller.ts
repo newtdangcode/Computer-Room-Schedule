@@ -66,4 +66,17 @@ export class SubjectController {
         console.log('Subject update many api ...');
         return await this.subjectService.updateMany(updateManySubjectDto);
     }
+
+    @Patch('delete-student-from-subject/:id')
+    async deleteStudentFromSubject(@Param('id') id: number, @Body() data: any) {
+     
+        console.log('Subject delete student from subject api...');
+        return await this.subjectService.deleteStudentFromSubject(id, data.student_code);
+    }
+
+    @Patch('delete-many-students-from-subject/:id')
+    async deleteManyStudentFromSubject(@Param('id') id: number, @Body() data: any) {
+        console.log('Subject delete student from subject api...');
+        return await this.subjectService.deleteManyStudentFromSubject(id, data.student_codes);
+    }
 }

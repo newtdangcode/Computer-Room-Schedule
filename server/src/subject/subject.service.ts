@@ -165,6 +165,50 @@ export class SubjectService {
         await this.subjectRepository.save(subject);
         return await this.getOneById(subject_id);
     }
+    async deleteStudentFromSubject(subject_id: number, student_code: string) {
+        const subject = await this.getOneById(subject_id);
+        
+        if (!subject || !subject.students) {
+            throw new Error('Subject not found or no students in subject');
+        }
+        
+        const studentIndex = subject.students.findIndex((student) => student.code == student_code);
+        
+        if (studentIndex === -1) {
+            throw new Error('Student not found');
+        }
+    
+        subject.students.splice(studentIndex, 1);
+    
+        await this.subjectRepository.save(subject);
+    
+        return await this.getOneById(subject_id);
+    }
+    
+
+    async deleteManyStudentFromSubject(subject_id: number, student_codes: string[]) {
+        const subject = await this.getOneById(subject_id);
+        
+        if (!subject || !subject.students) {
+            throw new Error('Subject not found or no students in subject');
+        }
+
+        Promise.all(student_codes.map((student_code) => {
+            const studentIndex = subject.students.findIndex((student) => student.code == student_code);
+            
+            if (studentIndex === -1) {
+                throw new Error('Student not found');
+            }
+        
+            subject.students.splice(studentIndex, 1);
+        }));
+        
+        await this.subjectRepository.save(subject);
+    
+        return await this.getOneById(subject_id);
+
+    }
+
     async update(updateSubjectDto: UpdateSubjectDto, id: number) {
         try {
             const subject = await this.getOneById(id);
@@ -196,4 +240,5 @@ export class SubjectService {
             throw new HttpException(error.message, error.status);
         }
     }
+
 }

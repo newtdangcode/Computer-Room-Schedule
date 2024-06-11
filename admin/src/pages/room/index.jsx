@@ -38,7 +38,13 @@ export default function Room() {
   useEffect(() => {
     if (isSelected.length === rooms.length && rooms.length > 0) {
       setIsSelectAll(true);
+    }else{
+      setIsSelectAll(false);
     }
+    if (isSelected.length === 0) {
+      setIsSelectAll(false);
+    }
+
   }, [isSelected]);
   const handleSelectAll = () => {
     setIsSelectAll(!isSelectAll);
