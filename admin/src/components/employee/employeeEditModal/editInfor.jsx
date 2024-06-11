@@ -10,6 +10,7 @@ import { IconUploadFile, IconEye, IconEyeClose } from "../../icon";
 import styles from "./styles.module.css";
 import yup from "../../../utils/yupGlobal";
 import toastMessage from "../../../utils/toastMessage";
+import { useSelector } from "react-redux";
 
 export default function EditInfor({
   user,
@@ -21,6 +22,7 @@ export default function EditInfor({
   closeModal,
   haveCloseModal = true,
 }) {
+  const role_id = useSelector((state) => state.auth.currentUser.account_id.role_id.id)
   const schema = yup.object().shape({
     first_name: yup.string().required("Vui lòng nhập họ của bạn."),
     last_name: yup.string().required("Vui lòng nhập tên của bạn."),
@@ -117,7 +119,8 @@ export default function EditInfor({
             </div>
             <div className={`${styles.item}`}>
               <div className="w-1/3 text-sm text-gray-700 font-medium dark:text-gray-400">
-                <label>Mã nhân viên </label>
+                <label>{role_id===1||role_id===2?" Mã nhân viên"
+                :(role_id===3?"Mã giảng viên":"Mã sinh viên")} </label>
               </div>
               <div className="flex flex-col w-2/3 ">
                 <div

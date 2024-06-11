@@ -119,7 +119,7 @@ export default function EditModalRoom({ haveCloseModal = true, closeModal, title
                     <option value="">Chọn Nhân viên</option>
                 {employees.map((item) => (
                   <option value={item.code} key={item.code}>
-                  {`${item.code} - ${item.first_name}`}
+                  {`${item.code} - ${item.first_name +" "+ item.last_name}`}
                   </option>
                 ))}
                     
