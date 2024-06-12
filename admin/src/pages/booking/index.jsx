@@ -53,12 +53,16 @@ export default function Booking() {
   const [searchKeyWord, setSearchKeyWord] = useState("");
   const debounceValue = useDebounce(searchKeyWord, 500);
   useEffect(() => {
-    getAllSubject();
+    
     getAllLecturer();
     getAllSemester();
     getAllRoom();
     getAllBooking();
   }, []);
+  useEffect(() => {
+   
+    getAllSubject(filterBySemester,filterByLecturer);
+  },[filterByLecturer,filterBySemester]);
   useEffect(() => {
     getAllBooking();
     //console.log('EMPLOYESS ',bookings);
@@ -107,9 +111,28 @@ export default function Booking() {
       setIsSelected(isSelected.filter((booking_id) => booking_id !== idInt));
     }
   };
-  const getAllSubject = async () => {
+  const getAllSubject = async (semesterSelected,lecturerSelected) => {
     try {
-      const response = await subjectAPI.getAllWithoutParams();
+      let params;
+      if(filterBySemester!==""&&filterByLecturer!==""){
+        params = {
+          filter: `is_active:eq:true,semester_id.id:eq:${semesterSelected},lecturer_code.code:eq:${lecturerSelected}`,
+        };
+      }else if(filterBySemester!==""&&filterByLecturer===""){
+        params = {
+          filter: `is_active:eq:true,semester_id.id:eq:${semesterSelected}`,
+        };
+      }else if(filterBySemester===""&&filterByLecturer!==""){
+        params = {
+          filter: `is_active:eq:true,lecturer_code.code:eq:${lecturerSelected}`,
+        };
+      }else {
+        params = {
+          filter: `is_active:eq:true`,
+        };
+      }
+      
+      const response = await subjectAPI.getAllBySemesterAndLecturer(params);
       setSubjects(response.data);
     } catch (err) {
       console.log(err);
@@ -155,6 +178,12 @@ export default function Booking() {
     }
     if (filterByShift) {
       params.shift_id = filterByShift;
+    }
+    if (filterByLecturer) {
+      params.lecturer_code = filterByLecturer;
+    }
+    if (filterBySubject) {
+      params.subject_id = filterBySubject;
     }
     if (sortValue) {
       params = { ...params, ...sortValue };
