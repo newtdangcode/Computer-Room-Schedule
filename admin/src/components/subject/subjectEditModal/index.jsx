@@ -20,7 +20,7 @@ export default function EditModalSubject({ haveCloseModal = true, closeModal, ti
   const getAllLecturer = async () => {
     try {
       const response = await lecturerAPI.getAllWithoutParams();
-      setLecturers(response.data.filter((item) => item.code !== editSubject.lecturer_code.code));
+      setLecturers(response.data);
     }catch (error) {
       console.log(error);
     }
@@ -113,16 +113,14 @@ export default function EditModalSubject({ haveCloseModal = true, closeModal, ti
               </div>
               <div className="flex flex-col w-2/3 ">
                 <select
-                  defaultValue={editSubject.lecturer_code.code}
+                  value={editSubject.lecturer_code.code}
                   {...register("lecturer_code")}
                   className="block w-full px-3 py-1 text-sm h-12 rounded-md bg-gray-100 focus:bg-gray-50 border-[1px] focus:bg-transparent focus:outline-none"
                 >
-                    <option value={editSubject.lecturer_code.code}>
-                      {editSubject.lecturer_code.code}-{editSubject.lecturer_code.name}
-                    </option>
+                    
                 {lecturers.map((item) => (
                   <option value={item.code} key={item.code}>
-                    {item.code}-{item.name}
+                    {item.code} - {item.first_name} {item.last_name}
                   </option>
                 ))}
                     

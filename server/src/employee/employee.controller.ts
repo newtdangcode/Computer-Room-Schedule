@@ -70,8 +70,8 @@ export class EmployeeController {
     @UsePipes(ValidationPipe)
     async update(@Param('code') code: string, @Body() updateEmployeeDto: UpdateEmployeeDto) {
         console.log('employee update api...');
-        const updatedEmployee = await this.employeeService.update(updateEmployeeDto, code);
-        return { message: 'Employee updated successfully', data: updatedEmployee };
+        return  await this.employeeService.update(updateEmployeeDto, code);
+        // return { message: 'Employee updated successfully', data: updatedEmployee };
     }
     
     @Patch('update-many')

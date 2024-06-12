@@ -15,15 +15,28 @@ const bookingAPI = {
         if(params.currentUser.account_id.role_id.id === 3){
             params.filter = params.filter + ",lecturer_code.code:eq:" + params.currentUser.code;
         }
-        if(params.search !== ""){
-            params.search = removeAccents(params.search);
-            params.filter = params.filter + ",name:like:" + params.search;
+        if(params.room_code !== null && params.room_code !== undefined){
+            params.filter = params.filter + ",room_code.code:eq:" + params.room_code;
+        }
+        if(params.shift_id !== null && params.shift_id !== undefined){
+            params.filter = params.filter + ",shift_id.id:eq:" + params.shift_id;
         }
         if(params.semester_id !== null && params.semester_id !== undefined){
             params.filter = params.filter + ",semester_id.id:eq:" + params.semester_id;
         }
+        if(params.subject_id !== null && params.subject_id !== undefined){
+            params.filter = params.filter + ",subject_id.id:eq:" + params.subject_id;
+        }
+        if(params.lecturer_code !== null && params.lecturer_code !== undefined){
+            params.filter = params.filter + ",lecturer_code.code:eq:" + params.lecturer_code;
+        }
+        // if(params.search !== ""){
+        //     params.search = removeAccents(params.search);
+        //     params.filter = params.filter + ",lecturer_name:like:" + params.search;
+        // }
         
         
+        console.log(params);
         switch (params.role_id){
             case 1:
             case 2:

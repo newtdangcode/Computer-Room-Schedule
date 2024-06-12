@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import useDebounce from "../../hooks/useDebounce";
-import { IconBin, IconAdd, IconDelete, IconBack, IconRestore, IconReject, IconAccept, IconUploadFile } from "../../components/icon";
+import {
+  IconBin,
+  IconAdd,
+  IconDelete,
+  IconBack,
+  IconRestore,
+  IconReject,
+  IconAccept,
+  IconUploadFile,
+} from "../../components/icon";
 import { useSelector } from "react-redux";
 import PageLayout from "../../components/layout/pageLayout";
 import bookingAPI from "../../api/bookingAPI";
@@ -9,10 +18,17 @@ import AddModalBooking from "../../components/booking/bookingAddModal";
 import BookingTable from "../../components/booking/bookingTable";
 import UploadFileModal from "../../components/uploadFileModal";
 import { io } from "socket.io-client";
-const socket = io('http://localhost:8080');
+import RoomAPI from "../../api/roomAPI";
+import semesterAPI from "../../api/semesterAPI";
+import lecturerAPI from "../../api/lecturerAPI";
+import subjectAPI from "../../api/subjectAPI";
+const socket = io("http://localhost:8080");
 
 export default function Booking() {
-  
+  const [lecturers, setLecturers] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [semesters, setSemesters] = useState([]);
+  const [rooms, setRooms] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [isSelected, setIsSelected] = useState([]);
@@ -25,6 +41,11 @@ export default function Booking() {
   const [lastPage, setLastPage] = useState();
   const currentUser = useSelector((state) => state.auth.currentUser);
   const [sortValue, setSortValue] = useState({ sort: "created_at:desc" });
+  const [filterByRoom, setFilterByRoom] = useState("");
+  const [filterByShift, setFilterByShift] = useState("");
+  const [filterByLecturer, setFilterByLecturer] = useState("");
+  const [filterBySubject, setFilterBySubject] = useState("");
+  const [filterBySemester, setFilterBySemester] = useState("");
   const [isShowAddModal, setIsShowAddModal] = useState(false);
   const [isShowEditModal, setIsShowEditModal] = useState(false);
   const [isShowUploadFileModal, setIsShowUploadFileModal] = useState(false);
@@ -32,25 +53,34 @@ export default function Booking() {
   const [searchKeyWord, setSearchKeyWord] = useState("");
   const debounceValue = useDebounce(searchKeyWord, 500);
   useEffect(() => {
+    getAllSubject();
+    getAllLecturer();
+    getAllSemester();
+    getAllRoom();
     getAllBooking();
   }, []);
   useEffect(() => {
     getAllBooking();
     //console.log('EMPLOYESS ',bookings);
   }, [
-    debounceValue, 
-    isShowDeletedTable, 
-    currentPage, 
-    limitPerPage, 
-    sortValue, 
-    isShowAddModal, 
+    debounceValue,
+    isShowDeletedTable,
+    currentPage,
+    limitPerPage,
+    sortValue,
+    isShowAddModal,
     isShowEditModal,
     isShowUploadFileModal,
+    filterByRoom,
+    filterBySemester,
+    filterByShift,
+    filterByLecturer,
+    filterBySubject,
   ]);
   useEffect(() => {
     if (isSelected.length === bookings.length && bookings.length > 0) {
       setIsSelectAll(true);
-    }else{
+    } else {
       setIsSelectAll(false);
     }
     if (isSelected.length === 0) {
@@ -77,6 +107,38 @@ export default function Booking() {
       setIsSelected(isSelected.filter((booking_id) => booking_id !== idInt));
     }
   };
+  const getAllSubject = async () => {
+    try {
+      const response = await subjectAPI.getAllWithoutParams();
+      setSubjects(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getAllLecturer = async () => {
+    try {
+      const response = await lecturerAPI.getAllWithoutParams();
+      setLecturers(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getAllSemester = async () => {
+    try {
+      const response = await semesterAPI.getAllWithoutParams();
+      setSemesters(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getAllRoom = async () => {
+    try {
+      const response = await RoomAPI.getAllWithoutParams();
+      setRooms(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const getAllBooking = async () => {
     let params = { page: currentPage, limit: limitPerPage };
     params.filter = "";
@@ -84,6 +146,15 @@ export default function Booking() {
     params.currentUser = currentUser;
     if (debounceValue) {
       params.search = debounceValue.trim();
+    }
+    if (filterByRoom) {
+      params.room_code = filterByRoom;
+    }
+    if (filterBySemester) {
+      params.semester_id = filterBySemester;
+    }
+    if (filterByShift) {
+      params.shift_id = filterByShift;
     }
     if (sortValue) {
       params = { ...params, ...sortValue };
@@ -175,12 +246,11 @@ export default function Booking() {
       status_id: status_id,
       employee_code: currentUser.account_id.role_id.id === 3 ? null : currentUser.code,
     });
-    if (currentUser.account_id.role_id.id === 3 && status_id===3) {
+    if (currentUser.account_id.role_id.id === 3 && status_id === 3) {
       socket.emit("lecturerBooking", {
         account_id: currentUser.account_id.id,
-        content: `${currentUser.first_name} ${currentUser.last_name} đã huỷ 1 đăng ký phòng.`
+        content: `${currentUser.first_name} ${currentUser.last_name} đã huỷ 1 đăng ký phòng.`,
       });
-      
     }
     getAllBooking();
   };
@@ -206,13 +276,13 @@ export default function Booking() {
     // Sử dụng for...of để chờ đợi các promise
     for (const item of data) {
       const booking = {
-       subject_code: item[1],
-       room_code: item[2],
-       shift_name: item[3],
-       day_of_week: item[4],
-       week_start: item[5],
-       week_quantity: item[6],
-       semester_name: item[7],
+        subject_code: item[1],
+        room_code: item[2],
+        shift_name: item[3],
+        day_of_week: item[4],
+        week_start: item[5],
+        week_quantity: item[6],
+        semester_name: item[7],
       };
       bookingList.push(booking);
     }
@@ -304,18 +374,18 @@ export default function Booking() {
             ) : null}
             {currentUser.account_id.role_id.id !== 3 && (
               <button
-              className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
+                className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
                 cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
                 text-primary bg-white border border-primaryRed  hover:bg-primary hover:text-white "
-              onClick={handleShowUploadFileModal}
-            >
-              <span className="mr-3">
-                <IconUploadFile />
-              </span>
-              Nhập danh sách từ file
-            </button>
+                onClick={handleShowUploadFileModal}
+              >
+                <span className="mr-3">
+                  <IconUploadFile />
+                </span>
+                Nhập danh sách từ file
+              </button>
             )}
-            
+
             <button
               className="h-12 align-bottom inline-flex leading-5 items-center justify-center 
               cursor-pointer transition-colors duration-150 font-medium px-4 py-2 rounded-lg text-sm 
@@ -331,9 +401,9 @@ export default function Booking() {
         </div>
       </div>
       <div className="bg-white rounded-lg ring-1 ring-gray-200 ring-opacity-4 overflow-huser_idden mb-5 shadow-xs">
-        <div className="p-4">
+        <div className="p-4 flex-non">
           <div className="py-3 flex gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex">
-            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+            {/* <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
               <input
                 value={searchKeyWord}
                 className="block w-full h-12 px-3 py-1 text-sm focus:outline-none leading-5 
@@ -341,9 +411,89 @@ export default function Booking() {
                         focus:bg-white border-transparent"
                 type="text"
                 name="searchKeyWord"
-                placeholder="Tìm theo tên"
+                placeholder="Tìm theo tên giảng  viên"
                 onChange={(e) => setSearchKeyWord(e.target.value)}
               />
+            </div> */}
+            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow ">
+              <select
+                defaultValue={filterByRoom}
+                onChange={(e) => setFilterByRoom(e.target.value)}
+                className="block w-full h-12 px-2 py-1 text-sm focus:outline-none leading-5 
+                        rounded-md focus:border-gray-200 border-gray-200 bg-gray-100 ring-1 ring-gray-200
+                        focus:bg-white border-transparent form-select "
+              >
+                <option value="">Chọn phòng</option>
+                {rooms?.map((item) => (
+                  <option value={item.code} key={item.code}>
+                    {item.code}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow ">
+              <select
+                defaultValue={filterByLecturer}
+                onChange={(e) => setFilterByLecturer(e.target.value)}
+                className="block w-full h-12 px-2 py-1 text-sm focus:outline-none leading-5 
+                        rounded-md focus:border-gray-200 border-gray-200 bg-gray-100 ring-1 ring-gray-200
+                        focus:bg-white border-transparent form-select "
+              >
+                <option value="">Chọn giảng viên</option>
+                {lecturers?.map((item) => (
+                  <option value={item.code} key={item.code}>
+                    {item.code} - {item.first_name} {item.last_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow ">
+              <select
+                defaultValue={filterBySubject}
+                onChange={(e) => setFilterBySubject(e.target.value)}
+                className="block w-full h-12 px-2 py-1 text-sm focus:outline-none leading-5 
+                        rounded-md focus:border-gray-200 border-gray-200 bg-gray-100 ring-1 ring-gray-200
+                        focus:bg-white border-transparent form-select "
+              >
+                <option value="">Chọn môn học</option>
+                {subjects?.map((item) => (
+                  <option value={item.id} key={item.id}>
+                    {item.code} - {item.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="py-3 flex gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex">
+            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow ">
+              <select
+                defaultValue={filterByShift}
+                onChange={(e) => setFilterByShift(e.target.value)}
+                className="block w-full h-12 px-2 py-1 text-sm focus:outline-none leading-5 
+                        rounded-md focus:border-gray-200 border-gray-200 bg-gray-100 ring-1 ring-gray-200
+                        focus:bg-white border-transparent form-select "
+              >
+                <option value="">Chọn ca</option>
+                <option value="1">Ca sáng</option>
+                <option value="2">Ca chiều</option>
+              </select>
+            </div>
+            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow ">
+              <select
+                defaultValue={filterBySemester}
+                onChange={(e) => setFilterBySemester(e.target.value)}
+                className="block w-full h-12 px-2 py-1 text-sm focus:outline-none leading-5 
+                        rounded-md focus:border-gray-200 border-gray-200 bg-gray-100 ring-1 ring-gray-200
+                        focus:bg-white border-transparent form-select "
+              >
+                <option value="">Chọn học kỳ</option>
+                {semesters?.map((item) => (
+                  <option value={item.id} key={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow ">

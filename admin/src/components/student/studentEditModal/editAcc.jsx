@@ -52,10 +52,11 @@ export default function EditAcc({
   const onSubmit = async (data) => {
     try {
       setIsLoading(true);
-      handleUpdateStudent(student.code, data);
+      await handleUpdateStudent(student.code, data);
       toastMessage({ type: "success", message: "Cập nhật thành công." });
     } catch (error) {
-      toastMessage({ type: "error", message: `Cập nhật thất bại. ${error}.` });
+      const errorMessage = error.response.data.message;
+      toastMessage({ type: "error", message: `Cập nhật thất bại. ${errorMessage}.` });
     } finally {
       setIsLoading(false);
       closeModal();

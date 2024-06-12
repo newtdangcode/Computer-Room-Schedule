@@ -46,7 +46,7 @@ export default function StudentListModal({ closeModal, class_code, subject_id })
 
   const handleDeleteFromSubjectStudentList = async (student_code) => {
     try {
-      const response = await subjectAPI.deleteStudentFromSubject(subject_id, {student_code: student_code});
+      const response = await subjectAPI.deleteStudentFromSubject(subject_id, { student_code: student_code });
       fetchStudentList();
     } catch (err) {
       console.log(err);
@@ -54,8 +54,8 @@ export default function StudentListModal({ closeModal, class_code, subject_id })
   };
   const handleDeleteManyFromSubjectStudentList = async () => {
     try {
-      console.log("deletemany",isSelected)
-      const response = await subjectAPI.deleteManyStudentsFromSubject(subject_id, {student_codes: isSelected});
+      console.log("deletemany", isSelected);
+      const response = await subjectAPI.deleteManyStudentsFromSubject(subject_id, { student_codes: isSelected });
       fetchStudentList();
     } catch (err) {
       console.log(err);
@@ -136,49 +136,50 @@ export default function StudentListModal({ closeModal, class_code, subject_id })
                   </div>
                 </div>
               )}
-
-              <div className="bg-white rounded-lg ring-1 ring-gray-200 ring-opacity-4 overflow-huser_idden mb-5 shadow-xs">
-                <div className="p-4">
-                  <div className="flex justify-end items-center py-3 gap-x-4">
-                    <button
-                      disabled={isSelected.length <= 0}
-                      onClick={() => {
-                        Swal.fire({
-                          title: "Bạn chắc chắn muốn xoá?",
-                          text: "Sinh viên sẽ được xoá khỏi lớp.",
-                          icon: "question",
-                          showCancelButton: true,
-                          confirmButtonColor: "#0E9F6E",
-                          cancelButtonColor: "#d33",
-                          cancelButtonText: "Huỷ bỏ",
-                          confirmButtonText: "Đồng ý!",
-                        }).then((result) => {
-                          if (result.isConfirmed) {
-                            handleDeleteManyFromSubjectStudentList();
-                            Swal.fire({
-                              title: "Đã được xoá khỏi lớp",
-                              text: "Sinh viên đã được được xoá khỏi lớp.",
-                              confirmButtonColor: "#0E9F6E",
-                            });
-                          }
-                        });
-                      }}
-                      className={`h-12 align-bottom inline-flex leading-5 items-center justify-center 
+              {subjectStudentList && (
+                <div className="bg-white rounded-lg ring-1 ring-gray-200 ring-opacity-4 overflow-huser_idden mb-5 shadow-xs">
+                  <div className="p-4">
+                    <div className="flex justify-end items-center py-3 gap-x-4">
+                      <button
+                        disabled={isSelected.length <= 0}
+                        onClick={() => {
+                          Swal.fire({
+                            title: "Bạn chắc chắn muốn xoá?",
+                            text: "Sinh viên sẽ được xoá khỏi lớp.",
+                            icon: "question",
+                            showCancelButton: true,
+                            confirmButtonColor: "#0E9F6E",
+                            cancelButtonColor: "#d33",
+                            cancelButtonText: "Huỷ bỏ",
+                            confirmButtonText: "Đồng ý!",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              handleDeleteManyFromSubjectStudentList();
+                              Swal.fire({
+                                title: "Đã được xoá khỏi lớp",
+                                text: "Sinh viên đã được được xoá khỏi lớp.",
+                                confirmButtonColor: "#0E9F6E",
+                              });
+                            }
+                          });
+                        }}
+                        className={`h-12 align-bottom inline-flex leading-5 items-center justify-center 
                         transition-colors duration-150 font-medium px-10 py-2 rounded-lg text-sm 
                         text-white border border-transparent ${
                           isSelected.length > 0
                             ? "bg-red-600 cursor-pointer hover:bg-red-800"
                             : "bg-red-300 cursor-not-allowed"
                         }`}
-                    >
-                      <span className="mr-3">
-                        <IconDelete />
-                      </span>
-                      Xoá
-                    </button>
+                      >
+                        <span className="mr-3">
+                          <IconDelete />
+                        </span>
+                        Xoá
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               <div className="container bg-[white] mb-[20px] p-[20px]">
                 {subjectStudentList && (
